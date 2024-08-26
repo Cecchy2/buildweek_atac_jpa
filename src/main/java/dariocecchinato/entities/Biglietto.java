@@ -22,21 +22,17 @@ public class Biglietto {
     @JoinColumn(name = "rivenditore_id (FK)")
     private Rivenditore rivenditore;
     @ManyToOne
-    @JoinColumn(name = "utente_id (FK)")
-    private Utente utente;
-    @OneToOne
     @JoinColumn(name = "tessera_id")
     private Tessera tessera;
 
     public Biglietto() {
     }
 
-    public Biglietto(LocalDate dataEmissione, double prezzo, Distributore distributore, Rivenditore rivenditore, Utente utente, Tessera tessera) {
+    public Biglietto(LocalDate dataEmissione, double prezzo, Distributore distributore, Rivenditore rivenditore, Tessera tessera) {
         this.dataEmissione = dataEmissione;
         this.prezzo = prezzo;
         this.distributore = distributore;
         this.rivenditore = rivenditore;
-        this.utente = utente;
         this.tessera = tessera;
     }
 
@@ -77,13 +73,6 @@ public class Biglietto {
         this.rivenditore = rivenditore;
     }
 
-    public Utente getUtente() {
-        return utente;
-    }
-
-    public void setUtente(Utente utente) {
-        this.utente = utente;
-    }
 
     public Tessera getTessera() {
         return tessera;
@@ -101,7 +90,7 @@ public class Biglietto {
                 ", prezzo=" + prezzo +
                 ", distributore=" + distributore +
                 ", rivenditore=" + rivenditore +
-                ", utente=" + utente +
+                ", utente=" +
                 ", tessera=" + tessera +
                 '}';
     }
