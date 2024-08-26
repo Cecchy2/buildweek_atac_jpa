@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-public class Abbonamenti {
+public class Abbonamento {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -19,13 +19,21 @@ public class Abbonamenti {
     @JoinColumn(name = "tessera_id")
     private Tessera tessera;
 
-    public Abbonamenti(LocalDate data_validazione, LocalDate data_scadenza, Tipo_abbonamento tipo_abbonamento) {
+    @ManyToOne
+    @JoinColumn(name = "distributore_id")
+    private Distributore distributore;
+
+    @ManyToOne
+    @JoinColumn(name = "rivenditore_id")
+    private Rivenditore rivenditore;
+
+    public Abbonamento(LocalDate data_validazione, LocalDate data_scadenza, Tipo_abbonamento tipo_abbonamento) {
         this.data_validazione = data_validazione;
         this.data_scadenza = data_scadenza;
         this.tipo_abbonamento = tipo_abbonamento;
     }
 
-    public Abbonamenti() {
+    public Abbonamento() {
     }
 
     public UUID getId() {

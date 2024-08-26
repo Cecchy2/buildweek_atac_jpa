@@ -13,16 +13,14 @@ public class Tessera {
     private UUID id;
     private LocalDate data_emissione;
     private LocalDate data_scadenza;
-
     @OneToOne
     @JoinColumn(name = "utente_id")
     private Utente utente;
-
     @OneToMany(mappedBy = "tessera_id")
     private List<Biglietto> biglietti;
-
     @OneToMany(mappedBy = "tessera_id")
-    private List<Abbonamenti> abbonamenti;
+    private List<Abbonamento> abbonamenti;
+
 
     public Tessera(LocalDate data_emissione, LocalDate data_scadenza) {
         this.data_emissione = data_emissione;

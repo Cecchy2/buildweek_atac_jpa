@@ -2,6 +2,7 @@ package dariocecchinato.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +13,10 @@ public class Rivenditore {
     private UUID id;
     @Column(name = "nome_locale")
     private String nomeLocale;
+    @OneToMany(mappedBy = "distributore")
+    private List<Abbonamento> abbonamenti;
+    @OneToMany(mappedBy = "distributore")
+    private List<Biglietto> biglietti;
 
     public Rivenditore() {
     }

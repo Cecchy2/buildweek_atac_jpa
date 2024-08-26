@@ -3,6 +3,7 @@ package dariocecchinato.entities;
 import dariocecchinato.enums.StatoDistributore;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,6 +16,10 @@ public class Distributore {
     private StatoDistributore stato;
     @Column(name = "ubicazione")
     private String ubicazione;
+    @OneToMany(mappedBy = "distributore")
+    private List<Abbonamento> abbonamenti;
+    @OneToMany(mappedBy = "distributore")
+    private List<Biglietto> biglietti;
 
     public Distributore() {
     }

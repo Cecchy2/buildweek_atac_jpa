@@ -16,10 +16,10 @@ public class Biglietto {
     @Column(name = "prezzo")
     private double prezzo;
     @ManyToOne
-    @JoinColumn(name = "distributore_id (FK)")
+    @JoinColumn(name = "distributore")
     private Distributore distributore;
     @ManyToOne
-    @JoinColumn(name = "rivenditore_id (FK)")
+    @JoinColumn(name = "rivenditore")
     private Rivenditore rivenditore;
     @ManyToOne
     @JoinColumn(name = "tessera_id")
