@@ -1,10 +1,7 @@
 package dariocecchinato.entities;
 
 import dariocecchinato.enums.Tipo_abbonamento;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -17,6 +14,10 @@ public class Abbonamenti {
     private LocalDate data_validazione;
     private LocalDate data_scadenza;
     private Tipo_abbonamento tipo_abbonamento;
+
+    @ManyToOne
+    @JoinColumn(name = "tessera_id")
+    private Tessera tessera;
 
     public Abbonamenti(LocalDate data_validazione, LocalDate data_scadenza, Tipo_abbonamento tipo_abbonamento) {
         this.data_validazione = data_validazione;
