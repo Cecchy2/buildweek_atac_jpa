@@ -1,12 +1,40 @@
 package dariocecchinato;
 
+import com.github.javafaker.Faker;
+import dariocecchinato.entities.Distributore;
+import dariocecchinato.enums.StatoDistributore;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public class Application {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("atac");
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        Faker faker = new Faker();
+        EntityManager em = emf.createEntityManager();
+
+        Supplier<Distributore> distributoreSupplier = () -> {
+            StatoDistributore stato = StatoDistributore.values()[faker.number().numberBetween(0, StatoDistributore.values().length)];
+            String ubicazione = faker.address().streetAddress();
+            return new Distributore(stato, ubicazione);
+        };
+
+        em.getTransaction().begin();
+
+        IntStream.range(0, 10)
+                .mapToObj(i -> distributoreSupplier.get())
+                .forEach(distributore -> {
+                    em.persist(distributore);
+                    System.out.println("Creato: " + distributore);
+                });
+
+        em.getTransaction().commit();
+        em.close();
+
+        System.out.println("funzionaaa");
     }
 }
