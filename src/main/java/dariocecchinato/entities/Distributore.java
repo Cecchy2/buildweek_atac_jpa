@@ -17,9 +17,9 @@ public class Distributore {
     private StatoDistributore stato;
     @Column(name = "ubicazione")
     private String ubicazione;
-    @OneToMany(mappedBy = "distributore")
+    @OneToMany(mappedBy = "distributore_id")
     private List<Abbonamento> abbonamenti;
-    @OneToMany(mappedBy = "distributore")
+    @OneToMany(mappedBy = "distributore_id")
     private List<Biglietto> biglietti;
 
     public Distributore() {

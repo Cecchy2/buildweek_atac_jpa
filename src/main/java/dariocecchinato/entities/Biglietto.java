@@ -16,28 +16,27 @@ public class Biglietto {
     @Column(name = "prezzo")
     private double prezzo;
     @ManyToOne
-    @JoinColumn(name = "distributore_id (FK)")
-    private Distributore distributore;
+    @JoinColumn(name = "distributore_id")
+    private Distributore distributore_id;
     @ManyToOne
-    @JoinColumn(name = "rivenditore_id (FK)")
-    private Rivenditore rivenditore;
+    @JoinColumn(name = "rivenditore_id")
+    private Rivenditore rivenditore_id;
     @ManyToOne
-    @JoinColumn(name = "utente_id (FK)")
+    @JoinColumn(name = "utente_id")
     private Utente utente;
     @OneToOne
     @JoinColumn(name = "tessera_id")
-    private Tessera tessera;
+    private Tessera tessera_id;
 
     public Biglietto() {
     }
 
-    public Biglietto(LocalDate dataEmissione, double prezzo, Distributore distributore, Rivenditore rivenditore, Utente utente, Tessera tessera) {
+    public Biglietto(LocalDate dataEmissione, double prezzo, Utente utente) {
         this.dataEmissione = dataEmissione;
         this.prezzo = prezzo;
-        this.distributore = distributore;
-        this.rivenditore = rivenditore;
+
         this.utente = utente;
-        this.tessera = tessera;
+
     }
 
     public UUID getId() {
@@ -61,22 +60,6 @@ public class Biglietto {
         this.prezzo = prezzo;
     }
 
-    public Distributore getDistributore() {
-        return distributore;
-    }
-
-    public void setDistributore(Distributore distributore) {
-        this.distributore = distributore;
-    }
-
-    public Rivenditore getRivenditore() {
-        return rivenditore;
-    }
-
-    public void setRivenditore(Rivenditore rivenditore) {
-        this.rivenditore = rivenditore;
-    }
-
     public Utente getUtente() {
         return utente;
     }
@@ -85,24 +68,14 @@ public class Biglietto {
         this.utente = utente;
     }
 
-    public Tessera getTessera() {
-        return tessera;
-    }
-
-    public void setTessera(Tessera tessera) {
-        this.tessera = tessera;
-    }
-
     @Override
     public String toString() {
         return "Biglietto{" +
                 "id=" + id +
                 ", dataEmissione=" + dataEmissione +
                 ", prezzo=" + prezzo +
-                ", distributore=" + distributore +
-                ", rivenditore=" + rivenditore +
                 ", utente=" + utente +
-                ", tessera=" + tessera +
+
                 '}';
     }
 }

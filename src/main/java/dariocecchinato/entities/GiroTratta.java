@@ -16,7 +16,7 @@ public class GiroTratta {
     @JoinColumn(name = "mezzo_id")
     private Mezzo mezzo_id;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "tratta_id")
     private Tratta tratta_id;
 

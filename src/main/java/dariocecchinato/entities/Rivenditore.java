@@ -13,10 +13,11 @@ public class Rivenditore {
     private UUID id;
     @Column(name = "nome_locale")
     private String nomeLocale;
-    @OneToMany(mappedBy = "distributore")
+    @OneToMany(mappedBy = "rivenditore_id")
     private List<Abbonamento> abbonamenti;
-    @OneToMany(mappedBy = "distributore")
+    @OneToMany(mappedBy = "rivenditore_id")
     private List<Biglietto> biglietti;
+
 
     public Rivenditore() {
     }
