@@ -9,7 +9,6 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
 public class Application {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("atac");
@@ -25,12 +24,13 @@ public class Application {
             return new Distributore(stato, ubicazione);
         };
 
-        IntStream.range(0, 10)
-                .mapToObj(i -> distributoreSupplier.get())
-                .forEach(distributore -> {
-                    distributoreDao.save(distributore);
-                    System.out.println("Creato: " + distributore);
-                });
+
+       /* for (int i = 0; i < 10; i++) {
+            Distributore distributore = distributoreSupplier.get();
+            distributoreDao.save(distributore);
+            System.out.println("Creato: " + distributore);
+        }*/
+
 
         em.close();
         emf.close();
