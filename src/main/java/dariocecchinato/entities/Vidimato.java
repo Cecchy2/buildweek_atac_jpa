@@ -1,4 +1,3 @@
-/*
 package dariocecchinato.entities;
 
 import jakarta.persistence.*;
@@ -13,30 +12,20 @@ public class Vidimato {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-
     @ManyToOne
     @JoinColumn(name = "biglietto_id", nullable = false)
     private Biglietto biglietto;
-
     @ManyToOne
     @JoinColumn(name = "mezzo_id", nullable = false)
     private Mezzo mezzo;
-
     @Column(name = "data_vidimazione", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDate dataVidimazione;
-
-    
 
     public Vidimato() {
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public Biglietto getBiglietto() {
@@ -62,4 +51,6 @@ public class Vidimato {
     public void setDataVidimazione(LocalDate dataVidimazione) {
         this.dataVidimazione = dataVidimazione;
     }
-}*/
+
+
+}
