@@ -13,6 +13,7 @@ public class Distributore {
     @GeneratedValue
     private UUID id;
     @Column(name = "stato")
+    @Enumerated(EnumType.STRING)
     private StatoDistributore stato;
     @Column(name = "ubicazione")
     private String ubicazione;
