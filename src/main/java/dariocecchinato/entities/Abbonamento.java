@@ -14,18 +14,16 @@ public class Abbonamento {
     private LocalDate data_validazione;
     private LocalDate data_scadenza;
     private Tipo_abbonamento tipo_abbonamento;
-
     @ManyToOne
     @JoinColumn(name = "tessera_id")
-    private Tessera tessera;
-
+    private Tessera tessera_id;
     @ManyToOne
     @JoinColumn(name = "distributore_id")
-    private Distributore distributore;
-
+    private Distributore distributore_id;
     @ManyToOne
     @JoinColumn(name = "rivenditore_id")
-    private Rivenditore rivenditore;
+    private Rivenditore rivenditore_id;
+
 
     public Abbonamento(LocalDate data_validazione, LocalDate data_scadenza, Tipo_abbonamento tipo_abbonamento) {
         this.data_validazione = data_validazione;
