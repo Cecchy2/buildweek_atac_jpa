@@ -1,6 +1,7 @@
 package dariocecchinato;
 
 import com.github.javafaker.Faker;
+import dariocecchinato.dao.DistributoreDao;
 import dariocecchinato.entities.Distributore;
 import dariocecchinato.enums.StatoDistributore;
 import jakarta.persistence.EntityManager;
@@ -16,6 +17,7 @@ public class Application {
     public static void main(String[] args) {
         Faker faker = new Faker();
         EntityManager em = emf.createEntityManager();
+        DistributoreDao distributoreDao = new DistributoreDao(em);
 
         Supplier<Distributore> distributoreSupplier = () -> {
             StatoDistributore stato = StatoDistributore.values()[faker.number().numberBetween(0, StatoDistributore.values().length)];
@@ -23,17 +25,15 @@ public class Application {
             return new Distributore(stato, ubicazione);
         };
 
-        em.getTransaction().begin();
-
         IntStream.range(0, 10)
                 .mapToObj(i -> distributoreSupplier.get())
                 .forEach(distributore -> {
-                    em.persist(distributore);
+                    distributoreDao.save(distributore);
                     System.out.println("Creato: " + distributore);
                 });
 
-        em.getTransaction().commit();
         em.close();
+        emf.close();
 
         System.out.println("funzionaaa");
     }
