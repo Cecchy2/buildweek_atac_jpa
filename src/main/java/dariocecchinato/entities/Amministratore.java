@@ -1,14 +1,14 @@
 package dariocecchinato.entities;
 
 public class Amministratore extends Persona {
-    private int Password;
+    private String Password;
 
 
-    public Amministratore(int password) {
+    public Amministratore(String password) {
         Password = password;
     }
 
-    public Amministratore(String nome, String cognome, String email, int eta, int password) {
+    public Amministratore(String nome, String cognome, String email, int eta, String password) {
         super(nome, cognome, email, eta);
         Password = password;
     }
@@ -16,11 +16,11 @@ public class Amministratore extends Persona {
     public Amministratore() {
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return Password;
     }
 
-    public void setPassword(int password) {
+    public void setPassword(String password) {
         Password = password;
     }
 
