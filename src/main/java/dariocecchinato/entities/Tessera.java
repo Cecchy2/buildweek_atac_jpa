@@ -18,7 +18,10 @@ public class Tessera {
     @JoinColumn(name = "utente_id")
     private Utente utente;
 
-    @OneToMany(mappedBy = "tessera")
+    @OneToMany(mappedBy = "tessera_id")
+    private List<Biglietto> biglietti;
+
+    @OneToMany(mappedBy = "tessera_id")
     private List<Abbonamenti> abbonamenti;
 
     public Tessera(LocalDate data_emissione, LocalDate data_scadenza) {
