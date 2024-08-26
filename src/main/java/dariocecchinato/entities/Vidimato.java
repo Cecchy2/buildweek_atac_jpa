@@ -21,6 +21,11 @@ public class Vidimato {
     @Column(name = "data_vidimazione", nullable = false)
     private LocalDate dataVidimazione;
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
     public Vidimato() {
     }
 
