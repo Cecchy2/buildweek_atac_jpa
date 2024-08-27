@@ -11,6 +11,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -32,8 +33,9 @@ public class Application {
         AbbonamentoDao ab = new AbbonamentoDao(em);
         TrattaDao trattaDao = new TrattaDao(em);
         BigliettoDao bigliettoDao = new BigliettoDao(em);
-        Faker faker = new Faker(Locale.ITALY);
         MezzoDao mezzoDao = new MezzoDao(em);
+        GiroTrattaDao giroTrattaDao = new GiroTrattaDao(em);
+
 
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
                 f.address().cityName(),
@@ -136,10 +138,26 @@ public class Application {
             Tessera tessera = utente.getTessera();
             Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
 
-            bigliettoDao.save(biglietto);
+            //bigliettoDao.save(biglietto);
 
         }
 
+        List<Mezzo> mezziT = mezzoDao.findAll();
+        List<Tratta> tratteT = trattaDao.findAll();
+
+        Supplier<GiroTratta> giroTrattaSupplier = () -> {
+            Mezzo mezzo = mezziT.get(f.number().numberBetween(0, mezzi.size()));
+            Tratta tratta = tratteT.get(f.number().numberBetween(0, tratte.size()));
+            LocalDateTime tempoPartenza = LocalDateTime.now().minusHours(f.number().numberBetween(1, 12));
+            LocalDateTime tempoArrivo = tempoPartenza.plusMinutes(f.number().numberBetween(15, 120));
+            return new GiroTratta(mezzo, tratta, tempoPartenza, tempoArrivo);
+        };
+        List<GiroTratta> giroTratte = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            GiroTratta giroTratta = giroTrattaSupplier.get();
+            giroTratte.add(giroTratta);
+        }
+        giroTratte.forEach(giroTrattaDao::save);
 
         em.close();
         emf.close();
