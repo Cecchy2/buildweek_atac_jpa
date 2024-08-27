@@ -1,12 +1,14 @@
 package dariocecchinato.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity
 public class Utente extends Persona {
     private String zone_di_residenza;
     @OneToOne(mappedBy = "utente")
+    @JoinColumn(name = "tessera_id")
     private Tessera tessera;
 
 
