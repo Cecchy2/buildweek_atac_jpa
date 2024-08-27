@@ -21,6 +21,7 @@ public class Vidimato {
     @Column(name = "data_vidimazione", nullable = false)
     private LocalDate dataVidimazione;
 
+
     public Vidimato() {
     }
 
