@@ -1,12 +1,11 @@
 package dariocecchinato.entities;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Amministratore extends Persona {
     private String Password;
 
-
-    public Amministratore(String password) {
-        Password = password;
-    }
 
     public Amministratore(String nome, String cognome, String email, int eta, String password) {
         super(nome, cognome, email, eta);
