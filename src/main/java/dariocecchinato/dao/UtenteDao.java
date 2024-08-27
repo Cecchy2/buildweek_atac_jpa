@@ -3,6 +3,9 @@ package dariocecchinato.dao;
 import dariocecchinato.entities.Utente;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
+
+import java.util.List;
 
 public class UtenteDao {
     private final EntityManager em;
@@ -23,5 +26,10 @@ public class UtenteDao {
         transaction.commit();
 
         System.out.println("L' utente " + utente.getNome() + " è stato salvato correttamente");
+    }
+
+    public List<Utente> findAll() {
+        TypedQuery<Utente> query = em.createQuery("SELECT p FROM Utente p", Utente.class);
+        return query.getResultList();
     }
 }
