@@ -50,7 +50,6 @@ public class Application {
         //tratte.forEach(trattaDao::save);
 
 
-
         Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
             String nomeLocale = f.company().name();
             return new Rivenditore(nomeLocale);
@@ -117,7 +116,7 @@ public class Application {
         /*CREAZIONE MEZZI*/
         Supplier<Mezzo> mezzoSupplier = () -> {
             TipoMezzo[] tipiMezzi = TipoMezzo.values();
-            return new Mezzo(f.number().numberBetween(8, 100), tipiMezzi[faker.number().numberBetween(0, 1)]);
+            return new Mezzo(f.number().numberBetween(8, 100), tipiMezzi[f.number().numberBetween(0, 1)]);
         };
         List<Mezzo> mezzi = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -132,14 +131,188 @@ public class Application {
         System.out.println("fin qui ci siamo...");
     }
 
-    public void menu() {
-        System.out.println("benvenuto, sei un admin o un utente?");
-        System.out.println("premere:");
-        System.out.println("1- utente");
-        System.out.println("2-amministratore");
+    public static void menu() {
+        System.out.println("Benvenuto, sei un admin o un utente?");
+        System.out.println("Premere:");
+        System.out.println("1- Utente");
+        System.out.println("2- Amministratore");
+
+        int scelta = inputScanner();
+
+        switch (scelta) {
+            case 1:
+                menuUtente();
+                break;
+            case 2:
+                menuAdmin();
+                break;
+            default:
+                System.out.println("Scelta non valida");
+                menu();
+                break;
+        }
     }
 
+    public static void menuUtente() {
+        System.out.println("Bisogna effettuare il login, inserisci il tuo codice UUID:");
+        String uuid = inputScannerUUID();
+
+        /*---------------RICERCA UTENTE TRAMITE UUUID--------------------*/
+        if (trovaUtente(uuid)) {
+            salutaUtente(uuid);
+            controllaTessera(uuid);
+        } else {
+            System.out.println("Utente non trovato.");
+            menu();
+        }
+    }
+
+    /* -----------------MENU AMMINISTRATORE-------------------*/
+    public static void menuAdmin() {
+        System.out.println("Menu amministratore in sviluppo :)");
+
+    }
+
+    public static void salutaUtente(String uuid) {
+        System.out.println("Ciao CiccioGamer");
+    }
+
+    /*------------------CONTROLL0 TESSERA---------------------*/
+    public static void controllaTessera(String uuid) {
+        boolean tesseraValida = verificaValiditàTessera(uuid);
+
+        if (tesseraValida) {
+            opzioniUtente();
+        } else {
+            System.out.println("La tua tessera è scaduta, vuoi rinnovarla?");
+            System.out.println("1- Rinnovo");
+            System.out.println("2- Esci");
+
+            int scelta = inputScanner();
+            switch (scelta) {
+                case 1:
+                    rinnovaTessera(uuid);
+                    break;
+                case 2:
+                    chiudiScanner();
+                    break;
+                default:
+                    System.out.println("Scelta non valida");
+                    controllaTessera(uuid);
+                    break;
+            }
+        }
+    }
+
+    /*---------OPZIONI UTENTE--------------*/
+    public static void opzioniUtente() {
+        System.out.println("Cosa vuoi fare?");
+        System.out.println("1- Controlla data di scadenza tessera");
+        System.out.println("2- Controlla i biglietti disponibili");
+        System.out.println("3- Controlla il tuo abbonamento");
+        System.out.println("4- Acquista biglietto");
+        System.out.println("5- Acquista abbonamento");
+        System.out.println("6- Esci");
+        System.out.println("7- Contattaci");
+
+        int scelta = inputScanner();
+
+        switch (scelta) {
+            case 1:
+                controllaDataScadenza();
+                break;
+            case 2:
+                controllaBiglietti();
+                break;
+            case 3:
+                controllaAbbonamento();
+                break;
+            case 4:
+                acquistaBiglietto();
+                break;
+            case 5:
+                acquistaAbbonamento();
+                break;
+            case 6:
+                chiudiScanner();
+                break;
+            case 7:
+                contattaci();
+                break;
+            default:
+                System.out.println("Scelta non valida");
+                opzioniUtente();
+                break;
+        }
+    }
+
+    public static void rinnovaTessera(String uuid) {
+        System.out.println("Complimenti, hai pagato millemilaeuro ad ATAC e non ce lo meritiamo!");
+        chiudiScanner();
+    }
+
+    /*crare metodi per interazione utente*/
+
+    /*------- INTERAZIONE UTENTE-----------*/
+    public static int inputScanner() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            try {
+                System.out.print("Inserisci la tua scelta: ");
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Inserisci un numero valido.");
+            }
+        }
+    }
+
+    public static String inputScannerUUID() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Inserisci UUID: ");
+        return scanner.nextLine();
+    }
+
+
+    /*------IMPLEMENTARE LE LOGICHE---------*/
+    public static boolean trovaUtente(String uuid) {
+
+        return true;
+    }
+
+    public static boolean verificaValiditàTessera(String uuid) {
+
+        return true;
+    }
+
+    public static void controllaDataScadenza() {
+        System.out.println("La tua tessera scade il 31/12/2024.");
+    }
+
+    public static void controllaBiglietti() {
+        System.out.println("Hai 5 biglietti disponibili.");
+    }
+
+    public static void controllaAbbonamento() {
+        System.out.println("Il tuo abbonamento è attivo fino al 31/12/2024.");
+    }
+
+    public static void acquistaBiglietto() {
+        System.out.println("Hai acquistato un biglietto.");
+    }
+
+    public static void acquistaAbbonamento() {
+        System.out.println("Hai acquistato un abbonamento.");
+    }
+
+    public static void contattaci() {
+        System.out.println("Puoi contattarci al numero 123-456-7890.");
+    }
+
+    public static void chiudiScanner() {
+        System.out.println("Scanner chiuso. Arrivederci!");
+    }
 }
+
 
 
 
