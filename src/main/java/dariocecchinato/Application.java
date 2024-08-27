@@ -6,10 +6,6 @@ import dariocecchinato.entities.*;
 import dariocecchinato.enums.StatoDistributore;
 import dariocecchinato.enums.Tipo_abbonamento;
 import enums.TipoMezzo;
-import dariocecchinato.dao.*;
-import dariocecchinato.entities.*;
-import dariocecchinato.enums.StatoDistributore;
-import dariocecchinato.enums.Tipo_abbonamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -19,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.time.LocalDate;
-import java.util.*;
 import java.util.function.Supplier;
 
 public class Application {
@@ -53,18 +47,16 @@ public class Application {
         //tratte.forEach(trattaDao::save);
 
 
-        RivenditoreDao rivDao = new RivenditoreDao(em);
         Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
             String nomeLocale = f.company().name();
             return new Rivenditore(nomeLocale);
-};
+        };
 
 
         /*for (int i = 0; i < 5; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
         }*/
         List<Rivenditore> rivenditori = rivDao.findAll();
-
 
 
         Supplier<Utente> randomUtenteSupplier = () -> {
@@ -79,7 +71,7 @@ public class Application {
             ud.save(randomUtenteSupplier.get());
 
         }*/
-            List<Utente> utenti = ud.findAll();
+        List<Utente> utenti = ud.findAll();
 
         Supplier<Distributore> distributoreSupplier = () -> {
             StatoDistributore stato = StatoDistributore.values()[f.number().numberBetween(0, StatoDistributore.values().length)];
@@ -131,26 +123,28 @@ public class Application {
         }
         //mezzi.forEach(mezzoDao::save);
 
-            //GENERAZIONE BIGLIETTI PER OGNI UTENTE
-            List<Biglietto> biglietti = bigliettoDao.findAll();
+        //GENERAZIONE BIGLIETTI PER OGNI UTENTE
+        List<Biglietto> biglietti = bigliettoDao.findAll();
 
-            for (Utente utente : utenti) {
-                LocalDate dataEmissione = LocalDate.now();
-                double prezzo = 2.00;
-                Distributore distributore = distributori.get(random.nextInt(distributori.size()));
-                Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
-                Tessera tessera = utente.getTessera();
-                Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
+        for (Utente utente : utenti) {
+            LocalDate dataEmissione = LocalDate.now();
+            double prezzo = 2.00;
+            Distributore distributore = distributori.get(random.nextInt(distributori.size()));
+            Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
+            Tessera tessera = utente.getTessera();
+            Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
 
-                bigliettoDao.save(biglietto);
+            bigliettoDao.save(biglietto);
 
-            }
+        }
 
 
-            em.close();
+        em.close();
         emf.close();
         System.out.println("fin qui ci siamo...");
-    };
+    }
+
+    ;
 
     /*public static void menu() {
         System.out.println("Benvenuto, sei un admin o un utente?");
@@ -274,7 +268,7 @@ public class Application {
 
     *//*crare metodi per interazione utente*//*
 
-    *//*------- INTERAZIONE UTENTE-----------*//*
+     *//*------- INTERAZIONE UTENTE-----------*//*
     public static int inputScanner() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -301,7 +295,7 @@ public class Application {
     }*/
 
 
-}}
+}
 
 
 
