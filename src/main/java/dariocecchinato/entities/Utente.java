@@ -6,9 +6,9 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Utente extends Persona {
     private String zone_di_residenza;
-
     @OneToOne(mappedBy = "utente")
     private Tessera tessera;
+
 
     public Utente() {
     }
