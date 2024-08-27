@@ -120,20 +120,8 @@ public class Application {
 
         BigliettoDao bigliettoDao = new BigliettoDao(em);
 
-        Supplier<Biglietto> randomBigliettoSupplier = () -> {
-
-            LocalDate dataEmissione = LocalDate.now();
-            double prezzo = 2.00;
-            Utente utente = utenti.get(random.nextInt(utenti.size()));
-            int indiceRandomDistributori = random.nextInt(distributori.size());
-            Distributore distributore = distributori.get(indiceRandomDistributori);
-            int indiceRandomRivenditori = random.nextInt(rivenditori.size());
-            Rivenditore rivenditore = rivenditori.get(indiceRandomRivenditori);
-            Tessera tessera = tessere.get(random.nextInt(tessere.size()));
-            return new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
-        };
+       
         //GENERAZIONE BIGLIETTI PER OGNI UTENTE
-
         List<Biglietto> biglietti = bigliettoDao.findAll();
 
         for (Utente utente : utenti) {
@@ -147,10 +135,6 @@ public class Application {
             bigliettoDao.save(biglietto);
 
         }
-
-        /*for (int i = 0; i < tessere.size(); i++) {
-            bigliettoDao.save(randomBigliettoSupplier.get());
-        }*/
 
 
         em.close();
