@@ -22,14 +22,26 @@ public class Utente extends Persona {
         this.zone_di_residenza = zone_di_residenza;
     }
 
-    public void setZone_di_residenza(String zone_di_residenza) {
-        this.zone_di_residenza = zone_di_residenza;
-    }
-
     @Override
     public String toString() {
         return "Utente{" +
                 ", zone_di_residenza='" + zone_di_residenza + '\'' +
                 '}';
+    }
+
+    public Tessera getTessera() {
+        return tessera;
+    }
+
+    public void setTessera(Tessera tessera) {
+        this.tessera = tessera;
+    }
+
+    public String getZone_di_residenza() {
+        return zone_di_residenza;
+    }
+
+    public void setZone_di_residenza(String zone_di_residenza) {
+        this.zone_di_residenza = zone_di_residenza;
     }
 }

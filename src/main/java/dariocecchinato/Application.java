@@ -92,22 +92,10 @@ public class Application {
         List<Utente> utenti = ud.findAll();
 
         TesseraDao tesseraDao = new TesseraDao(em);
-        Supplier<Tessera> randomTesseraSupplier = () -> {
-            LocalDate dataEmissione = LocalDate.now();
-            Utente utente = utenti.get(random.nextInt(utenti.size()));
-            return new Tessera(dataEmissione, utente);
 
-        };
-
-       /* for (int i = 0; i < 2; i++) {
-            tesseraDao.save(randomTesseraSupplier.get());
-        }*/
-
-        // Lista per memorizzare le tessere generate
-        List<Tessera> tessere = new ArrayList<>();
 
         // GENRAZIONE TESSERE PER OGNI UTENTE NEL DB
-        for (Utente utente : utenti) {
+       /* for (Utente utente : utenti) {
             // Genera la data di emissione per ogni tessera (usa la data corrente)
             LocalDate dataEmissione = LocalDate.now();
 
@@ -115,14 +103,13 @@ public class Application {
             Tessera tessera = new Tessera(dataEmissione, utente);
 
             // Aggiungi la tessera alla lista di tessere
-            tessere.add(tessera);
+
             tesseraDao.save(tessera);
-        }
+        }*/
 
+        // Lista tessera
+        List<Tessera> tessere = tesseraDao.findAll();
 
-
-
-        /* List<Tessera> tessere = td.findAll();*/
 
         Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
@@ -137,8 +124,7 @@ public class Application {
 
             LocalDate dataEmissione = LocalDate.now();
             double prezzo = 2.00;
-            int indiceRandomUtenti = random.nextInt(utenti.size());
-            Utente utente = utenti.get(indiceRandomUtenti);
+            Utente utente = utenti.get(random.nextInt(utenti.size()));
             int indiceRandomDistributori = random.nextInt(distributori.size());
             Distributore distributore = distributori.get(indiceRandomDistributori);
             int indiceRandomRivenditori = random.nextInt(rivenditori.size());
@@ -146,10 +132,25 @@ public class Application {
             Tessera tessera = tessere.get(random.nextInt(tessere.size()));
             return new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
         };
+        //GENERAZIONE BIGLIETTI PER OGNI UTENTE
 
-        for (int i = 0; i < tessere.size(); i++) {
-            bigliettoDao.save(randomBigliettoSupplier.get());
+        List<Biglietto> biglietti = bigliettoDao.findAll();
+
+        for (Utente utente : utenti) {
+            LocalDate dataEmissione = LocalDate.now();
+            double prezzo = 2.00;
+            Distributore distributore = distributori.get(random.nextInt(distributori.size()));
+            Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
+            Tessera tessera = utente.getTessera();
+            Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
+
+            bigliettoDao.save(biglietto);
+
         }
+
+        /*for (int i = 0; i < tessere.size(); i++) {
+            bigliettoDao.save(randomBigliettoSupplier.get());
+        }*/
 
 
         em.close();
