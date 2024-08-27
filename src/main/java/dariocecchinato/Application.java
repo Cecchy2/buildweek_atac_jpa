@@ -21,8 +21,6 @@ public class Application {
         EntityManager em = emf.createEntityManager();
         Random random = new Random();
         Faker f = new Faker(Locale.ITALY);
-        Faker faker = new Faker(Locale.ITALY);
-        Scanner scanner = new Scanner(System.in);
 
         /* Sezione DAO*/
         DistributoreDao db = new DistributoreDao(em);
@@ -30,12 +28,11 @@ public class Application {
         UtenteDao ud = new UtenteDao(em);
         TesseraDao td = new TesseraDao(em);
         AbbonamentoDao ab = new AbbonamentoDao(em);
-        MezzoDao mezzoDao = new MezzoDao(em);
         TrattaDao trattaDao = new TrattaDao(em);
 
-        List<Utente> utenti = ud.findAll();
+
         List<Rivenditore> rivenditori = rivDao.findAll();
-        List<Distributore> distributori = db.findAll();
+
 
 
 
@@ -73,9 +70,11 @@ public class Application {
             String zone_di_residenza = f.address().fullAddress();
             return new Utente(nomeUtente, cognomeUtente, email, eta, zone_di_residenza);
         };
-        /*for (int i = 0; i < 20; i++) {
+       /* for (int i = 0; i < 20; i++) {
             ud.save(randomUtenteSupplier.get());
         }*/
+        List<Utente> utenti = ud.findAll();
+
 
         Supplier<Distributore> distributoreSupplier = () -> {
             StatoDistributore stato = StatoDistributore.values()[f.number().numberBetween(0, StatoDistributore.values().length)];
@@ -85,22 +84,31 @@ public class Application {
         /*for (int i = 0; i < 10; i++) {
             db.save(distributoreSupplier.get());
         }*/
+        List<Distributore> distributori = db.findAll();
 
         utenti.stream()
                 .filter(utente -> utente.getTessera() == null)
                 .forEach(utente -> {
-                    LocalDate data_emissione = LocalDate.now().minusYears(random.nextInt(1));
+                    LocalDate data_emissione = LocalDate.now().minusMonths(f.number().numberBetween(1, 12));
                     Tessera tessera = new Tessera(data_emissione, utente);
                     //td.save(tessera);
                 });
+
         List<Tessera> tessere = td.findAll();
+
         Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
             LocalDate dataValidazione = LocalDate.now().minusMonths(2);
             Tessera tessera = tessere.get(random.nextInt(tessere.size()));
-            Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
-            Distributore distributore = distributori.get(random.nextInt(distributori.size()));
-            return new Abbonamento(dataValidazione, tipo, tessera, rivenditore, distributore);
+            if (random.nextBoolean()) {
+                Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
+                return new Abbonamento(dataValidazione, tipo, tessera, rivenditore);
+            } else {
+                Distributore distributore = distributori.get(random.nextInt(distributori.size()));
+                return new Abbonamento(dataValidazione, tipo, tessera, distributore);
+            }
+
+
         };
         /*for (int i = 0; i < 15; i++) {
             ab.save(randomAbbonamentoSupplier.get());
@@ -109,7 +117,7 @@ public class Application {
         /*CREAZIONE MEZZI*/
         Supplier<Mezzo> mezzoSupplier = () -> {
             TipoMezzo[] tipiMezzi = TipoMezzo.values();
-            return new Mezzo(faker.number().numberBetween(8, 100), tipiMezzi[faker.number().numberBetween(0, 1)]);
+            return new Mezzo(f.number().numberBetween(8, 100), tipiMezzi[faker.number().numberBetween(0, 1)]);
         };
         List<Mezzo> mezzi = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
