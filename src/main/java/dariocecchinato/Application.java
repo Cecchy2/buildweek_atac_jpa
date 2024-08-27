@@ -89,6 +89,7 @@ public class Application {
 
         }*/
 
+
         List<Utente> utenti = ud.findAll();
 
         List<Tessera> tessere = td.findAll();
@@ -102,7 +103,7 @@ public class Application {
 
         BigliettoDao bigliettoDao = new BigliettoDao(em);
 
-       /* Supplier<Biglietto> randomBigliettoSupplier = () -> {
+        /*Supplier<Biglietto> randomBigliettoSupplier = () -> {
 
             LocalDate dataEmissione = LocalDate.now();
             double prezzo = 2.00;
@@ -118,6 +119,7 @@ public class Application {
         for (int i = 0; i < utenti.size(); i++) {
             bigliettoDao.save(randomBigliettoSupplier.get());
         }*/
+
 
         em.close();
         emf.close();
