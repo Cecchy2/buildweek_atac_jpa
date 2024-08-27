@@ -24,18 +24,32 @@ public class Mezzo {
     @Enumerated(EnumType.STRING)
     private TipoMezzo tipo_mezzo;
 
-    public Mezzo(long capienza_max) {
-        this.capienza_max = capienza_max;
-    }
-
+    /*COSTRUTTORI*/
     public Mezzo() {
     }
 
-    @Override
-    public String toString() {
-        return "Mezzo{" +
-                "mezzo_id=" + mezzo_id +
-                ", capienza_max=" + capienza_max +
-                '}';
+    public Mezzo(long capienza_max, TipoMezzo tipo_mezzo) {
+        this.capienza_max = capienza_max;
+        this.tipo_mezzo = tipo_mezzo;
+    }
+
+    public long getCapienza_max() {
+        return capienza_max;
+    }
+
+    public void setCapienza_max(long capienza_max) {
+        this.capienza_max = capienza_max;
+    }
+
+    public TipoMezzo getTipo_mezzo() {
+        return tipo_mezzo;
+    }
+
+    public void setTipo_mezzo(TipoMezzo tipo_mezzo) {
+        this.tipo_mezzo = tipo_mezzo;
+    }
+
+    public UUID getMezzo_id() {
+        return mezzo_id;
     }
 }

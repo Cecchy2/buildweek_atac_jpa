@@ -5,15 +5,13 @@ import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
 import dariocecchinato.enums.StatoDistributore;
 import dariocecchinato.enums.Tipo_abbonamento;
+import enums.TipoMezzo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class Application {
@@ -23,20 +21,25 @@ public class Application {
         EntityManager em = emf.createEntityManager();
         Random random = new Random();
         Faker f = new Faker(Locale.ITALY);
+        Faker faker = new Faker(Locale.ITALY);
+        Scanner scanner = new Scanner(System.in);
 
-
+        /* Sezione DAO*/
         DistributoreDao db = new DistributoreDao(em);
         RivenditoreDao rivDao = new RivenditoreDao(em);
         UtenteDao ud = new UtenteDao(em);
         TesseraDao td = new TesseraDao(em);
         AbbonamentoDao ab = new AbbonamentoDao(em);
+        MezzoDao mezzoDao = new MezzoDao(em);
         TrattaDao trattaDao = new TrattaDao(em);
 
         List<Utente> utenti = ud.findAll();
-        List<Tessera> tessere = td.findAll();
         List<Rivenditore> rivenditori = rivDao.findAll();
         List<Distributore> distributori = db.findAll();
 
+
+
+        /*CREAZIONE TRATTE*/
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
                 f.address().cityName(),
                 f.address().cityName(),
@@ -49,13 +52,18 @@ public class Application {
         }
         //tratte.forEach(trattaDao::save);
 
+
+
         Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
             String nomeLocale = f.company().name();
             return new Rivenditore(nomeLocale);
         };
+
+
         /*for (int i = 0; i < 5; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
         }*/
+
 
         Supplier<Utente> randomUtenteSupplier = () -> {
             String nomeUtente = f.name().firstName();
@@ -85,7 +93,7 @@ public class Application {
                     Tessera tessera = new Tessera(data_emissione, utente);
                     //td.save(tessera);
                 });
-
+        List<Tessera> tessere = td.findAll();
         Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
             LocalDate dataValidazione = LocalDate.now().minusMonths(2);
@@ -98,11 +106,32 @@ public class Application {
             ab.save(randomAbbonamentoSupplier.get());
         }*/
 
+        /*CREAZIONE MEZZI*/
+        Supplier<Mezzo> mezzoSupplier = () -> {
+            TipoMezzo[] tipiMezzi = TipoMezzo.values();
+            return new Mezzo(faker.number().numberBetween(8, 100), tipiMezzi[faker.number().numberBetween(0, 1)]);
+        };
+        List<Mezzo> mezzi = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Mezzo mezzo = mezzoSupplier.get();
+            mezzi.add(mezzo);
+        }
+        //mezzi.forEach(mezzoDao::save);
+
+
         em.close();
         emf.close();
+        System.out.println("fin qui ci siamo...");
     }
-}
 
+    public void menu() {
+        System.out.println("benvenuto, sei un admin o un utente?");
+        System.out.println("premere:");
+        System.out.println("1- utente");
+        System.out.println("2-amministratore");
+    }
+
+}
 
 
 
