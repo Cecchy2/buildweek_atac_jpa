@@ -36,6 +36,7 @@ public class Application {
         Faker faker = new Faker(Locale.ITALY);
         MezzoDao mezzoDao = new MezzoDao(em);
         GiroTrattaDao giroTrattaDao = new GiroTrattaDao(em);
+        AmministratoreDao amministratoreDao = new AmministratoreDao(em);
 
         VidimatoDao vidimatoDao = new VidimatoDao(em);
 
@@ -171,7 +172,11 @@ public class Application {
             GiroTratta giroTratta = giroTrattaSupplier.get();
             giroTratte.add(giroTratta);
         }
-        giroTratte.forEach(giroTrattaDao::save);
+        //giroTratte.forEach(giroTrattaDao::save);
+
+        Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
+        System.out.println(amministratoreDao.calcolaTempoMedioEffettivo2(trattaAnalizzata));
+        System.out.println(amministratoreDao.calcolaTempoMedioEffettivo2(tratteT.get(1)));
 
         em.close();
         emf.close();

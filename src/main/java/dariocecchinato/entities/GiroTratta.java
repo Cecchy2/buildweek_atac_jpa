@@ -38,7 +38,7 @@ public class GiroTratta {
 
     public Long calcoloTempoEffettivoPercorreza(LocalDateTime tempo_partenza, LocalDateTime tempo_arrivo) {
         if (tempo_arrivo != null && tempo_partenza != null) {
-            tempo_effettivo_percorrenza = Duration.between(tempo_partenza, tempo_arrivo).getSeconds();
+            tempo_effettivo_percorrenza = Duration.between(tempo_partenza, tempo_arrivo).toMinutes();
         } else {
             System.out.println("errore nel reperimento dei tempo di partenza o di arrivo!");
         }
