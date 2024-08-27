@@ -41,7 +41,7 @@ public class RivenditoreDao {
     }
 
     public List<Rivenditore> findAll() {
-        TypedQuery<Rivenditore> query = em.createQuery("SELECT r FROM Rivenditore d", Rivenditore.class);
+        TypedQuery<Rivenditore> query = em.createQuery("SELECT r FROM Rivenditore r", Rivenditore.class);
         return query.getResultList();
     }
 }
