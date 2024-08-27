@@ -11,10 +11,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class Application {
@@ -24,6 +21,7 @@ public class Application {
         EntityManager em = emf.createEntityManager();
         Random random = new Random();
         Faker f = new Faker(Locale.ITALY);
+        Scanner scanner = new Scanner(System.in);
 
         TrattaDao trattaDao = new TrattaDao(em);
         Faker faker = new Faker(Locale.ITALY);
@@ -38,7 +36,6 @@ public class Application {
             tratte.add(tratta);
         }
         //tratte.forEach(trattaDao::save);
-        System.out.println("fin qui ci siamo...");
 
 
         RivenditoreDao rivDao = new RivenditoreDao(em);
@@ -82,8 +79,15 @@ public class Application {
 
         em.close();
         emf.close();
+        System.out.println("fin qui ci siamo...");
     }
 
+    public void menu() {
+        System.out.println("benvenuto, sei un admin o un utente?");
+        System.out.println("premere:");
+        System.out.println("1- utente");
+        System.out.println("2-amministratore");
+    }
 
 }
 
