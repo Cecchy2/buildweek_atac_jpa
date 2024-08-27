@@ -29,6 +29,8 @@ public class Application {
         TesseraDao td = new TesseraDao(em);
         AbbonamentoDao ab = new AbbonamentoDao(em);
         TrattaDao trattaDao = new TrattaDao(em);
+        BigliettoDao bigliettoDao = new BigliettoDao(em);
+        Faker faker = new Faker(Locale.ITALY);
         MezzoDao mezzoDao = new MezzoDao(em);
 
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
@@ -44,7 +46,6 @@ public class Application {
         //tratte.forEach(trattaDao::save);
 
 
-
         Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
             String nomeLocale = f.company().name();
             return new Rivenditore(nomeLocale);
@@ -55,7 +56,6 @@ public class Application {
             rivDao.save(randomRivenditoreSupplier.get());
         }*/
 
-        List<Rivenditore> rivenditori = rivDao.findAll();
 
         Supplier<Utente> randomUtenteSupplier = () -> {
             String nomeUtente = f.name().firstName();
@@ -69,6 +69,7 @@ public class Application {
             ud.save(randomUtenteSupplier.get());
         }*/
         List<Utente> utenti = ud.findAll();
+
 
         Supplier<Distributore> distributoreSupplier = () -> {
             StatoDistributore stato = StatoDistributore.values()[f.number().numberBetween(0, StatoDistributore.values().length)];
@@ -119,6 +120,21 @@ public class Application {
             mezzi.add(mezzo);
         }
         //mezzi.forEach(mezzoDao::save);
+
+        //GENERAZIONE BIGLIETTI PER OGNI UTENTE
+        List<Biglietto> biglietti = bigliettoDao.findAll();
+
+        for (Utente utente : utenti) {
+            LocalDate dataEmissione = LocalDate.now();
+            double prezzo = 2.00;
+            Distributore distributore = distributori.get(random.nextInt(distributori.size()));
+            Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
+            Tessera tessera = utente.getTessera();
+            Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
+
+            bigliettoDao.save(biglietto);
+
+        }
 
 
         em.close();
@@ -246,7 +262,7 @@ public class Application {
         chiudiScanner();
     }
 
-    /*crare metodi per interazione utente*/
+    /*creare metodi per interazione utente*/
 
     /*------- INTERAZIONE UTENTE-----------*/
     public static int inputScanner() {
@@ -269,7 +285,7 @@ public class Application {
 
 
     /*------IMPLEMENTARE LE LOGICHE---------*/
-    public static boolean trovaUtente(String uuid) {
+   /* public static boolean trovaUtente(String uuid) {
 
         return true;
     }
@@ -305,7 +321,7 @@ public class Application {
 
     public static void chiudiScanner() {
         System.out.println("Scanner chiuso. Arrivederci!");
-    }
+    }*/
 }
 
 

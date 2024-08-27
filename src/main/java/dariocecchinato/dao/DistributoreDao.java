@@ -40,6 +40,7 @@ public class DistributoreDao {
         return found;
     }
 
+
     public List<Distributore> findAll() {
         TypedQuery<Distributore> query = em.createQuery("SELECT d FROM Distributore d", Distributore.class);
         return query.getResultList();
