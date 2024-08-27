@@ -23,43 +23,39 @@ public class Application {
         EntityManager em = emf.createEntityManager();
         Random random = new Random();
         Faker f = new Faker(Locale.ITALY);
-        Scanner scanner = new Scanner(System.in);
 
 
-        DistributoreDao distributoreDao = new DistributoreDao(em);
+        DistributoreDao db = new DistributoreDao(em);
         RivenditoreDao rivDao = new RivenditoreDao(em);
         UtenteDao ud = new UtenteDao(em);
         TesseraDao td = new TesseraDao(em);
         AbbonamentoDao ab = new AbbonamentoDao(em);
-
         TrattaDao trattaDao = new TrattaDao(em);
-        Faker faker = new Faker(Locale.ITALY);
+
+        List<Utente> utenti = ud.findAll();
+        List<Tessera> tessere = td.findAll();
+        List<Rivenditore> rivenditori = rivDao.findAll();
+        List<Distributore> distributori = db.findAll();
+
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
-                faker.address().cityName(),
-                faker.address().cityName(),
-                faker.number().numberBetween(15, 120)
+                f.address().cityName(),
+                f.address().cityName(),
+                f.number().numberBetween(15, 120)
         );
         List<Tratta> tratte = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Tratta tratta = trattaSupplier.get();
             tratte.add(tratta);
         }
-
-
-        tratte.forEach(trattaDao::save);
-        System.out.println("fin qui ci siamo...");
+        //tratte.forEach(trattaDao::save);
 
         Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
-            String nomeLocale = faker.company().name();
-
+            String nomeLocale = f.company().name();
             return new Rivenditore(nomeLocale);
         };
-
-
         /*for (int i = 0; i < 5; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
         }*/
-
 
         Supplier<Utente> randomUtenteSupplier = () -> {
             String nomeUtente = f.name().firstName();
@@ -73,42 +69,40 @@ public class Application {
             ud.save(randomUtenteSupplier.get());
         }*/
 
-        List<Utente> utenti = ud.findAll();
+        Supplier<Distributore> distributoreSupplier = () -> {
+            StatoDistributore stato = StatoDistributore.values()[f.number().numberBetween(0, StatoDistributore.values().length)];
+            String ubicazione = f.address().streetAddress();
+            return new Distributore(stato, ubicazione);
+        };
+        /*for (int i = 0; i < 10; i++) {
+            db.save(distributoreSupplier.get());
+        }*/
 
         utenti.stream()
                 .filter(utente -> utente.getTessera() == null)
                 .forEach(utente -> {
                     LocalDate data_emissione = LocalDate.now().minusYears(random.nextInt(1));
-
                     Tessera tessera = new Tessera(data_emissione, utente);
-
-                    utente.setTessera(tessera);
                     //td.save(tessera);
                 });
 
-        List<Tessera> tessere = td.findAll();
-        List<Rivenditore> rivenditori = rivDao.findAll();
-        List<Distributore> distributori = db.findAll();
-
-        /*Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
+        Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
             LocalDate dataValidazione = LocalDate.now().minusMonths(2);
-            LocalDate dataScadenza = tipo == Tipo_abbonamento.MENSILE ? dataValidazione.plusMonths(1) : dataValidazione.plusWeeks(1);
             Tessera tessera = tessere.get(random.nextInt(tessere.size()));
             Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
-            Distributore distribure = distributori.get(random.nextInt(distributori.size()));
-            return new Abbonamento(dataValidazione, tipo, tessera, rivenditore, distribure);
+            Distributore distributore = distributori.get(random.nextInt(distributori.size()));
+            return new Abbonamento(dataValidazione, tipo, tessera, rivenditore, distributore);
         };
-        for (int i = 0; i < 15; i++) {
+        /*for (int i = 0; i < 15; i++) {
             ab.save(randomAbbonamentoSupplier.get());
         }*/
 
         em.close();
         emf.close();
     }
-
-
 }
+
 
 
 
