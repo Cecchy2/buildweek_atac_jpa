@@ -31,13 +31,15 @@ public class Biglietto {
     public Biglietto() {
     }
 
-    public Biglietto(LocalDate dataEmissione, double prezzo, Utente utente) {
+    public Biglietto(LocalDate dataEmissione, double prezzo, Distributore distributore_id, Rivenditore rivenditore_id, Utente utente, Tessera tessera_id) {
         this.dataEmissione = dataEmissione;
         this.prezzo = prezzo;
-
+        this.distributore_id = distributore_id;
+        this.rivenditore_id = rivenditore_id;
         this.utente = utente;
-
+        this.tessera_id = tessera_id;
     }
+    
 
     public UUID getId() {
         return id;

@@ -1,16 +1,15 @@
 package dariocecchinato;
 
 import com.github.javafaker.Faker;
-import dariocecchinato.dao.RivenditoreDao;
-import dariocecchinato.dao.TesseraDao;
-import dariocecchinato.dao.TrattaDao;
-import dariocecchinato.dao.UtenteDao;
-import dariocecchinato.entities.Rivenditore;
-import dariocecchinato.entities.Tratta;
+import dariocecchinato.dao.*;
+import dariocecchinato.entities.*;
+import dariocecchinato.enums.StatoDistributore;
+import dariocecchinato.enums.Tipo_abbonamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -33,11 +32,12 @@ public class Application {
                 faker.number().numberBetween(15, 120)
         );
         List<Tratta> tratte = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        /*for (int i = 0; i < 10; i++) {
             Tratta tratta = trattaSupplier.get();
             tratte.add(tratta);
-        }
+        }*/
         //tratte.forEach(trattaDao::save);
+
         System.out.println("fin qui ci siamo...");
 
 
@@ -50,14 +50,32 @@ public class Application {
 
         };
 
-        /*for (int i = 0; i < 5; i++) {
+        DistributoreDao distribDao = new DistributoreDao(em);
+
+        Supplier<Distributore> randomDistributoreSupplier = () -> {
+            // Ottengo tutti i valori dell'enum
+            StatoDistributore[] stati = StatoDistributore.values();
+
+            StatoDistributore stato = stati[random.nextInt(stati.length)];
+            String ubicazione = faker.address().fullAddress();
+            return new Distributore(stato, ubicazione);
+        };
+
+        /*for (int i = 0; i < 10; i++) {
+            distribDao.save(randomDistributoreSupplier.get());
+        }*/
+
+       /* for (int i = 0; i < 10; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
         }*/
+
+        List<Distributore> distributori = distribDao.findAll();
+        List<Rivenditore> rivenditori = rivDao.findAll();
 
         UtenteDao ud = new UtenteDao(em);
         TesseraDao td = new TesseraDao(em);
 
-        /*Supplier<Utente> randomUtenteSupplier = () -> {
+        Supplier<Utente> randomUtenteSupplier = () -> {
             String nomeUtente = f.name().firstName();
             String cognomeUtente = f.name().lastName();
             String email = f.internet().emailAddress();
@@ -65,21 +83,41 @@ public class Application {
             String zone_di_residenza = f.address().fullAddress();
             return new Utente(nomeUtente, cognomeUtente, email, eta, zone_di_residenza);
         };
-        for (int i = 0; i < 20; i++) {
+
+       /* for (int i = 0; i < 20; i++) {
             ud.save(randomUtenteSupplier.get());
 
-        }
+        }*/
 
-        List<Utente> utenti = ud.findAll();*/
+        List<Utente> utenti = ud.findAll();
 
-        //List<Tessera> tessere = td.findAll();
+        List<Tessera> tessere = td.findAll();
 
-        /*Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
+        Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
             LocalDate dataValidazione = LocalDate.now().minusMonths(2);
             LocalDate dataScadenza = tipo == Tipo_abbonamento.MENSILE ? dataValidazione.plusMonths(1) : dataValidazione.plusWeeks(1);
             return new Abbonamento(dataValidazione, tipo);
-        };*/
+        };
+
+        BigliettoDao bigliettoDao = new BigliettoDao(em);
+
+       /* Supplier<Biglietto> randomBigliettoSupplier = () -> {
+
+            LocalDate dataEmissione = LocalDate.now();
+            double prezzo = 2.00;
+            int indiceRandomUtenti = random.nextInt(utenti.size());
+            Utente utente = utenti.get(indiceRandomUtenti);
+            int indiceRandomDistributori = random.nextInt(distributori.size());
+            Distributore distributore = distributori.get(indiceRandomDistributori);
+            int indiceRandomRivenditori=random.nextInt(rivenditori.size());
+            Rivenditore rivenditore=rivenditori.get(indiceRandomRivenditori);
+            return new Biglietto(dataEmissione, prezzo, distributore,rivenditore,utente,);
+        };
+
+        for (int i = 0; i < utenti.size(); i++) {
+            bigliettoDao.save(randomBigliettoSupplier.get());
+        }*/
 
         em.close();
         emf.close();
