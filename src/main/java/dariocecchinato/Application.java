@@ -92,9 +92,15 @@ public class Application {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
             LocalDate dataValidazione = LocalDate.now().minusMonths(2);
             Tessera tessera = tessere.get(random.nextInt(tessere.size()));
-            Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
-            Distributore distributore = distributori.get(random.nextInt(distributori.size()));
-            return new Abbonamento(dataValidazione, tipo, tessera, rivenditore, distributore);
+            if (random.nextBoolean()) {
+                Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
+                return new Abbonamento(dataValidazione, tipo, tessera, rivenditore);
+            } else {
+                Distributore distributore = distributori.get(random.nextInt(distributori.size()));
+                return new Abbonamento(dataValidazione, tipo, tessera, distributore);
+            }
+
+
         };
         /*for (int i = 0; i < 15; i++) {
             ab.save(randomAbbonamentoSupplier.get());
