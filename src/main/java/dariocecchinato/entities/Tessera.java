@@ -22,9 +22,10 @@ public class Tessera {
     private List<Abbonamento> abbonamenti;
 
 
-    public Tessera(LocalDate data_emissione, LocalDate data_scadenza) {
+    public Tessera(LocalDate data_emissione, Utente utente) {
         this.data_emissione = data_emissione;
-        this.data_scadenza = data_scadenza;
+        this.data_scadenza = data_emissione.plusYears(1);
+        this.utente = utente;
     }
 
     public Tessera() {
