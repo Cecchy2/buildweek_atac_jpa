@@ -11,6 +11,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -34,6 +35,8 @@ public class Application {
         BigliettoDao bigliettoDao = new BigliettoDao(em);
         Faker faker = new Faker(Locale.ITALY);
         MezzoDao mezzoDao = new MezzoDao(em);
+        GiroTrattaDao giroTrattaDao = new GiroTrattaDao(em);
+
         VidimatoDao vidimatoDao = new VidimatoDao(em);
 
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
@@ -137,23 +140,38 @@ public class Application {
             Tessera tessera = utente.getTessera();
             Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
 
-            //bigliettoDao.save(biglietto);
+            bigliettoDao.save(biglietto);
 
         }
-        //preso un tram a caso dal db per generare una vidimazione
-        Mezzo tramFromDb = mezzoDao.getById(UUID.fromString("19e190a6-b59b-4813-b964-ee2c59e72e81"));
+
 
         //**************VIDIMAZIONE DI BIGLIETTO
-        Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
+        /*Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
             Biglietto biglietto = biglietti.get(random.nextInt(biglietti.size()));
             LocalDate dataVidimazione = LocalDate.now();
             return new Vidimato(biglietto, tramFromDb, dataVidimazione);
-        };
+        };*/
 
        /* for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
         }*/
 
+        List<Mezzo> mezziT = mezzoDao.findAll();
+        List<Tratta> tratteT = trattaDao.findAll();
+
+        Supplier<GiroTratta> giroTrattaSupplier = () -> {
+            Mezzo mezzo = mezziT.get(f.number().numberBetween(0, mezzi.size()));
+            Tratta tratta = tratteT.get(f.number().numberBetween(0, tratte.size()));
+            LocalDateTime tempoPartenza = LocalDateTime.now().minusHours(f.number().numberBetween(1, 12));
+            LocalDateTime tempoArrivo = tempoPartenza.plusMinutes(f.number().numberBetween(15, 120));
+            return new GiroTratta(mezzo, tratta, tempoPartenza, tempoArrivo);
+        };
+        List<GiroTratta> giroTratte = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            GiroTratta giroTratta = giroTrattaSupplier.get();
+            giroTratte.add(giroTratta);
+        }
+        giroTratte.forEach(giroTrattaDao::save);
 
         em.close();
         emf.close();

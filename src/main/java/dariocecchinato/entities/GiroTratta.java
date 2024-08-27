@@ -23,7 +23,7 @@ public class GiroTratta {
 
     private LocalDateTime tempo_partenza;
     private LocalDateTime tempo_arrivo;
-    private Duration tempo_effettivo_percorrenza;
+    private Long tempo_effettivo_percorrenza;
 
     public GiroTratta() {
     }
@@ -36,12 +36,50 @@ public class GiroTratta {
         this.tempo_effettivo_percorrenza = calcoloTempoEffettivoPercorreza(tempo_partenza, tempo_arrivo);
     }
 
-    public Duration calcoloTempoEffettivoPercorreza(LocalDateTime tempo_partenza, LocalDateTime tempo_arrivo) {
+    public Long calcoloTempoEffettivoPercorreza(LocalDateTime tempo_partenza, LocalDateTime tempo_arrivo) {
         if (tempo_arrivo != null && tempo_partenza != null) {
-            tempo_effettivo_percorrenza = Duration.between(tempo_partenza, tempo_arrivo);
+            tempo_effettivo_percorrenza = Duration.between(tempo_partenza, tempo_arrivo).getSeconds();
         } else {
             System.out.println("errore nel reperimento dei tempo di partenza o di arrivo!");
         }
         return tempo_effettivo_percorrenza;
     }
+
+    public UUID getGiro_tratta_id() {
+        return giro_tratta_id;
+    }
+
+    public Mezzo getMezzo_id() {
+        return mezzo_id;
+    }
+
+    public Tratta getTratta_id() {
+        return tratta_id;
+    }
+
+    public LocalDateTime getTempo_partenza() {
+        return tempo_partenza;
+    }
+
+    public void setTempo_partenza(LocalDateTime tempo_partenza) {
+        this.tempo_partenza = tempo_partenza;
+    }
+
+    public LocalDateTime getTempo_arrivo() {
+        return tempo_arrivo;
+    }
+
+    public void setTempo_arrivo(LocalDateTime tempo_arrivo) {
+        this.tempo_arrivo = tempo_arrivo;
+    }
+
+    public Long getTempo_effettivo_percorrenza() {
+        return tempo_effettivo_percorrenza;
+    }
+
+    public void setTempo_effettivo_percorrenza(Long tempo_effettivo_percorrenza) {
+        this.tempo_effettivo_percorrenza = tempo_effettivo_percorrenza;
+    }
+
+
 }

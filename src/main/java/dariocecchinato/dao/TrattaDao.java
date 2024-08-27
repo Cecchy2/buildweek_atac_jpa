@@ -4,7 +4,9 @@ import dariocecchinato.entities.Tratta;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
+import java.util.List;
 import java.util.UUID;
 
 public class TrattaDao {
@@ -36,5 +38,10 @@ public class TrattaDao {
         Tratta found = em.find(Tratta.class, trattaId);
         if (found == null) throw new NotFoundException(trattaId);
         return found;
+    }
+
+    public List<Tratta> findAll() {
+        TypedQuery<Tratta> query = em.createQuery("SELECT m FROM Tratta m", Tratta.class);
+        return query.getResultList();
     }
 }
