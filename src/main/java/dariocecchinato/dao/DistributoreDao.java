@@ -4,7 +4,9 @@ import dariocecchinato.entities.Distributore;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
+import java.util.List;
 import java.util.UUID;
 
 public class DistributoreDao {
@@ -36,5 +38,10 @@ public class DistributoreDao {
         Distributore found = em.find(Distributore.class, distributoreId);
         if (found == null) throw new NotFoundException(distributoreId);
         return found;
+    }
+
+    public List<Distributore> findAll() {
+        TypedQuery<Distributore> query = em.createQuery("SELECT d FROM Distributore d", Distributore.class);
+        return query.getResultList();
     }
 }

@@ -3,7 +3,6 @@ package dariocecchinato;
 import com.github.javafaker.Faker;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
-import dariocecchinato.enums.Tipo_abbonamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -27,6 +26,7 @@ public class Application {
         UtenteDao ud = new UtenteDao(em);
         TesseraDao td = new TesseraDao(em);
         AbbonamentoDao ab = new AbbonamentoDao(em);
+        DistributoreDao db = new DistributoreDao(em);
 
         TrattaDao trattaDao = new TrattaDao(em);
         Faker faker = new Faker(Locale.ITALY);
@@ -43,18 +43,15 @@ public class Application {
         tratte.forEach(trattaDao::save);
         System.out.println("fin qui ci siamo...");
 
-
         Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
             String nomeLocale = faker.company().name();
 
             return new Rivenditore(nomeLocale);
         };
 
-
-        /*for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
-        }*/
-
+        }
 
         Supplier<Utente> randomUtenteSupplier = () -> {
             String nomeUtente = f.name().firstName();
@@ -64,34 +61,39 @@ public class Application {
             String zone_di_residenza = f.address().fullAddress();
             return new Utente(nomeUtente, cognomeUtente, email, eta, zone_di_residenza);
         };
-        for (int i = 0; i < 20; i++) {
-            //ud.save(randomUtenteSupplier.get());
-
-        }
+        /*for (int i = 0; i < 20; i++) {
+            ud.save(randomUtenteSupplier.get());
+        }*/
 
         List<Utente> utenti = ud.findAll();
 
-        Supplier<Tessera> randomTesseraSupplier = () -> {
-            LocalDate data_emissione = LocalDate.now().minusYears(random.nextInt(1));
-            Utente utente = utenti.get(random.nextInt(20));
-            return new Tessera(data_emissione, utente);
-        };
-        for (int i = 0; i < 15; i++) {
-            //td.save(randomTesseraSupplier.get());
-        }
-        List<Tessera> tessere = td.findAll();
+        utenti.stream()
+                .filter(utente -> utente.getTessera() == null)
+                .forEach(utente -> {
+                    LocalDate data_emissione = LocalDate.now().minusYears(random.nextInt(1));
 
-        Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
+                    Tessera tessera = new Tessera(data_emissione, utente);
+
+                    utente.setTessera(tessera);
+                    //td.save(tessera);
+                });
+
+        List<Tessera> tessere = td.findAll();
+        List<Rivenditore> rivenditori = rivDao.findAll();
+        List<Distributore> distributori = db.findAll();
+
+        /*Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
             LocalDate dataValidazione = LocalDate.now().minusMonths(2);
             LocalDate dataScadenza = tipo == Tipo_abbonamento.MENSILE ? dataValidazione.plusMonths(1) : dataValidazione.plusWeeks(1);
-            return new Abbonamento(dataValidazione, tipo);
+            Tessera tessera = tessere.get(random.nextInt(tessere.size()));
+            Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
+            Distributore distribure = distributori.get(random.nextInt(distributori.size()));
+            return new Abbonamento(dataValidazione, tipo, tessera, rivenditore, distribure);
         };
-
         for (int i = 0; i < 15; i++) {
             ab.save(randomAbbonamentoSupplier.get());
-        }
-
+        }*/
 
         em.close();
         emf.close();

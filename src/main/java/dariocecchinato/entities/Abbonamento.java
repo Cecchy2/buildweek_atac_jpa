@@ -25,13 +25,17 @@ public class Abbonamento {
     private Rivenditore rivenditore_id;
 
 
-    public Abbonamento(LocalDate data_validazione, Tipo_abbonamento tipo_abbonamento) {
+    public Abbonamento(LocalDate data_validazione, Tipo_abbonamento tipo_abbonamento, Tessera tessera, Rivenditore rivenditore, Distributore distributore) {
         this.data_validazione = data_validazione;
         this.tipo_abbonamento = tipo_abbonamento;
         this.data_scadenza = tipo_abbonamento == Tipo_abbonamento.MENSILE ?
                 data_validazione.plusMonths(1) :
                 data_validazione.plusWeeks(1);
+        this.tessera_id = tessera;
+        this.rivenditore_id = rivenditore;
+        this.distributore_id = distributore;
     }
+
 
     public Abbonamento() {
     }

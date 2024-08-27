@@ -29,7 +29,7 @@ public class TrattaDao {
         //4.concludiamo la transazione salvando l'evento nel DB
         transaction.commit();
 
-        System.out.println("Il Tratta con ID : " + tratta.toString() + " " + " è stato salvato con successo!");
+        System.out.println("La Tratta con ID : " + tratta.toString() + " " + " è stata salvata con successo!");
     }
 
     public Tratta getById(UUID trattaId) {

@@ -16,8 +16,10 @@ public class Tessera {
     @OneToOne
     @JoinColumn(name = "utente_id")
     private Utente utente;
+
     @OneToMany(mappedBy = "tessera_id")
     private List<Biglietto> biglietti;
+
     @OneToMany(mappedBy = "tessera_id")
     private List<Abbonamento> abbonamenti;
 
@@ -35,6 +37,10 @@ public class Tessera {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public LocalDate getData_emissione() {
         return data_emissione;
     }
@@ -49,6 +55,30 @@ public class Tessera {
 
     public void setData_scadenza(LocalDate data_scadenza) {
         this.data_scadenza = data_scadenza;
+    }
+
+    public Utente getUtente() {
+        return utente;
+    }
+
+    public void setUtente(Utente utente) {
+        this.utente = utente;
+    }
+
+    public List<Biglietto> getBiglietti() {
+        return biglietti;
+    }
+
+    public void setBiglietti(List<Biglietto> biglietti) {
+        this.biglietti = biglietti;
+    }
+
+    public List<Abbonamento> getAbbonamenti() {
+        return abbonamenti;
+    }
+
+    public void setAbbonamenti(List<Abbonamento> abbonamenti) {
+        this.abbonamenti = abbonamenti;
     }
 
     @Override
