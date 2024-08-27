@@ -103,8 +103,26 @@ public class Application {
             tesseraDao.save(randomTesseraSupplier.get());
         }*/
 
+        // Lista per memorizzare le tessere generate
+        List<Tessera> tessere = new ArrayList<>();
 
-        List<Tessera> tessere = td.findAll();
+        // GENRAZIONE TESSERE PER OGNI UTENTE NEL DB
+        for (Utente utente : utenti) {
+            // Genera la data di emissione per ogni tessera (usa la data corrente)
+            LocalDate dataEmissione = LocalDate.now();
+
+            // Crea una nuova tessera per l'utente corrente
+            Tessera tessera = new Tessera(dataEmissione, utente);
+
+            // Aggiungi la tessera alla lista di tessere
+            tessere.add(tessera);
+            tesseraDao.save(tessera);
+        }
+
+
+
+
+        /* List<Tessera> tessere = td.findAll();*/
 
         Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
@@ -129,7 +147,7 @@ public class Application {
             return new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
         };
 
-        for (int i = 0; i < utenti.size(); i++) {
+        for (int i = 0; i < tessere.size(); i++) {
             bigliettoDao.save(randomBigliettoSupplier.get());
         }
 
