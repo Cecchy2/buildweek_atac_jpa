@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
 import dariocecchinato.enums.Tipo_abbonamento;
+import enums.TipoMezzo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -19,28 +20,29 @@ public class Application {
         EntityManager em = emf.createEntityManager();
         Random random = new Random();
         Faker f = new Faker(Locale.ITALY);
+        Faker faker = new Faker(Locale.ITALY);
         Scanner scanner = new Scanner(System.in);
 
+        /* Sezione DAO*/
         RivenditoreDao rivDao = new RivenditoreDao(em);
         UtenteDao ud = new UtenteDao(em);
         TesseraDao td = new TesseraDao(em);
         AbbonamentoDao ab = new AbbonamentoDao(em);
-
         TrattaDao trattaDao = new TrattaDao(em);
-        Faker faker = new Faker(Locale.ITALY);
+        MezzoDao mezzoDao = new MezzoDao(em);
+
+        /*CREAZIONE TRATTE*/
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
                 faker.address().cityName(),
                 faker.address().cityName(),
-                faker.number().numberBetween(15, 120)
+                faker.number().numberBetween(40, 120)
         );
         List<Tratta> tratte = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Tratta tratta = trattaSupplier.get();
             tratte.add(tratta);
         }
-
-        tratte.forEach(trattaDao::save);
-        System.out.println("fin qui ci siamo...");
+        //tratte.forEach(trattaDao::save);
 
 
         Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
@@ -65,7 +67,6 @@ public class Application {
         };
         for (int i = 0; i < 20; i++) {
             //ud.save(randomUtenteSupplier.get());
-
         }
 
         List<Utente> utenti = ud.findAll();
@@ -83,13 +84,23 @@ public class Application {
         Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
             LocalDate dataValidazione = LocalDate.now().minusMonths(2);
-            LocalDate dataScadenza = tipo == Tipo_abbonamento.MENSILE ? dataValidazione.plusMonths(1) : dataValidazione.plusWeeks(1);
             return new Abbonamento(dataValidazione, tipo);
         };
 
         for (int i = 0; i < 15; i++) {
-            ab.save(randomAbbonamentoSupplier.get());
+            //ab.save(randomAbbonamentoSupplier.get());
         }
+        /*CREAZIONE MEZZI*/
+        Supplier<Mezzo> mezzoSupplier = () -> {
+            TipoMezzo[] tipiMezzi = TipoMezzo.values();
+            return new Mezzo(faker.number().numberBetween(8, 100), tipiMezzi[faker.number().numberBetween(0, 1)]);
+        };
+        List<Mezzo> mezzi = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Mezzo mezzo = mezzoSupplier.get();
+            mezzi.add(mezzo);
+        }
+        //mezzi.forEach(mezzoDao::save);
 
 
         em.close();
