@@ -11,7 +11,10 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 import java.util.function.Supplier;
 
 public class Application {
@@ -55,6 +58,8 @@ public class Application {
         /*for (int i = 0; i < 5; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
         }*/
+
+        List<Rivenditore> rivenditori = rivDao.findAll();
 
 
         Supplier<Utente> randomUtenteSupplier = () -> {
@@ -142,7 +147,7 @@ public class Application {
         System.out.println("fin qui ci siamo...");
     }
 
-    public static void menu() {
+   /* public static void menu() {
         System.out.println("Benvenuto, sei un admin o un utente?");
         System.out.println("Premere:");
         System.out.println("1- Utente");
@@ -162,13 +167,13 @@ public class Application {
                 menu();
                 break;
         }
-    }
+    }*/
 
-    public static void menuUtente() {
+    /*public static void menuUtente() {
         System.out.println("Bisogna effettuare il login, inserisci il tuo codice UUID:");
         String uuid = inputScannerUUID();
 
-        /*---------------RICERCA UTENTE TRAMITE UUUID--------------------*/
+        *//*---------------RICERCA UTENTE TRAMITE UUUID--------------------*//*
         if (trovaUtente(uuid)) {
             salutaUtente(uuid);
             controllaTessera(uuid);
@@ -178,7 +183,7 @@ public class Application {
         }
     }
 
-    /* -----------------MENU AMMINISTRATORE-------------------*/
+    *//* -----------------MENU AMMINISTRATORE-------------------*//*
     public static void menuAdmin() {
         System.out.println("Menu amministratore in sviluppo :)");
 
@@ -188,7 +193,7 @@ public class Application {
         System.out.println("Ciao CiccioGamer");
     }
 
-    /*------------------CONTROLL0 TESSERA---------------------*/
+    *//*------------------CONTROLL0 TESSERA---------------------*//*
     public static void controllaTessera(String uuid) {
         boolean tesseraValida = verificaValiditàTessera(uuid);
 
@@ -215,7 +220,7 @@ public class Application {
         }
     }
 
-    /*---------OPZIONI UTENTE--------------*/
+    *//*---------OPZIONI UTENTE--------------*//*
     public static void opzioniUtente() {
         System.out.println("Cosa vuoi fare?");
         System.out.println("1- Controlla data di scadenza tessera");
@@ -260,12 +265,12 @@ public class Application {
     public static void rinnovaTessera(String uuid) {
         System.out.println("Complimenti, hai pagato millemilaeuro ad ATAC e non ce lo meritiamo!");
         chiudiScanner();
-    }
+    }*/
 
     /*creare metodi per interazione utente*/
 
     /*------- INTERAZIONE UTENTE-----------*/
-    public static int inputScanner() {
+   /* public static int inputScanner() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
@@ -281,7 +286,7 @@ public class Application {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Inserisci UUID: ");
         return scanner.nextLine();
-    }
+    }*/
 
 
     /*------IMPLEMENTARE LE LOGICHE---------*/
