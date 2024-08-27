@@ -3,6 +3,7 @@ package dariocecchinato;
 import com.github.javafaker.Faker;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
+import dariocecchinato.enums.StatoDistributore;
 import dariocecchinato.enums.Tipo_abbonamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -21,6 +22,8 @@ public class Application {
         Faker f = new Faker(Locale.ITALY);
         Scanner scanner = new Scanner(System.in);
 
+
+        DistributoreDao distributoreDao = new DistributoreDao(em);
         RivenditoreDao rivDao = new RivenditoreDao(em);
         UtenteDao ud = new UtenteDao(em);
         TesseraDao td = new TesseraDao(em);
@@ -39,15 +42,28 @@ public class Application {
             tratte.add(tratta);
         }
 
+
         tratte.forEach(trattaDao::save);
-        System.out.println("fin qui ci siamo...");
 
 
-        Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
-            String nomeLocale = faker.company().name();
-
-            return new Rivenditore(nomeLocale);
+        Supplier<Distributore> distributoreSupplier = () -> {
+            StatoDistributore stato = StatoDistributore.values()[faker.number().numberBetween(0, StatoDistributore.values().length)];
+            String ubicazione = faker.address().streetAddress();
+            return new Distributore(stato, ubicazione);
         };
+
+        /*for (int i = 0; i < 10; i++) {
+            Distributore distributore = distributoreSupplier.get();
+            distributoreDao.save(distributore);
+            System.out.println("Creato: " + distributore);*/
+
+
+
+            Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
+                String nomeLocale = faker.company().name();
+
+                return new Rivenditore(nomeLocale);
+            };
 
 
         /*for (int i = 0; i < 5; i++) {
@@ -55,55 +71,50 @@ public class Application {
         }*/
 
 
-        Supplier<Utente> randomUtenteSupplier = () -> {
-            String nomeUtente = f.name().firstName();
-            String cognomeUtente = f.name().lastName();
-            String email = f.internet().emailAddress();
-            int eta = f.number().numberBetween(14, 88);
-            String zone_di_residenza = f.address().fullAddress();
-            return new Utente(nomeUtente, cognomeUtente, email, eta, zone_di_residenza);
-        };
-        for (int i = 0; i < 20; i++) {
-            //ud.save(randomUtenteSupplier.get());
+            Supplier<Utente> randomUtenteSupplier = () -> {
+                String nomeUtente = f.name().firstName();
+                String cognomeUtente = f.name().lastName();
+                String email = f.internet().emailAddress();
+                int eta = f.number().numberBetween(14, 88);
+                String zone_di_residenza = f.address().fullAddress();
+                return new Utente(nomeUtente, cognomeUtente, email, eta, zone_di_residenza);
+            };
+            for (int i = 0; i < 20; i++) {
+                //ud.save(randomUtenteSupplier.get());
 
+            }
+
+            List<Utente> utenti = ud.findAll();
+
+            Supplier<Tessera> randomTesseraSupplier = () -> {
+                LocalDate data_emissione = LocalDate.now().minusYears(random.nextInt(1));
+                Utente utente = utenti.get(random.nextInt(20));
+                return new Tessera(data_emissione, utente);
+            };
+            for (int i = 0; i < 15; i++) {
+                //td.save(randomTesseraSupplier.get());
+            }
+            List<Tessera> tessere = td.findAll();
+
+            Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
+                Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
+                LocalDate dataValidazione = LocalDate.now().minusMonths(2);
+                LocalDate dataScadenza = tipo == Tipo_abbonamento.MENSILE ? dataValidazione.plusMonths(1) : dataValidazione.plusWeeks(1);
+                return new Abbonamento(dataValidazione, tipo);
+            };
+
+            for (int i = 0; i < 15; i++) {
+                ab.save(randomAbbonamentoSupplier.get());
+            }
+
+
+            em.close();
+            emf.close();
+            System.out.println("fin qui ci siamo...");
         }
 
-        List<Utente> utenti = ud.findAll();
 
-        Supplier<Tessera> randomTesseraSupplier = () -> {
-            LocalDate data_emissione = LocalDate.now().minusYears(random.nextInt(1));
-            Utente utente = utenti.get(random.nextInt(20));
-            return new Tessera(data_emissione, utente);
-        };
-        for (int i = 0; i < 15; i++) {
-            //td.save(randomTesseraSupplier.get());
-        }
-        List<Tessera> tessere = td.findAll();
-
-        Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
-            Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
-            LocalDate dataValidazione = LocalDate.now().minusMonths(2);
-            LocalDate dataScadenza = tipo == Tipo_abbonamento.MENSILE ? dataValidazione.plusMonths(1) : dataValidazione.plusWeeks(1);
-            return new Abbonamento(dataValidazione, tipo);
-        };
-
-        for (int i = 0; i < 15; i++) {
-            ab.save(randomAbbonamentoSupplier.get());
-        }
-
-
-        em.close();
-        emf.close();
-        System.out.println("fin qui ci siamo...");
     }
-
-    public void menu() {
-        System.out.println("benvenuto, sei un admin o un utente?");
-        System.out.println("premere:");
-        System.out.println("1- utente");
-        System.out.println("2-amministratore");
-    }
-
 }
 
 
