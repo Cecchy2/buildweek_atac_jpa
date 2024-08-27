@@ -32,10 +32,6 @@ public class Application {
         AbbonamentoDao ab = new AbbonamentoDao(em);
         TrattaDao trattaDao = new TrattaDao(em);
 
-        List<Utente> utenti = ud.findAll();
-        List<Tessera> tessere = td.findAll();
-        List<Rivenditore> rivenditori = rivDao.findAll();
-        List<Distributore> distributori = db.findAll();
 
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
                 f.address().cityName(),
@@ -56,6 +52,7 @@ public class Application {
         /*for (int i = 0; i < 5; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
         }*/
+        List<Rivenditore> rivenditori = rivDao.findAll();
 
         Supplier<Utente> randomUtenteSupplier = () -> {
             String nomeUtente = f.name().firstName();
@@ -65,9 +62,11 @@ public class Application {
             String zone_di_residenza = f.address().fullAddress();
             return new Utente(nomeUtente, cognomeUtente, email, eta, zone_di_residenza);
         };
-        /*for (int i = 0; i < 20; i++) {
+       /* for (int i = 0; i < 20; i++) {
             ud.save(randomUtenteSupplier.get());
         }*/
+        List<Utente> utenti = ud.findAll();
+
 
         Supplier<Distributore> distributoreSupplier = () -> {
             StatoDistributore stato = StatoDistributore.values()[f.number().numberBetween(0, StatoDistributore.values().length)];
@@ -77,14 +76,17 @@ public class Application {
         /*for (int i = 0; i < 10; i++) {
             db.save(distributoreSupplier.get());
         }*/
+        List<Distributore> distributori = db.findAll();
 
         utenti.stream()
                 .filter(utente -> utente.getTessera() == null)
                 .forEach(utente -> {
-                    LocalDate data_emissione = LocalDate.now().minusYears(random.nextInt(1));
+                    LocalDate data_emissione = LocalDate.now().minusMonths(f.number().numberBetween(1, 12));
                     Tessera tessera = new Tessera(data_emissione, utente);
                     //td.save(tessera);
                 });
+
+        List<Tessera> tessere = td.findAll();
 
         Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
