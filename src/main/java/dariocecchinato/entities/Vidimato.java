@@ -25,6 +25,12 @@ public class Vidimato {
     public Vidimato() {
     }
 
+    public Vidimato(Biglietto biglietto, Mezzo mezzo, LocalDate dataVidimazione) {
+        this.biglietto = biglietto;
+        this.mezzo = mezzo;
+        this.dataVidimazione = dataVidimazione;
+    }
+
     public UUID getId() {
         return id;
     }

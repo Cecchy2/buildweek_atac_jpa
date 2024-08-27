@@ -34,6 +34,7 @@ public class Application {
         BigliettoDao bigliettoDao = new BigliettoDao(em);
         Faker faker = new Faker(Locale.ITALY);
         MezzoDao mezzoDao = new MezzoDao(em);
+        VidimatoDao vidimatoDao = new VidimatoDao(em);
 
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
                 f.address().cityName(),
@@ -136,9 +137,22 @@ public class Application {
             Tessera tessera = utente.getTessera();
             Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
 
-            bigliettoDao.save(biglietto);
+            //bigliettoDao.save(biglietto);
 
         }
+        //preso un tram a caso dal db per generare una vidimazione
+        Mezzo tramFromDb = mezzoDao.getById(UUID.fromString("19e190a6-b59b-4813-b964-ee2c59e72e81"));
+
+        //**************VIDIMAZIONE DI BIGLIETTO
+        Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
+            Biglietto biglietto = biglietti.get(random.nextInt(biglietti.size()));
+            LocalDate dataVidimazione = LocalDate.now();
+            return new Vidimato(biglietto, tramFromDb, dataVidimazione);
+        };
+
+       /* for (int i = 0; i < 2; i++) {
+            vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
+        }*/
 
 
         em.close();
