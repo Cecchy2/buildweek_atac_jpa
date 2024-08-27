@@ -13,6 +13,7 @@ public class Abbonamento {
     private UUID id;
     private LocalDate data_validazione;
     private LocalDate data_scadenza;
+    @Enumerated(EnumType.STRING)
     private Tipo_abbonamento tipo_abbonamento;
     @ManyToOne
     @JoinColumn(name = "tessera_id")
