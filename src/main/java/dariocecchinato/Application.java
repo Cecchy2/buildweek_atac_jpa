@@ -3,6 +3,8 @@ package dariocecchinato;
 import com.github.javafaker.Faker;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
+import dariocecchinato.enums.StatoDistributore;
+import dariocecchinato.enums.Tipo_abbonamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -21,12 +23,14 @@ public class Application {
         EntityManager em = emf.createEntityManager();
         Random random = new Random();
         Faker f = new Faker(Locale.ITALY);
+        Scanner scanner = new Scanner(System.in);
 
+
+        DistributoreDao distributoreDao = new DistributoreDao(em);
         RivenditoreDao rivDao = new RivenditoreDao(em);
         UtenteDao ud = new UtenteDao(em);
         TesseraDao td = new TesseraDao(em);
         AbbonamentoDao ab = new AbbonamentoDao(em);
-        DistributoreDao db = new DistributoreDao(em);
 
         TrattaDao trattaDao = new TrattaDao(em);
         Faker faker = new Faker(Locale.ITALY);
@@ -40,6 +44,8 @@ public class Application {
             Tratta tratta = trattaSupplier.get();
             tratte.add(tratta);
         }
+
+
         tratte.forEach(trattaDao::save);
         System.out.println("fin qui ci siamo...");
 
@@ -49,9 +55,11 @@ public class Application {
             return new Rivenditore(nomeLocale);
         };
 
-        for (int i = 0; i < 5; i++) {
+
+        /*for (int i = 0; i < 5; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
-        }
+        }*/
+
 
         Supplier<Utente> randomUtenteSupplier = () -> {
             String nomeUtente = f.name().firstName();
