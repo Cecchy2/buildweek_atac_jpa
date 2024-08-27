@@ -49,9 +49,11 @@ public class Application {
 
             return new Rivenditore(nomeLocale);
         };
-        for (int i = 0; i < 5; i++) {
+
+
+        /*for (int i = 0; i < 5; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
-        }
+        }*/
 
 
         Supplier<Utente> randomUtenteSupplier = () -> {
