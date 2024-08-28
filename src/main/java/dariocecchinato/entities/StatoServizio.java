@@ -1,6 +1,6 @@
 package dariocecchinato.entities;
 
-import enums.TipoServizio;
+import dariocecchinato.enums.TipoServizio;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -23,7 +23,8 @@ public class StatoServizio {
     @Enumerated(EnumType.STRING)
     private TipoServizio tipo_servizio;
 
-    public StatoServizio(LocalDate data_inizio, LocalDate data_fine, TipoServizio tipo_servizio) {
+    public StatoServizio(LocalDate data_inizio, LocalDate data_fine, TipoServizio
+            tipo_servizio) {
         this.data_inizio = data_inizio;
         this.data_fine = data_fine;
         this.tipo_servizio = tipo_servizio;
