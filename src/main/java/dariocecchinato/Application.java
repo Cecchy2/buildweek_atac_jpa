@@ -162,7 +162,7 @@ public class Application {
         }
     }
 
-    public static void menuUtente() {
+    public static void menuUtente(Utente utente) {
         /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
         System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
         System.out.println("1- Validazione corsa");
@@ -192,7 +192,8 @@ public class Application {
                 System.out.println("Tempo di arrivo: " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_arrivo());
                 System.out.println("Mezzo : " + giroTrattaDellaTrattaSelezionata.getFirst().getMezzo_id().getTipo_mezzo());
 
-                Vidimato vidimazione=new Vidimato()
+                Vidimato vidimazione = new Vidimato(utente.getTessera().getBiglietti().getFirst(), giroTrattaDellaTrattaSelezionata.getFirst(), LocalDate.now());
+                vidimatoDao.save(vidimazione);
 
 
                 break;
