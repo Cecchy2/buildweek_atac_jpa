@@ -163,39 +163,71 @@ public class Application {
         }
         //giroTratte.forEach(giroTrattaDao::save);
 
-        /**/
-        Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
-        System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));
+        /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
+        System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
 
         em.close();
         emf.close();
         System.out.println("fin qui ci siamo...");
+
+
+        startMenu();
+
     }
 
     public static void startMenu() {
-        System.out.println("Benvenuto in Atac, sei un admin o un utente?");
-        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
-        System.out.println("1- Utente");
-        System.out.println("2- Amministratore");
-        System.out.println("3- Esci");
+        menuAtac:
+        while (true) {
+            System.out.println("Benvenuto in Atac");
+            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
+            System.out.println("1- Registrati");
+            System.out.println("2- Login");
+            System.out.println("3- Esci");
 
-        int scelta = scanner.nextInt();
+            int scelta = gestioneInputIntMenu();
 
-        switch (scelta) {
-            case 1:
-                menuUtente();
-                break;
-            case 2:
-                menuAdmin();
-                break;
-            case 3:
+            switch (scelta) {
+                case 1:
+                    /*aggiungere metodo per la gestione del registrati*/
+                    break;
+                case 2:
+                    /*add metodo per gestire il login*/
+                    login();
 
-                break;
-            default:
-                System.out.println("Scelta non valida");
-                startMenu();
-                break;
+                    break;
+                case 3:
+                    /*si esce dal while principale*/
+                    break menuAtac;
+                default:
+                    System.out.println("Scelta non valida");
+                    startMenu();
+                    break;
+            }
         }
+    }
+
+    private static int gestioneInputIntMenu() {
+        while (true) {
+            try {
+                int input = scanner.nextInt();
+                scanner.nextLine(); // Pulisce il newline rimasto dopo nextInt()
+                if (input < 1 || input > 3) {
+                    System.out.println("Scelta non valida. Inserisci un numero tra 1 e 3.");
+                } else {
+                    return input;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input non valido. Per favore, inserisci un numero intero.");
+                scanner.nextLine(); // Pulisce l'input non valido
+            }
+        }
+    }
+
+    private static void login() {
+        System.out.println("inserisci il tuo codice UUID");
+        String input = scanner.nextLine();
+        /*devo capire se è un utente o un admin */
+      
     }
 
     public static void menuUtente() {
