@@ -18,27 +18,24 @@ import java.util.function.Supplier;
 public class Application {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("atac");
     private static Scanner scanner = new Scanner(System.in);
+    private static EntityManager em = emf.createEntityManager();
+    /* Sezione DAO*/
+    private static DistributoreDao db = new DistributoreDao(em);
+    private static RivenditoreDao rivDao = new RivenditoreDao(em);
+    private static UtenteDao ud = new UtenteDao(em);
+    private static TesseraDao td = new TesseraDao(em);
+    private static AbbonamentoDao ab = new AbbonamentoDao(em);
+    private static TrattaDao trattaDao = new TrattaDao(em);
+    private static BigliettoDao bigliettoDao = new BigliettoDao(em);
+    private static MezzoDao mezzoDao = new MezzoDao(em);
+    private static GiroTrattaDao giroTrattaDao = new GiroTrattaDao(em);
+    private static AmministratoreDao amministratoreDao = new AmministratoreDao(em);
+    private static VidimatoDao vidimatoDao = new VidimatoDao(em);
+    private static Random random = new Random();
+    private static Faker f = new Faker(Locale.ITALY);
 
     public static void main(String[] args) {
-        EntityManager em = emf.createEntityManager();
-        Random random = new Random();
-        Faker f = new Faker(Locale.ITALY);
-
-
-        /* Sezione DAO*/
-        DistributoreDao db = new DistributoreDao(em);
-        RivenditoreDao rivDao = new RivenditoreDao(em);
-        UtenteDao ud = new UtenteDao(em);
-        TesseraDao td = new TesseraDao(em);
-        AbbonamentoDao ab = new AbbonamentoDao(em);
-        TrattaDao trattaDao = new TrattaDao(em);
-        BigliettoDao bigliettoDao = new BigliettoDao(em);
-        Faker faker = new Faker(Locale.ITALY);
-        MezzoDao mezzoDao = new MezzoDao(em);
-        GiroTrattaDao giroTrattaDao = new GiroTrattaDao(em);
-
-        VidimatoDao vidimatoDao = new VidimatoDao(em);
-
+        /*CREAZIONE TRATTE*/
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
                 f.address().cityName(),
                 f.address().cityName(),
@@ -51,20 +48,17 @@ public class Application {
         }
         //tratte.forEach(trattaDao::save);
 
-
+        /*CREAZIONE RIVENDITORI*/
         Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
             String nomeLocale = f.company().name();
             return new Rivenditore(nomeLocale);
         };
-
-
         /*for (int i = 0; i < 5; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
         }*/
-
         List<Rivenditore> rivenditori = rivDao.findAll();
 
-
+        /*CREAZIONE UTENTI*/
         Supplier<Utente> randomUtenteSupplier = () -> {
             String nomeUtente = f.name().firstName();
             String cognomeUtente = f.name().lastName();
@@ -78,7 +72,7 @@ public class Application {
         }*/
         List<Utente> utenti = ud.findAll();
 
-
+        /*CREAZIONE DISTRIBUTORI*/
         Supplier<Distributore> distributoreSupplier = () -> {
             StatoDistributore stato = StatoDistributore.values()[f.number().numberBetween(0, StatoDistributore.values().length)];
             String ubicazione = f.address().streetAddress();
@@ -99,6 +93,7 @@ public class Application {
 
         List<Tessera> tessere = td.findAll();
 
+        /*CREAZIONE ABBONAMENTI*/
         Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
             LocalDate dataValidazione = LocalDate.now().minusDays(f.number().numberBetween(1, 60));
@@ -131,7 +126,6 @@ public class Application {
 
         //GENERAZIONE BIGLIETTI PER OGNI UTENTE
         List<Biglietto> biglietti = bigliettoDao.findAll();
-
         for (Utente utente : utenti) {
             LocalDate dataEmissione = LocalDate.now();
             double prezzo = 2.00;
@@ -139,11 +133,8 @@ public class Application {
             Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
             Tessera tessera = utente.getTessera();
             Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
-
             bigliettoDao.save(biglietto);
-
         }
-
 
         //**************VIDIMAZIONE DI BIGLIETTO
         /*Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
@@ -151,14 +142,13 @@ public class Application {
             LocalDate dataVidimazione = LocalDate.now();
             return new Vidimato(biglietto, tramFromDb, dataVidimazione);
         };*/
-
        /* for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
         }*/
 
         List<Mezzo> mezziT = mezzoDao.findAll();
         List<Tratta> tratteT = trattaDao.findAll();
-
+        /*CREAZIONE GIRITRATTA*/
         Supplier<GiroTratta> giroTrattaSupplier = () -> {
             Mezzo mezzo = mezziT.get(f.number().numberBetween(0, mezzi.size()));
             Tratta tratta = tratteT.get(f.number().numberBetween(0, tratte.size()));
@@ -171,33 +161,73 @@ public class Application {
             GiroTratta giroTratta = giroTrattaSupplier.get();
             giroTratte.add(giroTratta);
         }
-        giroTratte.forEach(giroTrattaDao::save);
+        //giroTratte.forEach(giroTrattaDao::save);
+
+        /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
+        System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
 
         em.close();
         emf.close();
         System.out.println("fin qui ci siamo...");
+
+
+        startMenu();
+
     }
 
-    public static void menu() {
-        System.out.println("Benvenuto, sei un admin o un utente?");
-        System.out.println("Premere:");
-        System.out.println("1- Utente");
-        System.out.println("2- Amministratore");
+    public static void startMenu() {
+        menuAtac:
+        while (true) {
+            System.out.println("Benvenuto in Atac");
+            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
+            System.out.println("1- Registrati");
+            System.out.println("2- Login");
+            System.out.println("3- Esci");
 
-        int scelta = scanner.nextInt();
+            int scelta = gestioneInputIntMenu();
 
-        switch (scelta) {
-            case 1:
-                menuUtente();
-                break;
-            case 2:
-                menuAdmin();
-                break;
-            default:
-                System.out.println("Scelta non valida");
-                menu();
-                break;
+            switch (scelta) {
+                case 1:
+                    /*aggiungere metodo per la gestione del registrati*/
+                    break;
+                case 2:
+                    /*add metodo per gestire il login*/
+                    login();
+
+                    break;
+                case 3:
+                    /*si esce dal while principale*/
+                    break menuAtac;
+                default:
+                    System.out.println("Scelta non valida");
+                    startMenu();
+                    break;
+            }
         }
+    }
+
+    private static int gestioneInputIntMenu() {
+        while (true) {
+            try {
+                int input = scanner.nextInt();
+                scanner.nextLine(); // Pulisce il newline rimasto dopo nextInt()
+                if (input < 1 || input > 3) {
+                    System.out.println("Scelta non valida. Inserisci un numero tra 1 e 3.");
+                } else {
+                    return input;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input non valido. Per favore, inserisci un numero intero.");
+                scanner.nextLine(); // Pulisce l'input non valido
+            }
+        }
+    }
+
+    private static void login() {
+        System.out.println("inserisci il tuo codice UUID");
+        String input = scanner.nextLine();
+        /*devo capire se è un utente o un admin */
+      
     }
 
     public static void menuUtente() {
@@ -210,7 +240,7 @@ public class Application {
             controllaTessera(uuid);
         } else {
             System.out.println("Utente non trovato.");
-            menu();
+            startMenu();
         }
     }
 

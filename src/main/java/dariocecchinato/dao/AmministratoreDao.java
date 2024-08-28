@@ -2,6 +2,7 @@ package dariocecchinato.dao;
 
 import dariocecchinato.entities.Amministratore;
 import dariocecchinato.exceptions.NotFoundException;
+import dariocecchinato.entities.Tratta;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
@@ -35,5 +36,13 @@ public class AmministratoreDao {
         Amministratore found = em.find(Amministratore.class, amministratoreId);
         if (found == null) throw new NotFoundException(amministratoreId);
         return found;
+    }
+
+    public double calcolaTempoMedioEffettivo(Tratta tratta) {
+        TypedQuery<Double> query = em.createQuery("SELECT AVG(g.tempo_effettivo_percorrenza) FROM GiroTratta g WHERE g.tratta_id = :tratta", Double.class);
+        query.setParameter("tratta", tratta);
+        Double tempoMedioInSecondi = query.getSingleResult();
+        Double tempoMedioInMinuti = tempoMedioInSecondi / 60;
+        return tempoMedioInMinuti;
     }
 }
