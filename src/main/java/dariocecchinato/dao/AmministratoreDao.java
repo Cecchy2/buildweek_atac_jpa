@@ -30,9 +30,11 @@ public class AmministratoreDao {
         return query.getResultList();
     }
 
-    public double calcolaTempoMedioEffettivo2(Tratta tratta) {
+    public double calcolaTempoMedioEffettivo(Tratta tratta) {
         TypedQuery<Double> query = em.createQuery("SELECT AVG(g.tempo_effettivo_percorrenza) FROM GiroTratta g WHERE g.tratta_id = :tratta", Double.class);
         query.setParameter("tratta", tratta);
-        return query.getSingleResult();
+        Double tempoMedioInSecondi = query.getSingleResult();
+        Double tempoMedioInMinuti = tempoMedioInSecondi / 60;
+        return tempoMedioInMinuti;
     }
 }

@@ -35,8 +35,7 @@ public class Application {
     private static Faker f = new Faker(Locale.ITALY);
 
     public static void main(String[] args) {
-
-
+        /*CREAZIONE TRATTE*/
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
                 f.address().cityName(),
                 f.address().cityName(),
@@ -49,7 +48,7 @@ public class Application {
         }
         //tratte.forEach(trattaDao::save);
 
-
+        /*CREAZIONE RIVENDITORI*/
         Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
             String nomeLocale = f.company().name();
             return new Rivenditore(nomeLocale);
@@ -59,7 +58,7 @@ public class Application {
         }*/
         List<Rivenditore> rivenditori = rivDao.findAll();
 
-
+        /*CREAZIONE UTENTI*/
         Supplier<Utente> randomUtenteSupplier = () -> {
             String nomeUtente = f.name().firstName();
             String cognomeUtente = f.name().lastName();
@@ -73,7 +72,7 @@ public class Application {
         }*/
         List<Utente> utenti = ud.findAll();
 
-
+        /*CREAZIONE DISTRIBUTORI*/
         Supplier<Distributore> distributoreSupplier = () -> {
             StatoDistributore stato = StatoDistributore.values()[f.number().numberBetween(0, StatoDistributore.values().length)];
             String ubicazione = f.address().streetAddress();
@@ -94,6 +93,7 @@ public class Application {
 
         List<Tessera> tessere = td.findAll();
 
+        /*CREAZIONE ABBONAMENTI*/
         Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
             Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
             LocalDate dataValidazione = LocalDate.now().minusDays(f.number().numberBetween(1, 60));
@@ -148,7 +148,7 @@ public class Application {
 
         List<Mezzo> mezziT = mezzoDao.findAll();
         List<Tratta> tratteT = trattaDao.findAll();
-
+        /*CREAZIONE GIRITRATTA*/
         Supplier<GiroTratta> giroTrattaSupplier = () -> {
             Mezzo mezzo = mezziT.get(f.number().numberBetween(0, mezzi.size()));
             Tratta tratta = tratteT.get(f.number().numberBetween(0, tratte.size()));
@@ -163,9 +163,9 @@ public class Application {
         }
         //giroTratte.forEach(giroTrattaDao::save);
 
+        /**/
         Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
-        System.out.println(amministratoreDao.calcolaTempoMedioEffettivo2(trattaAnalizzata));
-        System.out.println(amministratoreDao.calcolaTempoMedioEffettivo2(tratteT.get(1)));
+        System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));
 
         em.close();
         emf.close();
