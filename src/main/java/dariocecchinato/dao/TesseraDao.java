@@ -41,7 +41,7 @@ public class TesseraDao {
 
     public boolean isTesseraValida(UUID idTessera) {
         Tessera tessera = getById(idTessera);
-        return tessera != null && !LocalDate.now().isAfter(tessera.getData_scadenza());
+        return tessera != null && LocalDate.now().isBefore(tessera.getData_scadenza());
     }
 
     public List<Tessera> findAll() {
