@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -332,6 +333,12 @@ public class Application {
         return true;
     }
 
+    public static void vidmazioneBiglietto(Biglietto biglietto, Mezzo mezzo) {
+        Vidimato bigliettoDaVidimare = new Vidimato(biglietto, mezzo, LocalDate.now());
+        vidimatoDao.save(bigliettoDaVidimare);
+        System.out.println("Il biglietto è stato vidimato correttamente!");
+    }
+
     public static void controllaDataScadenza() {
         System.out.println("La tua tessera scade il 31/12/2024.");
     }
@@ -359,6 +366,7 @@ public class Application {
     public static void chiudiScanner() {
         System.out.println("Scanner chiuso. Arrivederci!");
     }
+
 }
 
 
