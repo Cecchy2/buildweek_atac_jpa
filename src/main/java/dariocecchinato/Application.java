@@ -21,7 +21,6 @@ public class Application {
     private static EntityManager em = emf.createEntityManager();
     /* Sezione DAO*/
     private static DistributoreDao db = new DistributoreDao(em);
-    private static PersonaDao personaDao = new PersonaDao(em);
     private static RivenditoreDao rivDao = new RivenditoreDao(em);
     private static UtenteDao ud = new UtenteDao(em);
     private static TesseraDao td = new TesseraDao(em);
@@ -134,7 +133,7 @@ public class Application {
             Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
             Tessera tessera = utente.getTessera();
             Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
-            //bigliettoDao.save(biglietto);
+            bigliettoDao.save(biglietto);
         }
 
         //**************VIDIMAZIONE DI BIGLIETTO
@@ -167,11 +166,13 @@ public class Application {
         /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
         System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
 
+
         System.out.println("fin qui ci siamo...");
 
         startMenu();
         em.close();
         emf.close();
+
 
     }
 
@@ -228,19 +229,6 @@ public class Application {
         String input = scanner.nextLine();
         /*devo capire se è un utente o un admin */
         /*fatto questo nel if else if che creeremo dobbiamo implementare i metodi che continueranno il menu*/
-
-        personaDao.findUserOrAdminById(UUID.fromString(input));
-
-
-        /*Persona utente = ud.getById(UUID.fromString(input));
-        System.out.println("Benvenuto/a utente " + utente.getNome());
-        if (utente == null) {
-
-            Persona amministratore = amministratoreDao.getById(UUID.fromString(input));
-            System.out.println("Benvenuto/a " + amministratore.getNome() + " Accesso effettuato come amministratore!");
-        }*/
-
-
     }
 
     public static void menuUtente() {
