@@ -4,10 +4,12 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
+import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -233,7 +235,7 @@ public class Application {
         int scelta = gestioneInputIntMenu(1, 2);
         switch (scelta) {
             case 1:
-                /*metodo controllo data di scadenza abbonamento*/ /*cristiano*/
+                controllaValiditaAbbonamento();
                 break;
             case 2:
                 /*metodo acquista abbonamento*/
@@ -241,6 +243,55 @@ public class Application {
             default:
                 System.out.println("Scelta non valida");
                 break;
+        }
+    }
+
+    public static void controllaValiditaAbbonamento() {
+
+        /* 1 mi recupero tessera tramite tesseradao */
+
+        /*2 controllo se la tessera ha gia abbonamenti caricati
+         * 2.1 e se il piu recente è ancora valido
+         *
+         * 3 mi trovo l'abb piu recente
+         *
+         * 4 verifico la data discadenza*/
+        System.out.println("Inserisci l'UUID della tua tessera:");
+        String uuidInput = scanner.nextLine();
+        UUID tesseraId = UUID.fromString(uuidInput);
+
+        /*1*/
+        Tessera tessera;
+        try {
+            tessera = td.getById(tesseraId);
+        } catch (NotFoundException e) {
+            System.out.println("Tessera non trovata.");
+            return;
+        }
+        /*2*/
+
+        List<Abbonamento> abbonamenti = tessera.getAbbonamenti();
+        if (abbonamenti == null || abbonamenti.isEmpty()) {
+            System.out.println("Non ci sono abbonamenti associati a questa tessera.");
+            return;
+        }
+
+        /*3*/
+        Abbonamento abbonamentoRecente = abbonamenti.stream()
+                .max(Comparator.comparing(Abbonamento::getData_validazione))/*.max((a1, a2) -> a1.getData_validazione().compareTo(a2.getData_validazione()))*/
+                .orElse(null);
+
+        if (abbonamentoRecente == null) {
+            System.out.println("Nessun abbonamento valido trovato.");
+            return;
+        }
+
+        /*4*/
+        LocalDate dataScadenza = abbonamentoRecente.getData_scadenza();
+        if (dataScadenza != null && !dataScadenza.isBefore(LocalDate.now())) {
+            System.out.println("Il tuo abbonamento è ancora valido fino il: " + dataScadenza);
+        } else {
+            System.out.println("Il tuo abbonamento è scaduto il: " + dataScadenza);
         }
     }
 }
