@@ -16,8 +16,8 @@ public class Vidimato {
     @JoinColumn(name = "biglietto_id", nullable = false)
     private Biglietto biglietto;
     @ManyToOne
-    @JoinColumn(name = "mezzo_id", nullable = false)
-    private Mezzo mezzo;
+    @JoinColumn(name = "giro_tratta_id", nullable = false)
+    private GiroTratta giroTratta;
     @Column(name = "data_vidimazione", nullable = false)
     private LocalDate dataVidimazione;
 
@@ -25,9 +25,9 @@ public class Vidimato {
     public Vidimato() {
     }
 
-    public Vidimato(Biglietto biglietto, Mezzo mezzo, LocalDate dataVidimazione) {
+    public Vidimato(Biglietto biglietto, GiroTratta giroTratta, LocalDate dataVidimazione) {
         this.biglietto = biglietto;
-        this.mezzo = mezzo;
+        this.giroTratta = giroTratta;
         this.dataVidimazione = dataVidimazione;
     }
 
@@ -43,12 +43,12 @@ public class Vidimato {
         this.biglietto = biglietto;
     }
 
-    public Mezzo getMezzo() {
-        return mezzo;
+    public GiroTratta getGiroTratta() {
+        return giroTratta;
     }
 
-    public void setMezzo(Mezzo mezzo) {
-        this.mezzo = mezzo;
+    public void setGiroTratta(GiroTratta giroTratta) {
+        this.giroTratta = giroTratta;
     }
 
     public LocalDate getDataVidimazione() {

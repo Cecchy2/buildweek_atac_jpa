@@ -84,16 +84,18 @@ public class Application {
         for (int i = 0; i < 4; i++) {
             //bigliettoDao.save(bigliettoSupplier.get());
         }
-        List<Biglietto> biglietti = bigliettoDao.findAll();
+       /* List<Biglietto> biglietti = bigliettoDao.findAll();
+        GiroTratta trattaAnalizzata = giroTrattaDao.getById(UUID.fromString("32ebdea8-028c-49f0-af6d-44085f764730"));
         //**************VIDIMAZIONE DI BIGLIETTO
-        /*Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
+        Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
             Biglietto biglietto = biglietti.get(random.nextInt(biglietti.size()));
             LocalDate dataVidimazione = LocalDate.now();
-            return new Vidimato(biglietto, tramFromDb, dataVidimazione);
-        };*/
-       /* for (int i = 0; i < 2; i++) {
+            return new Vidimato(biglietto, trattaAnalizzata, dataVidimazione);
+        };
+        for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
         }*/
+        
         //**************************   CREAZIONE GIROTRATTE  *********************************
         Supplier<GiroTratta> giroTrattaSupplier = new GiroTrattaSupplier(mezzi, tratte);
         for (int i = 0; i < 10; i++) {
@@ -101,7 +103,7 @@ public class Application {
         }
         List<GiroTratta> girotratte = giroTrattaDao.findAll();
 
-        /**/
+
         /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
         System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
 
@@ -160,14 +162,6 @@ public class Application {
         }
     }
 
-    private static void login() {
-        System.out.println("inserisci il tuo codice UUID");
-        String input = scanner.nextLine();
-        /*devo capire se è un utente o un admin */  /*gianluca*/
-        /*fatto questo nel if else if che creeremo dobbiamo implementare i metodi che continueranno il menu*/
-        personaDao.findUserOrAdminById(UUID.fromString(input));
-    }
-
     public static void menuUtente() {
         /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
         System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
@@ -178,7 +172,9 @@ public class Application {
         int scelta = gestioneInputIntMenu(1, 4);
         switch (scelta) {
             case 1:
+
                 /*metodo per vidimare il biglietto*/ /*gianluca*/
+
                 break;
             case 2:
                 /*metodo acquista biglietto*/ /*acquista biglietto*/
@@ -300,8 +296,6 @@ public class Application {
         chiudiScanner();
     }
 
-    /*creare metodi per interazione utente*/
-
     /*------- INTERAZIONE UTENTE-----------*/
     public static int inputScanner() {
         Scanner scanner = new Scanner(System.in);
@@ -315,12 +309,13 @@ public class Application {
         }
     }
 
+    /*creare metodi per interazione utente*/
+
     public static String inputScannerUUID() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Inserisci UUID: ");
         return scanner.nextLine();
     }
-
 
     /*------IMPLEMENTARE LE LOGICHE---------*/
     public static boolean trovaUtente(String uuid) {
@@ -333,8 +328,8 @@ public class Application {
         return true;
     }
 
-    public static void vidmazioneBiglietto(Biglietto biglietto, Mezzo mezzo) {
-        Vidimato bigliettoDaVidimare = new Vidimato(biglietto, mezzo, LocalDate.now());
+    public static void vidmazioneBiglietto(Biglietto biglietto, GiroTratta giroTratta) {
+        Vidimato bigliettoDaVidimare = new Vidimato(biglietto, giroTratta, LocalDate.now());
         vidimatoDao.save(bigliettoDaVidimare);
         System.out.println("Il biglietto è stato vidimato correttamente!");
     }
@@ -365,6 +360,15 @@ public class Application {
 
     public static void chiudiScanner() {
         System.out.println("Scanner chiuso. Arrivederci!");
+    }
+
+    private static Persona login() {
+        System.out.println("inserisci il tuo codice UUID");
+        String input = scanner.nextLine();
+        /*devo capire se è un utente o un admin */  /*gianluca*/
+        /*fatto questo nel if else if che creeremo dobbiamo implementare i metodi che continueranno il menu*/
+        return personaDao.findUserOrAdminById(UUID.fromString(input));
+
     }
 
 }
