@@ -240,7 +240,7 @@ public class Application {
         int scelta = gestioneInputIntMenu(1, 4);
         switch (scelta) {
             case 1:
-                /*metodo per vidimare il biglietto*/
+                /*metodo per vidimare il biglietto*/ /*gianluca*/
                 break;
             case 2:
                 /*metodo acquista biglietto*/ /*acquista biglietto*/
