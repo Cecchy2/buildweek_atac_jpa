@@ -5,6 +5,7 @@ import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
 import dariocecchinato.enums.StatoDistributore;
 import dariocecchinato.enums.Tipo_abbonamento;
+import dariocecchinato.exceptions.NotFoundException;
 import enums.TipoMezzo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -67,9 +68,9 @@ public class Application {
             String zone_di_residenza = f.address().fullAddress();
             return new Utente(nomeUtente, cognomeUtente, email, eta, zone_di_residenza);
         };
-       /* for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 20; i++) {
             ud.save(randomUtenteSupplier.get());
-        }*/
+        }
         List<Utente> utenti = ud.findAll();
 
         /*CREAZIONE DISTRIBUTORI*/
@@ -78,9 +79,9 @@ public class Application {
             String ubicazione = f.address().streetAddress();
             return new Distributore(stato, ubicazione);
         };
-        /*for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             db.save(distributoreSupplier.get());
-        }*/
+        }
         List<Distributore> distributori = db.findAll();
 
         utenti.stream()
@@ -267,7 +268,7 @@ public class Application {
         int scelta = gestioneInputIntMenu(1, 2);
         switch (scelta) {
             case 1:
-                /*metodo controllo data di scadenza abbonamento*/ /*cristiano*/
+                controllaValiditaAbbonamento();
                 break;
             case 2:
                 /*metodo acquista abbonamento*/
@@ -294,7 +295,7 @@ public class Application {
         boolean tesseraValida = verificaValiditàTessera(uuid);
 
         if (tesseraValida) {
-            opzioniUtente();
+
         } else {
             System.out.println("La tua tessera è scaduta, vuoi rinnovarla?");
             System.out.println("1- Rinnovo");
@@ -316,47 +317,6 @@ public class Application {
         }
     }
 
-    /*---------OPZIONI UTENTE--------------*/
-    public static void opzioniUtente() {
-        System.out.println("Cosa vuoi fare?");
-        System.out.println("1- Controlla data di scadenza tessera");
-        System.out.println("2- Controlla i biglietti disponibili");
-        System.out.println("3- Controlla il tuo abbonamento");
-        System.out.println("4- Acquista biglietto");
-        System.out.println("5- Acquista abbonamento");
-        System.out.println("6- Esci");
-        System.out.println("7- Contattaci");
-
-        int scelta = inputScanner();
-
-        switch (scelta) {
-            case 1:
-                controllaDataScadenza();
-                break;
-            case 2:
-                controllaBiglietti();
-                break;
-            case 3:
-                controllaAbbonamento();
-                break;
-            case 4:
-                acquistaBiglietto();
-                break;
-            case 5:
-                acquistaAbbonamento();
-                break;
-            case 6:
-                chiudiScanner();
-                break;
-            case 7:
-                contattaci();
-                break;
-            default:
-                System.out.println("Scelta non valida");
-                opzioniUtente();
-                break;
-        }
-    }
 
     public static void rinnovaTessera(String uuid) {
         System.out.println("Complimenti, hai pagato millemilaeuro ad ATAC e non ce lo meritiamo!");
@@ -404,8 +364,56 @@ public class Application {
         System.out.println("Hai 5 biglietti disponibili.");
     }
 
-    public static void controllaAbbonamento() {
-        System.out.println("Il tuo abbonamento è attivo fino al 31/12/2024.");
+    public static void controllaValiditaAbbonamento() {
+
+        /* 1 mi recupero tessera tramite tesseradao */
+
+        /*2 controllo se la tessera ha gia abbonamenti caricati
+         * 2.1 e se il piu recente è ancora valido
+         *
+         * 3 mi trovo l'abb piu recente
+         *
+         * 4 verifico la data discadenza*/
+        System.out.println("Inserisci l'UUID della tua tessera:");
+        String uuidInput = scanner.nextLine();
+        UUID tesseraId = UUID.fromString(uuidInput);
+
+        /*1*/
+        Tessera tessera;
+        try {
+            tessera = td.getById(tesseraId);
+        } catch (NotFoundException e) {
+            System.out.println("Tessera non trovata.");
+            return;
+        }
+        /*2*/
+
+        List<Abbonamento> abbonamenti = tessera.getAbbonamenti();
+        if (abbonamenti == null || abbonamenti.isEmpty()) {
+            System.out.println("Non ci sono abbonamenti associati a questa tessera.");
+            return;
+        }
+
+        /*3*/
+        Abbonamento abbonamentoRecente = abbonamenti.stream()
+                .max(Comparator.comparing(Abbonamento::getData_validazione))/*.max((a1, a2) -> a1.getData_validazione().compareTo(a2.getData_validazione()))*/
+                .orElse(null);
+
+        if (abbonamentoRecente == null) {
+            System.out.println("Nessun abbonamento valido trovato.");
+            return;
+        }
+
+        /*4*/
+        LocalDate dataScadenza = abbonamentoRecente.getData_scadenza();
+        if (dataScadenza != null && !dataScadenza.isBefore(LocalDate.now())) {
+            System.out.println("Il tuo abbonamento è ancora valido fino il: " + dataScadenza);
+        } else {
+            System.out.println("Il tuo abbonamento è scaduto il: " + dataScadenza);
+        }
+    }
+
+    private static void controllaAbbonamento() {
     }
 
     public static void acquistaBiglietto() {
@@ -415,6 +423,7 @@ public class Application {
     public static void acquistaAbbonamento() {
         System.out.println("Hai acquistato un abbonamento.");
     }
+
 
     public static void contattaci() {
         System.out.println("Puoi contattarci al numero 123-456-7890.");
