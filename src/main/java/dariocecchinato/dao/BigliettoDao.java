@@ -4,7 +4,9 @@ import dariocecchinato.entities.Biglietto;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
+import java.util.List;
 import java.util.UUID;
 
 public class BigliettoDao {
@@ -36,5 +38,10 @@ public class BigliettoDao {
         Biglietto found = em.find(Biglietto.class, bigliettoId);
         if (found == null) throw new NotFoundException(bigliettoId);
         return found;
+    }
+
+    public List<Biglietto> findAll() {
+        TypedQuery<Biglietto> query = em.createQuery("SELECT b FROM Biglietto b", Biglietto.class);
+        return query.getResultList();
     }
 }

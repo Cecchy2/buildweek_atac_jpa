@@ -1,6 +1,6 @@
 package dariocecchinato.dao;
 
-import dariocecchinato.entities.Distributore;
+import dariocecchinato.entities.Mezzo;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -9,14 +9,14 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.UUID;
 
-public class DistributoreDao {
+public class MezzoDao {
     private final EntityManager em;
 
-    public DistributoreDao(EntityManager em) {
+    public MezzoDao(EntityManager em) {
         this.em = em;
     }
 
-    public void save(Distributore distributore) {
+    public void save(Mezzo mezzo) {
         //NEL PROCESSO DI SCRITTURA BISOGNA UTILIZZARE UNA TRANSAZIONE PER ASSICURARSI CHE AVVENGA IN SICUREZZA
 
         //1. chiedo all'entity manager di fornire una transazione
@@ -26,23 +26,22 @@ public class DistributoreDao {
         transaction.begin();
 
         //3.aggiungo l'evento al persistence context
-        em.persist(distributore);
+        em.persist(mezzo);
 
         //4.concludiamo la transazione salvando l'evento nel DB
         transaction.commit();
 
-        System.out.println("Il Distributore con ID : " + distributore.getId() + " " + " è stato salvato con successo!");
+        System.out.println("Il Mezzo con ID : " + mezzo.getMezzo_id() + " " + " è stato salvato con successo!");
     }
 
-    public Distributore getById(UUID distributoreId) {
-        Distributore found = em.find(Distributore.class, distributoreId);
-        if (found == null) throw new NotFoundException(distributoreId);
+    public Mezzo getById(UUID mezzoId) {
+        Mezzo found = em.find(Mezzo.class, mezzoId);
+        if (found == null) throw new NotFoundException(mezzoId);
         return found;
     }
 
-
-    public List<Distributore> findAll() {
-        TypedQuery<Distributore> query = em.createQuery("SELECT d FROM Distributore d", Distributore.class);
+    public List<Mezzo> findAll() {
+        TypedQuery<Mezzo> query = em.createQuery("SELECT m FROM Mezzo m", Mezzo.class);
         return query.getResultList();
     }
 }

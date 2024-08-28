@@ -13,6 +13,7 @@ public class Abbonamento {
     private UUID id;
     private LocalDate data_validazione;
     private LocalDate data_scadenza;
+    @Enumerated(EnumType.STRING)
     private Tipo_abbonamento tipo_abbonamento;
     @ManyToOne
     @JoinColumn(name = "tessera_id")
@@ -25,13 +26,27 @@ public class Abbonamento {
     private Rivenditore rivenditore_id;
 
 
-    public Abbonamento(LocalDate data_validazione, Tipo_abbonamento tipo_abbonamento) {
+    public Abbonamento(LocalDate data_validazione, Tipo_abbonamento tipo_abbonamento, Tessera tessera, Rivenditore rivenditore) {
         this.data_validazione = data_validazione;
         this.tipo_abbonamento = tipo_abbonamento;
         this.data_scadenza = tipo_abbonamento == Tipo_abbonamento.MENSILE ?
                 data_validazione.plusMonths(1) :
                 data_validazione.plusWeeks(1);
+        this.tessera_id = tessera;
+        this.rivenditore_id = rivenditore;
+
     }
+
+    public Abbonamento(LocalDate data_validazione, Tipo_abbonamento tipo_abbonamento, Tessera tessera, Distributore distributore) {
+        this.data_validazione = data_validazione;
+        this.tipo_abbonamento = tipo_abbonamento;
+        this.data_scadenza = tipo_abbonamento == Tipo_abbonamento.MENSILE ?
+                data_validazione.plusMonths(1) :
+                data_validazione.plusWeeks(1);
+        this.tessera_id = tessera;
+        this.distributore_id = distributore;
+    }
+
 
     public Abbonamento() {
     }

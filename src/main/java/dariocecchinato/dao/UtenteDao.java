@@ -15,6 +15,7 @@ public class UtenteDao {
     }
 
     //*************************************  Metodo SAVE  ****************************************
+
     public void save(Utente utente) {
         //1.
         EntityTransaction transaction = em.getTransaction();
