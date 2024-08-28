@@ -126,6 +126,7 @@ public class Application {
             switch (scelta) {
                 case 1:
                     /*aggiungere metodo per la gestione del registrati*/
+                    registrazione();
                     break;
                 case 2:
                     /*add metodo per gestire il login*/
@@ -212,7 +213,7 @@ public class Application {
                     break;
                 case 3:
                     /*metodo abbonamento*/
-                    menuAbbonamento();
+                    menuAbbonamento(utente);
                     break;
                 case 4:
                     /*messaggio che compare in contattaci*/
@@ -228,14 +229,14 @@ public class Application {
         }
     }
 
-    public static void menuAbbonamento() {
+    public static void menuAbbonamento(Utente utente) {
         System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
         System.out.println("1- Controlla validità");
         System.out.println("2- Acquista abbonamento");
         int scelta = gestioneInputIntMenu(1, 2);
         switch (scelta) {
             case 1:
-                controllaValiditaAbbonamento();
+                controllaValiditaAbbonamento(utente); /*cristiano*/
                 break;
             case 2:
                 /*metodo acquista abbonamento*/
@@ -246,7 +247,7 @@ public class Application {
         }
     }
 
-    public static void controllaValiditaAbbonamento() {
+    public static void controllaValiditaAbbonamento(Utente utente) {
 
         /* 1 mi recupero tessera tramite tesseradao */
 
@@ -293,6 +294,10 @@ public class Application {
         } else {
             System.out.println("Il tuo abbonamento è scaduto il: " + dataScadenza);
         }
+    }
+
+    private static void registrazione() {
+        /*crei un utente, e subito dopo ti crei la tessera*/
     }
 }
 
