@@ -44,4 +44,9 @@ public class TrattaDao {
         TypedQuery<Tratta> query = em.createQuery("SELECT m FROM Tratta m", Tratta.class);
         return query.getResultList();
     }
+
+    public List<Object[]> getAllZonaPartenzaECapolinea() {
+        TypedQuery<Object[]> query = em.createQuery("SELECT t.zona_di_partenza FROM Tratta t", Object[].class);
+        return query.getResultList();
+    }
 }

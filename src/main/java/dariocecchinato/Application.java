@@ -95,7 +95,7 @@ public class Application {
         for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
         }*/
-        
+
         //**************************   CREAZIONE GIROTRATTE  *********************************
         Supplier<GiroTratta> giroTrattaSupplier = new GiroTrattaSupplier(mezzi, tratte);
         for (int i = 0; i < 10; i++) {
@@ -174,6 +174,26 @@ public class Application {
             case 1:
 
                 /*metodo per vidimare il biglietto*/ /*gianluca*/
+                System.out.println("Scegli la tratta che desideri percorrere:");
+                //lista di tutte le tratte del DB
+                List<Tratta> listaTratte = trattaDao.findAll();
+                //lista di oggetti delle colonne zona_partenza e capolinea
+                List<Object[]> zonePartenzaCapolinea = trattaDao.getAllZonaPartenzaECapolinea();
+                for (int i = 0; i < zonePartenzaCapolinea.size(); i++) {
+                    System.out.println(i + 1 + "- " + Arrays.toString(zonePartenzaCapolinea.get(i)));
+                }
+
+                //raccolgo l'input dell'utente per la scelta della tratta
+                int inputTratta = gestioneInputIntMenu(1, zonePartenzaCapolinea.size());
+                //lista dei giri della tratta selezionata dall'utente
+                List<GiroTratta> giroTrattaDellaTrattaSelezionata = listaTratte.get(inputTratta).getGiritratte();
+                System.out.println("Informazioni sul giro della tratta:");
+                System.out.println("Tempo di partenza : " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_partenza());
+                System.out.println("Tempo di arrivo: " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_arrivo());
+                System.out.println("Mezzo : " + giroTrattaDellaTrattaSelezionata.getFirst().getMezzo_id().getTipo_mezzo());
+
+                Vidimato vidimazione=new Vidimato()
+
 
                 break;
             case 2:
