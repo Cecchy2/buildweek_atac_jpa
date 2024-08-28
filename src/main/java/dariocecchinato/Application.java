@@ -104,7 +104,6 @@ public class Application {
         /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
         System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
 
-
         startMenu();
         em.close();
         emf.close();
@@ -129,7 +128,7 @@ public class Application {
                 case 2:
                     /*add metodo per gestire il login*/
                     login();
-                    menuUtente(); /*da togliere una volta finito il metodo login, per ora questa è solo un modo per continuare la struttura del menu*/
+                    //menuUtente(); /*da togliere una volta finito il metodo login, per ora questa è solo un modo per continuare la struttura del menu*/
                     break;
                 case 3:
                     /*si esce dal while principale*/
@@ -164,12 +163,36 @@ public class Application {
         String input = scanner.nextLine();
         /*devo capire se è un utente o un admin */  /*gianluca*/
         /*fatto questo nel if else if che creeremo dobbiamo implementare i metodi che continueranno il menu*/
-        personaDao.findUserOrAdminById(UUID.fromString(input));
+        findUserOrAdminById2(UUID.fromString(input));
+
     }
 
-    public static void menuUtente() {
-        /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
-        
+    public static void findUserOrAdminById2(UUID personaId) {
+        Utente foundUser = em.find(Utente.class, personaId);
+        if (foundUser == null) {
+            Amministratore foundAdmin = em.find(Amministratore.class, personaId);
+            System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
+            /*metodo per avanzare nel menu amministratore*/
+        }
+        System.out.println("Benvenuto/a utente " + foundUser.getNome());
+        menuUtente(foundUser);
+    }
+
+    public static void menuUtente(Utente utente) {
+        if (!td.isTesseraValida(utente.getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
+            System.out.println("Attenzione: la tua tessera è scaduta! Vuoi rinnovarla?");
+            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
+            System.out.println("1- Rinnova tessera");
+            System.out.println("2- Non rinnovare");
+            int scelta = gestioneInputIntMenu(1, 2);
+            if (scelta == 1) {
+                Tessera tessera = utente.getTessera();
+                tessera.rinnovoTessera();
+            } else {
+                System.out.println("Tessera non rinnovata");
+            }
+        }
+
         System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
         System.out.println("1- Validazione corsa");
         System.out.println("2- Acquista biglietto");
@@ -226,81 +249,10 @@ public class Application {
         System.out.println("Ciao CiccioGamer");
     }
 
-    /*------------------CONTROLL0 TESSERA---------------------*/
-    public static void controllaTessera(String uuid) {
-        boolean tesseraValida = verificaValiditàTessera(uuid);
-
-        if (tesseraValida) {
-            opzioniUtente();
-        } else {
-            System.out.println("La tua tessera è scaduta, vuoi rinnovarla?");
-            System.out.println("1- Rinnovo");
-            System.out.println("2- Esci");
-
-            int scelta = inputScanner();
-            switch (scelta) {
-                case 1:
-                    rinnovaTessera(uuid);
-                    break;
-                case 2:
-                    chiudiScanner();
-                    break;
-                default:
-                    System.out.println("Scelta non valida");
-                    controllaTessera(uuid);
-                    break;
-            }
-        }
-    }
-
-    /*---------OPZIONI UTENTE--------------*/
-    public static void opzioniUtente() {
-        System.out.println("Cosa vuoi fare?");
-        System.out.println("1- Controlla data di scadenza tessera");
-        System.out.println("2- Controlla i biglietti disponibili");
-        System.out.println("3- Controlla il tuo abbonamento");
-        System.out.println("4- Acquista biglietto");
-        System.out.println("5- Acquista abbonamento");
-        System.out.println("6- Esci");
-        System.out.println("7- Contattaci");
-
-        int scelta = inputScanner();
-
-        switch (scelta) {
-            case 1:
-                controllaDataScadenza();
-                break;
-            case 2:
-                controllaBiglietti();
-                break;
-            case 3:
-                controllaAbbonamento();
-                break;
-            case 4:
-                acquistaBiglietto();
-                break;
-            case 5:
-                acquistaAbbonamento();
-                break;
-            case 6:
-                chiudiScanner();
-                break;
-            case 7:
-                contattaci();
-                break;
-            default:
-                System.out.println("Scelta non valida");
-                opzioniUtente();
-                break;
-        }
-    }
-
     public static void rinnovaTessera(String uuid) {
         System.out.println("Complimenti, hai pagato millemilaeuro ad ATAC e non ce lo meritiamo!");
         chiudiScanner();
     }
-
-    /*creare metodi per interazione utente*/
 
     /*------- INTERAZIONE UTENTE-----------*/
     public static int inputScanner() {
@@ -321,6 +273,7 @@ public class Application {
         return scanner.nextLine();
     }
 
+    /*creare metodi per interazione utente*/
 
     /*------IMPLEMENTARE LE LOGICHE---------*/
     public static boolean trovaUtente(String uuid) {
@@ -360,6 +313,8 @@ public class Application {
     public static void chiudiScanner() {
         System.out.println("Scanner chiuso. Arrivederci!");
     }
+
+
 }
 
 

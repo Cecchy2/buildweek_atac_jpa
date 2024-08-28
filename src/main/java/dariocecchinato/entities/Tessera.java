@@ -33,6 +33,15 @@ public class Tessera {
     public Tessera() {
     }
 
+    public void rinnovoTessera() {
+        if (LocalDate.now().isAfter(data_scadenza)) {
+            data_scadenza = LocalDate.now().plusYears(1);
+            System.out.println("Tessera rinnovata. Nuova data di scadenza: " + data_scadenza);
+        } else {
+            System.out.println("La tessera è ancora valida fino al: " + data_scadenza);
+        }
+    }
+
     public UUID getId() {
         return id;
     }
