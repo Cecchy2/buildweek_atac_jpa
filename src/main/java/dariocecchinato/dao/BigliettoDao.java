@@ -3,6 +3,7 @@ package dariocecchinato.dao;
 import dariocecchinato.entities.Biglietto;
 import dariocecchinato.entities.Distributore;
 import dariocecchinato.entities.Rivenditore;
+import dariocecchinato.entities.Tessera;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -55,13 +56,9 @@ public class BigliettoDao {
         return query.getResultList();
     }
 
-    public void acquistaBiglietto() {
+    public void acquistaBiglietto(Tessera tessera) {
         Scanner scanner = new Scanner(System.in);
 
-
-        /*
-        Tessera tessera = td.getById(tesseraIdUUID);
-        }*/
 
         while (true) {
 
@@ -82,7 +79,7 @@ public class BigliettoDao {
                     int indiceDistributore = Integer.parseInt(distributoreScelto);
 
                     Distributore distributore = distributori.get(indiceDistributore - 1);
-                    Biglietto biglietto = new Biglietto(LocalDate.now(), 1.50, distributore, null);
+                    Biglietto biglietto = new Biglietto(LocalDate.now(), 1.50, distributore, tessera);
                     save(biglietto);
                     System.out.println("Hai acquistato Il Biglietto " + biglietto.getId());
                     break;
@@ -97,7 +94,7 @@ public class BigliettoDao {
                     int indiceRivenditore = Integer.parseInt(rivenditoreScelto);
                     Rivenditore rivenditore = rivenditori.get(indiceRivenditore - 1);
 
-                    Biglietto biglietto2 = new Biglietto(LocalDate.now(), 1.50, rivenditore, null);
+                    Biglietto biglietto2 = new Biglietto(LocalDate.now(), 1.50, rivenditore, tessera);
                     save(biglietto2);
                     System.out.println("Hai acquistato Il Biglietto" + biglietto2.getId());
                     break;

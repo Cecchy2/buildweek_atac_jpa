@@ -184,7 +184,7 @@ public class Application {
     }
 
     public static void menuUtente(Utente utente) {
-        if (!td.isTesseraValida(utente.getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
+        if (!td.isTesseraValida(utente.getTessera().getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
             System.out.println("Attenzione: la tua tessera è scaduta! Vuoi rinnovarla?");
             System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
             System.out.println("1- Rinnova tessera");
@@ -211,7 +211,7 @@ public class Application {
                     /*metodo per vidimare il biglietto*/ /*gianluca*/
                     break;
                 case 2:
-                    bigliettoDao.acquistaBiglietto();
+                    bigliettoDao.acquistaBiglietto(utente.getTessera());
                     break;
                 case 3:
                     /*metodo abbonamento*/
