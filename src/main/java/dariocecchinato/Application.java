@@ -18,27 +18,24 @@ import java.util.function.Supplier;
 public class Application {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("atac");
     private static Scanner scanner = new Scanner(System.in);
+    private static EntityManager em = emf.createEntityManager();
+    /* Sezione DAO*/
+    private static DistributoreDao db = new DistributoreDao(em);
+    private static RivenditoreDao rivDao = new RivenditoreDao(em);
+    private static UtenteDao ud = new UtenteDao(em);
+    private static TesseraDao td = new TesseraDao(em);
+    private static AbbonamentoDao ab = new AbbonamentoDao(em);
+    private static TrattaDao trattaDao = new TrattaDao(em);
+    private static BigliettoDao bigliettoDao = new BigliettoDao(em);
+    private static MezzoDao mezzoDao = new MezzoDao(em);
+    private static GiroTrattaDao giroTrattaDao = new GiroTrattaDao(em);
+    private static AmministratoreDao amministratoreDao = new AmministratoreDao(em);
+    private static VidimatoDao vidimatoDao = new VidimatoDao(em);
+    private static Random random = new Random();
+    private static Faker f = new Faker(Locale.ITALY);
 
     public static void main(String[] args) {
-        EntityManager em = emf.createEntityManager();
-        Random random = new Random();
-        Faker f = new Faker(Locale.ITALY);
 
-
-        /* Sezione DAO*/
-        DistributoreDao db = new DistributoreDao(em);
-        RivenditoreDao rivDao = new RivenditoreDao(em);
-        UtenteDao ud = new UtenteDao(em);
-        TesseraDao td = new TesseraDao(em);
-        AbbonamentoDao ab = new AbbonamentoDao(em);
-        TrattaDao trattaDao = new TrattaDao(em);
-        BigliettoDao bigliettoDao = new BigliettoDao(em);
-        Faker faker = new Faker(Locale.ITALY);
-        MezzoDao mezzoDao = new MezzoDao(em);
-        GiroTrattaDao giroTrattaDao = new GiroTrattaDao(em);
-        AmministratoreDao amministratoreDao = new AmministratoreDao(em);
-
-        VidimatoDao vidimatoDao = new VidimatoDao(em);
 
         Supplier<Tratta> trattaSupplier = () -> new Tratta(
                 f.address().cityName(),
@@ -57,12 +54,9 @@ public class Application {
             String nomeLocale = f.company().name();
             return new Rivenditore(nomeLocale);
         };
-
-
         /*for (int i = 0; i < 5; i++) {
             rivDao.save(randomRivenditoreSupplier.get());
         }*/
-
         List<Rivenditore> rivenditori = rivDao.findAll();
 
 
@@ -132,7 +126,6 @@ public class Application {
 
         //GENERAZIONE BIGLIETTI PER OGNI UTENTE
         List<Biglietto> biglietti = bigliettoDao.findAll();
-
         for (Utente utente : utenti) {
             LocalDate dataEmissione = LocalDate.now();
             double prezzo = 2.00;
@@ -140,11 +133,8 @@ public class Application {
             Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
             Tessera tessera = utente.getTessera();
             Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
-
             bigliettoDao.save(biglietto);
-
         }
-
 
         //**************VIDIMAZIONE DI BIGLIETTO
         /*Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
@@ -152,7 +142,6 @@ public class Application {
             LocalDate dataVidimazione = LocalDate.now();
             return new Vidimato(biglietto, tramFromDb, dataVidimazione);
         };*/
-
        /* for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
         }*/
@@ -184,7 +173,7 @@ public class Application {
     }
 
     public static void menu() {
-        System.out.println("Benvenuto, sei un admin o un utente?");
+        System.out.println("Benvenuto in atac, sei un admin o un utente?");
         System.out.println("Premere:");
         System.out.println("1- Utente");
         System.out.println("2- Amministratore");
