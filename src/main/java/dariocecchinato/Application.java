@@ -17,6 +17,7 @@ public class Application {
     private static EntityManager em = emf.createEntityManager();
     /* Sezione DAO*/
     private static DistributoreDao db = new DistributoreDao(em);
+    private static PersonaDao personaDao = new PersonaDao(em);
     private static RivenditoreDao rivDao = new RivenditoreDao(em);
     private static UtenteDao ud = new UtenteDao(em);
     private static TesseraDao td = new TesseraDao(em);
@@ -163,6 +164,7 @@ public class Application {
         String input = scanner.nextLine();
         /*devo capire se è un utente o un admin */  /*gianluca*/
         /*fatto questo nel if else if che creeremo dobbiamo implementare i metodi che continueranno il menu*/
+        personaDao.findUserOrAdminById(UUID.fromString(input));
     }
 
     public static void menuUtente() {
