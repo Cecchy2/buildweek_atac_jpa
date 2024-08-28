@@ -294,7 +294,7 @@ public class Application {
         boolean tesseraValida = verificaValiditàTessera(uuid);
 
         if (tesseraValida) {
-
+            opzioniUtente();
         } else {
             System.out.println("La tua tessera è scaduta, vuoi rinnovarla?");
             System.out.println("1- Rinnovo");
@@ -316,6 +316,47 @@ public class Application {
         }
     }
 
+    /*---------OPZIONI UTENTE--------------*/
+    public static void opzioniUtente() {
+        System.out.println("Cosa vuoi fare?");
+        System.out.println("1- Controlla data di scadenza tessera");
+        System.out.println("2- Controlla i biglietti disponibili");
+        System.out.println("3- Controlla il tuo abbonamento");
+        System.out.println("4- Acquista biglietto");
+        System.out.println("5- Acquista abbonamento");
+        System.out.println("6- Esci");
+        System.out.println("7- Contattaci");
+
+        int scelta = inputScanner();
+
+        switch (scelta) {
+            case 1:
+                controllaDataScadenza();
+                break;
+            case 2:
+                controllaBiglietti();
+                break;
+            case 3:
+                controllaAbbonamento();
+                break;
+            case 4:
+                acquistaBiglietto();
+                break;
+            case 5:
+                acquistaAbbonamento();
+                break;
+            case 6:
+                chiudiScanner();
+                break;
+            case 7:
+                contattaci();
+                break;
+            default:
+                System.out.println("Scelta non valida");
+                opzioniUtente();
+                break;
+        }
+    }
 
     public static void rinnovaTessera(String uuid) {
         System.out.println("Complimenti, hai pagato millemilaeuro ad ATAC e non ce lo meritiamo!");
@@ -363,6 +404,9 @@ public class Application {
         System.out.println("Hai 5 biglietti disponibili.");
     }
 
+    public static void controllaAbbonamento() {
+        System.out.println("Il tuo abbonamento è attivo fino al 31/12/2024.");
+    }
 
     public static void acquistaBiglietto() {
         System.out.println("Hai acquistato un biglietto.");
