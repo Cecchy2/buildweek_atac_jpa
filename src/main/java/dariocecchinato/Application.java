@@ -1,18 +1,17 @@
 package dariocecchinato;
 
 import com.github.javafaker.Faker;
+import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
-import dariocecchinato.enums.StatoDistributore;
-import dariocecchinato.enums.Tipo_abbonamento;
-import enums.TipoMezzo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.function.Supplier;
 
 public class Application {
@@ -35,137 +34,77 @@ public class Application {
     private static Faker f = new Faker(Locale.ITALY);
 
     public static void main(String[] args) {
-        /*CREAZIONE TRATTE*/
-        Supplier<Tratta> trattaSupplier = () -> new Tratta(
-                f.address().cityName(),
-                f.address().cityName(),
-                f.number().numberBetween(15, 120)
-        );
-        List<Tratta> tratte = new ArrayList<>();
+
+        //**************************   CREAZIONE TRATTE  *********************************
+        Supplier<Tratta> trattaSupplier = new TrattaSupplier();
         for (int i = 0; i < 10; i++) {
-            Tratta tratta = trattaSupplier.get();
-            tratte.add(tratta);
+            //trattaDao.save(trattaSupplier.get());
         }
-        //tratte.forEach(trattaDao::save);
-
-        /*CREAZIONE RIVENDITORI*/
-        Supplier<Rivenditore> randomRivenditoreSupplier = () -> {
-            String nomeLocale = f.company().name();
-            return new Rivenditore(nomeLocale);
-        };
-        /*for (int i = 0; i < 5; i++) {
-            rivDao.save(randomRivenditoreSupplier.get());
-        }*/
+        List<Tratta> tratte = trattaDao.findAll();
+        //**************************   CREAZIONE RIVENDITORI  *********************************
+        Supplier<Rivenditore> randomRivenditoreSupplier = new RivenditoreSupplier();
+        for (int i = 0; i < 5; i++) {
+            //rivDao.save(randomRivenditoreSupplier.get());
+        }
         List<Rivenditore> rivenditori = rivDao.findAll();
-
-        /*CREAZIONE UTENTI*/
-        Supplier<Utente> randomUtenteSupplier = () -> {
-            String nomeUtente = f.name().firstName();
-            String cognomeUtente = f.name().lastName();
-            String email = f.internet().emailAddress();
-            int eta = f.number().numberBetween(14, 88);
-            String zone_di_residenza = f.address().fullAddress();
-            return new Utente(nomeUtente, cognomeUtente, email, eta, zone_di_residenza);
-        };
-       /* for (int i = 0; i < 20; i++) {
-            ud.save(randomUtenteSupplier.get());
-        }*/
+        //**************************   CREAZIONE UTENTI  *********************************
+        Supplier<Utente> randomUtenteSupplier = new UtenteSupplier();
+        for (int i = 0; i < 20; i++) {
+            //ud.save(randomUtenteSupplier.get());
+        }
         List<Utente> utenti = ud.findAll();
-
-        /*CREAZIONE DISTRIBUTORI*/
-        Supplier<Distributore> distributoreSupplier = () -> {
-            StatoDistributore stato = StatoDistributore.values()[f.number().numberBetween(0, StatoDistributore.values().length)];
-            String ubicazione = f.address().streetAddress();
-            return new Distributore(stato, ubicazione);
-        };
-        /*for (int i = 0; i < 10; i++) {
-            db.save(distributoreSupplier.get());
-        }*/
+        //**************************   CREAZIONE DISTRIBUTORI  *********************************
+        Supplier<Distributore> distributoreSupplier = new DistributoreSupplier();
+        for (int i = 0; i < 10; i++) {
+            //db.save(distributoreSupplier.get());
+        }
         List<Distributore> distributori = db.findAll();
-
+        //**************************   CREAZIONE TESSERE  *********************************
         utenti.stream()
                 .filter(utente -> utente.getTessera() == null)
                 .forEach(utente -> {
-                    LocalDate data_emissione = LocalDate.now().minusDays(f.number().numberBetween(1, 720));
-                    Tessera tessera = new Tessera(data_emissione, utente);
+                    Supplier<Tessera> tesseraSupplier = new TesseraSupplier(utente);
+                    Tessera tessera = tesseraSupplier.get();
                     //td.save(tessera);
                 });
-
         List<Tessera> tessere = td.findAll();
-
-        /*CREAZIONE ABBONAMENTI*/
-        Supplier<Abbonamento> randomAbbonamentoSupplier = () -> {
-            Tipo_abbonamento tipo = random.nextBoolean() ? Tipo_abbonamento.MENSILE : Tipo_abbonamento.SETTIMANALE;
-            LocalDate dataValidazione = LocalDate.now().minusDays(f.number().numberBetween(1, 60));
-            Tessera tessera = tessere.get(random.nextInt(tessere.size()));
-            if (random.nextBoolean()) {
-                Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
-                return new Abbonamento(dataValidazione, tipo, tessera, rivenditore);
-            } else {
-                Distributore distributore = distributori.get(random.nextInt(distributori.size()));
-                return new Abbonamento(dataValidazione, tipo, tessera, distributore);
-            }
-
-
-        };
-        /*for (int i = 0; i < 15; i++) {
-            ab.save(randomAbbonamentoSupplier.get());
-        }*/
-
-        /*CREAZIONE MEZZI*/
-        Supplier<Mezzo> mezzoSupplier = () -> {
-            TipoMezzo[] tipiMezzi = TipoMezzo.values();
-            return new Mezzo(f.number().numberBetween(8, 100), tipiMezzi[f.number().numberBetween(0, 2)]);
-        };
-        List<Mezzo> mezzi = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Mezzo mezzo = mezzoSupplier.get();
-            mezzi.add(mezzo);
+        //**************************   CREAZIONE ABBONAMENTI  *********************************
+        Supplier<Abbonamento> randomAbbonamentoSupplier = new AbbonamentoSupplier(tessere, rivenditori, distributori);
+        for (int i = 0; i < 15; i++) {
+            //ab.save(randomAbbonamentoSupplier.get());
         }
-        //mezzi.forEach(mezzoDao::save);
-
-        //GENERAZIONE BIGLIETTI PER OGNI UTENTE
+        List<Abbonamento> abbonamenti = ab.findAll();
+        //**************************   CREAZIONE MEZZI  *********************************
+        Supplier<Mezzo> mezzoSupplier = new MezzoSupplier();
+        for (int i = 0; i < 25; i++) {
+            //mezzoDao.save(mezzoSupplier.get());
+        }
+        List<Mezzo> mezzi = mezzoDao.findAll();
+        //**************************   CREAZIONE BIGLIETTI  *********************************
+        Supplier<Biglietto> bigliettoSupplier = new BigliettoSupplier(tessere, rivenditori, distributori);
+        for (int i = 0; i < 4; i++) {
+            //bigliettoDao.save(bigliettoSupplier.get());
+        }
         List<Biglietto> biglietti = bigliettoDao.findAll();
-        for (Utente utente : utenti) {
-            LocalDate dataEmissione = LocalDate.now();
-            double prezzo = 2.00;
-            Distributore distributore = distributori.get(random.nextInt(distributori.size()));
-            Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
-            Tessera tessera = utente.getTessera();
-            Biglietto biglietto = new Biglietto(dataEmissione, prezzo, distributore, rivenditore, utente, tessera);
-            bigliettoDao.save(biglietto);
-        }
-
         //**************VIDIMAZIONE DI BIGLIETTO
         /*Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
             Biglietto biglietto = biglietti.get(random.nextInt(biglietti.size()));
             LocalDate dataVidimazione = LocalDate.now();
             return new Vidimato(biglietto, tramFromDb, dataVidimazione);
-        };*/
-       /* for (int i = 0; i < 2; i++) {
+        };
+        for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
         }*/
-
-        List<Mezzo> mezziT = mezzoDao.findAll();
-        List<Tratta> tratteT = trattaDao.findAll();
-        /*CREAZIONE GIRITRATTA*/
-        Supplier<GiroTratta> giroTrattaSupplier = () -> {
-            Mezzo mezzo = mezziT.get(f.number().numberBetween(0, mezzi.size()));
-            Tratta tratta = tratteT.get(f.number().numberBetween(0, tratte.size()));
-            LocalDateTime tempoPartenza = LocalDateTime.now().minusHours(f.number().numberBetween(1, 12));
-            LocalDateTime tempoArrivo = tempoPartenza.plusMinutes(f.number().numberBetween(15, 120));
-            return new GiroTratta(mezzo, tratta, tempoPartenza, tempoArrivo);
-        };
-        List<GiroTratta> giroTratte = new ArrayList<>();
+        //**************************   CREAZIONE GIROTRATTE  *********************************
+        Supplier<GiroTratta> giroTrattaSupplier = new GiroTrattaSupplier(mezzi, tratte);
         for (int i = 0; i < 10; i++) {
-            GiroTratta giroTratta = giroTrattaSupplier.get();
-            giroTratte.add(giroTratta);
+            //giroTrattaDao.save(giroTrattaSupplier.get());
         }
-        //giroTratte.forEach(giroTrattaDao::save);
+        List<GiroTratta> girotratte = giroTrattaDao.findAll();
 
         /**/
-        Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
-        System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));
+        /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
+        System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
 
         em.close();
         emf.close();

@@ -1,6 +1,6 @@
 package dariocecchinato.entities;
 
-import enums.TipoMezzo;
+import dariocecchinato.enums.TipoMezzo;
 import jakarta.persistence.*;
 
 import java.util.List;

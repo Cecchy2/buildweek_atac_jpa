@@ -21,9 +21,7 @@ public class Biglietto {
     @ManyToOne
     @JoinColumn(name = "rivenditore_id")
     private Rivenditore rivenditore_id;
-    @ManyToOne
-    @JoinColumn(name = "utente_id")
-    private Utente utente;
+
     @OneToOne
     @JoinColumn(name = "tessera_id")
     private Tessera tessera_id;
@@ -31,15 +29,24 @@ public class Biglietto {
     public Biglietto() {
     }
 
-    public Biglietto(LocalDate dataEmissione, double prezzo, Distributore distributore_id, Rivenditore rivenditore_id, Utente utente, Tessera tessera_id) {
+    public Biglietto(LocalDate dataEmissione, double prezzo, Distributore distributore_id, Tessera tessera_id) {
         this.dataEmissione = dataEmissione;
         this.prezzo = prezzo;
         this.distributore_id = distributore_id;
         this.rivenditore_id = rivenditore_id;
-        this.utente = utente;
+
         this.tessera_id = tessera_id;
     }
-    
+
+    public Biglietto(LocalDate dataEmissione, double prezzo, Rivenditore rivenditore_id, Tessera tessera_id) {
+        this.dataEmissione = dataEmissione;
+        this.prezzo = prezzo;
+        this.distributore_id = distributore_id;
+        this.rivenditore_id = rivenditore_id;
+
+        this.tessera_id = tessera_id;
+    }
+
 
     public UUID getId() {
         return id;
@@ -62,13 +69,6 @@ public class Biglietto {
         this.prezzo = prezzo;
     }
 
-    public Utente getUtente() {
-        return utente;
-    }
-
-    public void setUtente(Utente utente) {
-        this.utente = utente;
-    }
 
     @Override
     public String toString() {
@@ -76,7 +76,7 @@ public class Biglietto {
                 "id=" + id +
                 ", dataEmissione=" + dataEmissione +
                 ", prezzo=" + prezzo +
-                ", utente=" + utente +
+
 
                 '}';
     }
