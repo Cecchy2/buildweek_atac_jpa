@@ -192,33 +192,38 @@ public class Application {
                 System.out.println("Tessera non rinnovata");
             }
         }
+        cicloMenuUtente:
+        while (true) {
+            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+            System.out.println("1- Validazione corsa");
+            System.out.println("2- Acquista biglietto");
+            System.out.println("3- Abbonamenti");
+            System.out.println("4- Contattaci");
+            System.out.println("5- Esci");
+            int scelta = gestioneInputIntMenu(1, 4);
+            switch (scelta) {
+                case 1:
+                    /*metodo per vidimare il biglietto*/ /*gianluca*/
+                    break;
+                case 2:
+                    /*metodo acquista biglietto*/ /*acquista biglietto*/ /*Dario*/
+                    break;
+                case 3:
+                    /*metodo abbonamento*/
+                    menuAbbonamento();
+                    break;
+                case 4:
+                    /*messaggio che compare in contattaci*/
+                    System.out.println("Hai un problema che questo menu non riesce a soddisfare, contattaci al numero +00-111-222-3333");
+                    break;
+                case 5:
+                    break cicloMenuUtente;
+                default:
+                    System.out.println("Scelta non valida");
+                    break;
+            }
 
-        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
-        System.out.println("1- Validazione corsa");
-        System.out.println("2- Acquista biglietto");
-        System.out.println("3- Abbonamenti");
-        System.out.println("4- Contattaci");
-        int scelta = gestioneInputIntMenu(1, 4);
-        switch (scelta) {
-            case 1:
-                /*metodo per vidimare il biglietto*/ /*gianluca*/
-                break;
-            case 2:
-                /*metodo acquista biglietto*/ /*acquista biglietto*/
-                break;
-            case 3:
-                /*metodo abbonamento*/
-                menuAbbonamento();
-                break;
-            case 4:
-                /*metodo contattaci che in realta posso gestire con due rughe qua*/
-
-                break;
-            default:
-                System.out.println("Scelta non valida");
-                break;
         }
-
     }
 
     public static void menuAbbonamento() {
@@ -237,80 +242,6 @@ public class Application {
                 System.out.println("Scelta non valida");
                 break;
         }
-    }
-
-    /* -----------------MENU AMMINISTRATORE-------------------*/
-    public static void menuAdmin() {
-        System.out.println("Menu amministratore in sviluppo :)");
-
-    }
-
-    public static void salutaUtente(String uuid) {
-        System.out.println("Ciao CiccioGamer");
-    }
-
-    public static void rinnovaTessera(String uuid) {
-        System.out.println("Complimenti, hai pagato millemilaeuro ad ATAC e non ce lo meritiamo!");
-        chiudiScanner();
-    }
-
-    /*------- INTERAZIONE UTENTE-----------*/
-    public static int inputScanner() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            try {
-                System.out.print("Inserisci la tua scelta: ");
-                return Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Inserisci un numero valido.");
-            }
-        }
-    }
-
-    public static String inputScannerUUID() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Inserisci UUID: ");
-        return scanner.nextLine();
-    }
-
-
-    /*------IMPLEMENTARE LE LOGICHE---------*/
-    public static boolean trovaUtente(String uuid) {
-
-        return true;
-    }
-
-    public static boolean verificaValiditàTessera(String uuid) {
-
-        return true;
-    }
-
-    public static void controllaDataScadenza() {
-        System.out.println("La tua tessera scade il 31/12/2024.");
-    }
-
-    public static void controllaBiglietti() {
-        System.out.println("Hai 5 biglietti disponibili.");
-    }
-
-    public static void controllaAbbonamento() {
-        System.out.println("Il tuo abbonamento è attivo fino al 31/12/2024.");
-    }
-
-    public static void acquistaBiglietto() {
-        System.out.println("Hai acquistato un biglietto.");
-    }
-
-    public static void acquistaAbbonamento() {
-        System.out.println("Hai acquistato un abbonamento.");
-    }
-
-    public static void contattaci() {
-        System.out.println("Puoi contattarci al numero 123-456-7890.");
-    }
-
-    public static void chiudiScanner() {
-        System.out.println("Scanner chiuso. Arrivederci!");
     }
 }
 
