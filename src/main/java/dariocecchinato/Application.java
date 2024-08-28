@@ -169,6 +169,7 @@ public class Application {
 
     public static void menuUtente() {
         /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
+        
         System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
         System.out.println("1- Validazione corsa");
         System.out.println("2- Acquista biglietto");
