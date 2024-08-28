@@ -4,15 +4,10 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
-import dariocecchinato.enums.StatoDistributore;
-import dariocecchinato.enums.Tipo_abbonamento;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -113,8 +108,6 @@ public class Application {
         em.close();
         emf.close();
         System.out.println("fin qui ci siamo...");
-
-
     }
 
     public static void startMenu() {
