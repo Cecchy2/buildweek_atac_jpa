@@ -46,10 +46,6 @@ public class Tessera {
         return id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public LocalDate getData_emissione() {
         return data_emissione;
     }

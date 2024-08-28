@@ -54,7 +54,7 @@ public class Application {
         //**************************   CREAZIONE DISTRIBUTORI  *********************************
         Supplier<Distributore> distributoreSupplier = new DistributoreSupplier();
         for (int i = 0; i < 10; i++) {
-            //db.save(distributoreSupplier.get());
+            // db.save(distributoreSupplier.get());
         }
         List<Distributore> distributori = db.findAll();
         //**************************   CREAZIONE TESSERE  *********************************
@@ -89,8 +89,8 @@ public class Application {
             Biglietto biglietto = biglietti.get(random.nextInt(biglietti.size()));
             LocalDate dataVidimazione = LocalDate.now();
             return new Vidimato(biglietto, tramFromDb, dataVidimazione);
-        };*/
-       /* for (int i = 0; i < 2; i++) {
+        };
+        for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
         }*/
         //**************************   CREAZIONE GIROTRATTE  *********************************
@@ -273,7 +273,6 @@ public class Application {
         return scanner.nextLine();
     }
 
-    /*creare metodi per interazione utente*/
 
     /*------IMPLEMENTARE LE LOGICHE---------*/
     public static boolean trovaUtente(String uuid) {
@@ -313,8 +312,6 @@ public class Application {
     public static void chiudiScanner() {
         System.out.println("Scanner chiuso. Arrivederci!");
     }
-
-
 }
 
 

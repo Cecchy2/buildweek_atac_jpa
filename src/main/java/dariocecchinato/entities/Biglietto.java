@@ -21,6 +21,8 @@ public class Biglietto {
     @ManyToOne
     @JoinColumn(name = "rivenditore_id")
     private Rivenditore rivenditore_id;
+    @OneToOne(mappedBy = "biglietto")
+    private Vidimato vidimato;
 
     @OneToOne
     @JoinColumn(name = "tessera_id")
@@ -69,6 +71,37 @@ public class Biglietto {
         this.prezzo = prezzo;
     }
 
+    public Vidimato getVidimato() {
+        return vidimato;
+    }
+
+    public void setVidimato(Vidimato vidimato) {
+        this.vidimato = vidimato;
+    }
+
+    public Tessera getTessera_id() {
+        return tessera_id;
+    }
+
+    public void setTessera_id(Tessera tessera_id) {
+        this.tessera_id = tessera_id;
+    }
+
+    public Rivenditore getRivenditore_id() {
+        return rivenditore_id;
+    }
+
+    public void setRivenditore_id(Rivenditore rivenditore_id) {
+        this.rivenditore_id = rivenditore_id;
+    }
+
+    public Distributore getDistributore_id() {
+        return distributore_id;
+    }
+
+    public void setDistributore_id(Distributore distributore_id) {
+        this.distributore_id = distributore_id;
+    }
 
     @Override
     public String toString() {
