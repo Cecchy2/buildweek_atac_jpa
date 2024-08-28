@@ -193,7 +193,7 @@ public class Application {
                 case 2:
                     /*add metodo per gestire il login*/
                     login();
-
+                    menuUtente(); /*da togliere una volta finito il metodo login, per ora questa è solo un modo per continuare la struttura del menu*/
                     break;
                 case 3:
                     /*si esce dal while principale*/
@@ -227,21 +227,15 @@ public class Application {
         System.out.println("inserisci il tuo codice UUID");
         String input = scanner.nextLine();
         /*devo capire se è un utente o un admin */
-      
+        /*fatto questo nel if else if che creeremo dobbiamo implementare i metodi che continueranno il menu*/
     }
 
     public static void menuUtente() {
-        System.out.println("Bisogna effettuare il login, inserisci il tuo codice UUID:");
-        String uuid = scanner.nextLine();
+        /*metodo per controllare la validita della tessera in caso fosse scaduta*/
+        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+        System.out.println("1- ");
 
-        /*---------------RICERCA UTENTE TRAMITE UUUID--------------------*/
-        if (trovaUtente(uuid)) {
-            salutaUtente(uuid);
-            controllaTessera(uuid);
-        } else {
-            System.out.println("Utente non trovato.");
-            startMenu();
-        }
+
     }
 
     /* -----------------MENU AMMINISTRATORE-------------------*/
