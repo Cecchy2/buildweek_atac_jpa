@@ -16,6 +16,7 @@ public class UtenteDao {
         this.em = em;
     }
 
+
     //*************************************  Metodo SAVE  ****************************************
 
     public void save(Utente utente) {
@@ -41,4 +42,6 @@ public class UtenteDao {
         TypedQuery<Utente> query = em.createQuery("SELECT p FROM Utente p", Utente.class);
         return query.getResultList();
     }
+
+
 }

@@ -17,7 +17,9 @@ public class Application {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("atac");
     private static Scanner scanner = new Scanner(System.in);
     private static EntityManager em = emf.createEntityManager();
-    /* Sezione DAO*/
+
+
+    //**************************   SEZIONE DAO  *********************************
     private static DistributoreDao db = new DistributoreDao(em);
     private static PersonaDao personaDao = new PersonaDao(em);
     private static RivenditoreDao rivDao = new RivenditoreDao(em);
@@ -182,7 +184,7 @@ public class Application {
     }
 
     public static void menuUtente(Utente utente) {
-        if (!td.isTesseraValida(utente.getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
+        if (!td.isTesseraValida(utente.getTessera().getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
             System.out.println("Attenzione: la tua tessera è scaduta! Vuoi rinnovarla?");
             System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
             System.out.println("1- Rinnova tessera");
@@ -209,7 +211,7 @@ public class Application {
                     /*metodo per vidimare il biglietto*/ /*gianluca*/
                     break;
                 case 2:
-                    /*metodo acquista biglietto*/ /*acquista biglietto*/ /*Dario*/
+                    bigliettoDao.acquistaBiglietto(utente.getTessera());
                     break;
                 case 3:
                     /*metodo abbonamento*/
