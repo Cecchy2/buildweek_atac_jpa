@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +37,11 @@ public class TesseraDao {
         } else {
             return found;
         }
+    }
+
+    public boolean isTesseraValida(UUID idTessera) {
+        Tessera tessera = getById(idTessera);
+        return tessera != null && !LocalDate.now().isAfter(tessera.getData_scadenza());
     }
 
     public List<Tessera> findAll() {
