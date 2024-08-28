@@ -166,12 +166,12 @@ public class Application {
         /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
         System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
 
+
+        startMenu();
         em.close();
         emf.close();
         System.out.println("fin qui ci siamo...");
 
-
-        startMenu();
 
     }
 
@@ -184,7 +184,7 @@ public class Application {
             System.out.println("2- Login");
             System.out.println("3- Esci");
 
-            int scelta = gestioneInputIntMenu();
+            int scelta = gestioneInputIntMenu(1, 3);
 
             switch (scelta) {
                 case 1:
@@ -206,13 +206,13 @@ public class Application {
         }
     }
 
-    private static int gestioneInputIntMenu() {
+    private static int gestioneInputIntMenu(int min, int max) {
         while (true) {
             try {
                 int input = scanner.nextInt();
                 scanner.nextLine(); // Pulisce il newline rimasto dopo nextInt()
-                if (input < 1 || input > 3) {
-                    System.out.println("Scelta non valida. Inserisci un numero tra 1 e 3.");
+                if (input < min || input > max) {
+                    System.out.println("Scelta non valida. Inserisci un numero valido.");
                 } else {
                     return input;
                 }
@@ -226,15 +226,56 @@ public class Application {
     private static void login() {
         System.out.println("inserisci il tuo codice UUID");
         String input = scanner.nextLine();
-        /*devo capire se è un utente o un admin */
+        /*devo capire se è un utente o un admin */  /*gianluca*/
         /*fatto questo nel if else if che creeremo dobbiamo implementare i metodi che continueranno il menu*/
     }
 
     public static void menuUtente() {
-        /*metodo per controllare la validita della tessera in caso fosse scaduta*/
+        /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
         System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
-        System.out.println("1- ");
+        System.out.println("1- Validazione corsa");
+        System.out.println("2- Acquista biglietto");
+        System.out.println("3- Abbonamenti");
+        System.out.println("4- Contattaci");
+        int scelta = gestioneInputIntMenu(1, 4);
+        switch (scelta) {
+            case 1:
+                /*metodo per vidimare il biglietto*/
+                break;
+            case 2:
+                /*metodo acquista biglietto*/ /*acquista biglietto*/
+                break;
+            case 3:
+                /*metodo abbonamento*/
+                menuAbbonamento();
+                break;
+            case 4:
+                /*metodo contattaci che in realta posso gestire con due rughe qua*/
 
+                break;
+            default:
+                System.out.println("Scelta non valida");
+                break;
+        }
+
+    }
+
+    public static void menuAbbonamento() {
+        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+        System.out.println("1- Controlla validità");
+        System.out.println("2- Acquista abbonamento");
+        int scelta = gestioneInputIntMenu(1, 2);
+        switch (scelta) {
+            case 1:
+                /*metodo controllo data di scadenza abbonamento*/ /*cristiano*/
+                break;
+            case 2:
+                /*metodo acquista abbonamento*/
+                break;
+            default:
+                System.out.println("Scelta non valida");
+                break;
+        }
 
     }
 
@@ -253,7 +294,7 @@ public class Application {
         boolean tesseraValida = verificaValiditàTessera(uuid);
 
         if (tesseraValida) {
-            opzioniUtente();
+
         } else {
             System.out.println("La tua tessera è scaduta, vuoi rinnovarla?");
             System.out.println("1- Rinnovo");
@@ -275,47 +316,6 @@ public class Application {
         }
     }
 
-    /*---------OPZIONI UTENTE--------------*/
-    public static void opzioniUtente() {
-        System.out.println("Cosa vuoi fare?");
-        System.out.println("1- Controlla data di scadenza tessera");
-        System.out.println("2- Controlla i biglietti disponibili");
-        System.out.println("3- Controlla il tuo abbonamento");
-        System.out.println("4- Acquista biglietto");
-        System.out.println("5- Acquista abbonamento");
-        System.out.println("6- Esci");
-        System.out.println("7- Contattaci");
-
-        int scelta = inputScanner();
-
-        switch (scelta) {
-            case 1:
-                controllaDataScadenza();
-                break;
-            case 2:
-                controllaBiglietti();
-                break;
-            case 3:
-                controllaAbbonamento();
-                break;
-            case 4:
-                acquistaBiglietto();
-                break;
-            case 5:
-                acquistaAbbonamento();
-                break;
-            case 6:
-                chiudiScanner();
-                break;
-            case 7:
-                contattaci();
-                break;
-            default:
-                System.out.println("Scelta non valida");
-                opzioniUtente();
-                break;
-        }
-    }
 
     public static void rinnovaTessera(String uuid) {
         System.out.println("Complimenti, hai pagato millemilaeuro ad ATAC e non ce lo meritiamo!");
@@ -363,9 +363,6 @@ public class Application {
         System.out.println("Hai 5 biglietti disponibili.");
     }
 
-    public static void controllaAbbonamento() {
-        System.out.println("Il tuo abbonamento è attivo fino al 31/12/2024.");
-    }
 
     public static void acquistaBiglietto() {
         System.out.println("Hai acquistato un biglietto.");
