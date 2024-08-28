@@ -298,6 +298,38 @@ public class Application {
 
     private static void registrazione() {
         /*crei un utente, e subito dopo ti crei la tessera*/
+
+
+        // dati per la registrazione
+
+
+        System.out.println("Inserisci il tuo nome:");
+        String nome = scanner.nextLine();
+        System.out.println("Inserisci il tuo cognome:");
+        String cognome = scanner.nextLine();
+        System.out.println("Inserisci la tua email:");
+        String email = scanner.nextLine();
+        System.out.println("Inserisci la tua età:");
+        int eta = gestioneInputIntMenu(12, 95);
+        System.out.println("Inserisci la tua zona di residenza:");
+        String zonaDiResidenza = scanner.nextLine();
+
+        // creazione nuovo utente
+        Utente nuovoUtente = new Utente(nome, cognome, email, eta, zonaDiResidenza);
+
+        ud.save(nuovoUtente);
+        // creazione Tessera associata
+
+        Tessera nuovaTessera = new Tessera(LocalDate.now(), nuovoUtente);
+
+        td.save(nuovaTessera);
+
+        System.out.println("Utente creato: " + nuovoUtente);
+        System.out.println("Tessera associata:" + nuovaTessera);
+        
+        menuUtente(nuovoUtente);
+
+
     }
 }
 
