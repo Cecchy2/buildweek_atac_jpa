@@ -51,10 +51,17 @@ public class Application {
             //ud.save(randomUtenteSupplier.get());
         }
         List<Utente> utenti = ud.findAll();
+
+        /*UUID uuid = UUID.fromString("1a49212b-b8ac-4102-87c8-166feead2129");
+        Utente ut1 = ud.getById(uuid);
+        System.out.println(ut1);
+        Tessera tsss = ut1.getTessera();
+        System.out.println(tsss.getId());*/
+
         //**************************   CREAZIONE DISTRIBUTORI  *********************************
         Supplier<Distributore> distributoreSupplier = new DistributoreSupplier();
         for (int i = 0; i < 10; i++) {
-            //db.save(distributoreSupplier.get());
+            // db.save(distributoreSupplier.get());
         }
         List<Distributore> distributori = db.findAll();
         //**************************   CREAZIONE TESSERE  *********************************
@@ -89,8 +96,8 @@ public class Application {
             Biglietto biglietto = biglietti.get(random.nextInt(biglietti.size()));
             LocalDate dataVidimazione = LocalDate.now();
             return new Vidimato(biglietto, tramFromDb, dataVidimazione);
-        };*/
-       /* for (int i = 0; i < 2; i++) {
+        };
+        for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
         }*/
         //**************************   CREAZIONE GIROTRATTE  *********************************
@@ -359,6 +366,7 @@ public class Application {
     public static void chiudiScanner() {
         System.out.println("Scanner chiuso. Arrivederci!");
     }
+
 }
 
 

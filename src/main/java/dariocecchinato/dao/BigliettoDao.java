@@ -44,4 +44,6 @@ public class BigliettoDao {
         TypedQuery<Biglietto> query = em.createQuery("SELECT b FROM Biglietto b", Biglietto.class);
         return query.getResultList();
     }
+
+
 }
