@@ -172,11 +172,12 @@ public class Application {
         System.out.println("fin qui ci siamo...");
     }
 
-    public static void menu() {
-        System.out.println("Benvenuto in atac, sei un admin o un utente?");
-        System.out.println("Premere:");
+    public static void startMenu() {
+        System.out.println("Benvenuto in Atac, sei un admin o un utente?");
+        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
         System.out.println("1- Utente");
         System.out.println("2- Amministratore");
+        System.out.println("3- Esci");
 
         int scelta = scanner.nextInt();
 
@@ -187,9 +188,12 @@ public class Application {
             case 2:
                 menuAdmin();
                 break;
+            case 3:
+
+                break;
             default:
                 System.out.println("Scelta non valida");
-                menu();
+                startMenu();
                 break;
         }
     }
@@ -204,7 +208,7 @@ public class Application {
             controllaTessera(uuid);
         } else {
             System.out.println("Utente non trovato.");
-            menu();
+            startMenu();
         }
     }
 
