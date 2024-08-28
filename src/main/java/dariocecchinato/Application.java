@@ -4,14 +4,16 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
+import dariocecchinato.enums.StatoDistributore;
+import dariocecchinato.enums.Tipo_abbonamento;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class Application {
@@ -91,8 +93,8 @@ public class Application {
             Biglietto biglietto = biglietti.get(random.nextInt(biglietti.size()));
             LocalDate dataVidimazione = LocalDate.now();
             return new Vidimato(biglietto, tramFromDb, dataVidimazione);
-        };
-        for (int i = 0; i < 2; i++) {
+        };*/
+       /* for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
         }*/
         //**************************   CREAZIONE GIROTRATTE  *********************************
@@ -106,44 +108,115 @@ public class Application {
         /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
         System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
 
+
+        startMenu();
         em.close();
         emf.close();
         System.out.println("fin qui ci siamo...");
+
+
     }
 
-    public static void menu() {
-        System.out.println("Benvenuto in atac, sei un admin o un utente?");
-        System.out.println("Premere:");
-        System.out.println("1- Utente");
-        System.out.println("2- Amministratore");
+    public static void startMenu() {
+        menuAtac:
+        while (true) {
+            System.out.println("Benvenuto in Atac");
+            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
+            System.out.println("1- Registrati");
+            System.out.println("2- Login");
+            System.out.println("3- Esci");
 
-        int scelta = scanner.nextInt();
+            int scelta = gestioneInputIntMenu(1, 3);
 
-        switch (scelta) {
-            case 1:
-                menuUtente();
-                break;
-            case 2:
-                menuAdmin();
-                break;
-            default:
-                System.out.println("Scelta non valida");
-                menu();
-                break;
+            switch (scelta) {
+                case 1:
+                    /*aggiungere metodo per la gestione del registrati*/
+                    break;
+                case 2:
+                    /*add metodo per gestire il login*/
+                    login();
+                    menuUtente(); /*da togliere una volta finito il metodo login, per ora questa è solo un modo per continuare la struttura del menu*/
+                    break;
+                case 3:
+                    /*si esce dal while principale*/
+                    break menuAtac;
+                default:
+                    System.out.println("Scelta non valida");
+                    startMenu();
+                    break;
+            }
         }
     }
 
-    public static void menuUtente() {
-        System.out.println("Bisogna effettuare il login, inserisci il tuo codice UUID:");
-        String uuid = scanner.nextLine();
+    private static int gestioneInputIntMenu(int min, int max) {
+        while (true) {
+            try {
+                int input = scanner.nextInt();
+                scanner.nextLine(); // Pulisce il newline rimasto dopo nextInt()
+                if (input < min || input > max) {
+                    System.out.println("Scelta non valida. Inserisci un numero valido.");
+                } else {
+                    return input;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input non valido. Per favore, inserisci un numero intero.");
+                scanner.nextLine(); // Pulisce l'input non valido
+            }
+        }
+    }
 
-        /*---------------RICERCA UTENTE TRAMITE UUUID--------------------*/
-        if (trovaUtente(uuid)) {
-            salutaUtente(uuid);
-            controllaTessera(uuid);
-        } else {
-            System.out.println("Utente non trovato.");
-            menu();
+    private static void login() {
+        System.out.println("inserisci il tuo codice UUID");
+        String input = scanner.nextLine();
+        /*devo capire se è un utente o un admin */  /*gianluca*/
+        /*fatto questo nel if else if che creeremo dobbiamo implementare i metodi che continueranno il menu*/
+    }
+
+    public static void menuUtente() {
+        /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
+        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+        System.out.println("1- Validazione corsa");
+        System.out.println("2- Acquista biglietto");
+        System.out.println("3- Abbonamenti");
+        System.out.println("4- Contattaci");
+        int scelta = gestioneInputIntMenu(1, 4);
+        switch (scelta) {
+            case 1:
+                /*metodo per vidimare il biglietto*/ /*gianluca*/
+                break;
+            case 2:
+                /*metodo acquista biglietto*/ /*acquista biglietto*/
+                break;
+            case 3:
+                /*metodo abbonamento*/
+                menuAbbonamento();
+                break;
+            case 4:
+                /*metodo contattaci che in realta posso gestire con due rughe qua*/
+
+                break;
+            default:
+                System.out.println("Scelta non valida");
+                break;
+        }
+
+    }
+
+    public static void menuAbbonamento() {
+        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+        System.out.println("1- Controlla validità");
+        System.out.println("2- Acquista abbonamento");
+        int scelta = gestioneInputIntMenu(1, 2);
+        switch (scelta) {
+            case 1:
+                /*metodo controllo data di scadenza abbonamento*/ /*cristiano*/
+                break;
+            case 2:
+                /*metodo acquista abbonamento*/
+                break;
+            default:
+                System.out.println("Scelta non valida");
+                break;
         }
     }
 
