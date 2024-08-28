@@ -4,10 +4,12 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
+import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -53,13 +55,6 @@ public class Application {
             //ud.save(randomUtenteSupplier.get());
         }
         List<Utente> utenti = ud.findAll();
-
-        /*UUID uuid = UUID.fromString("1a49212b-b8ac-4102-87c8-166feead2129");
-        Utente ut1 = ud.getById(uuid);
-        System.out.println(ut1);
-        Tessera tsss = ut1.getTessera();
-        System.out.println(tsss.getId());*/
-
         //**************************   CREAZIONE DISTRIBUTORI  *********************************
         Supplier<Distributore> distributoreSupplier = new DistributoreSupplier();
         for (int i = 0; i < 10; i++) {
@@ -113,7 +108,6 @@ public class Application {
         /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
         System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
 
-
         startMenu();
         em.close();
         emf.close();
@@ -134,11 +128,12 @@ public class Application {
             switch (scelta) {
                 case 1:
                     /*aggiungere metodo per la gestione del registrati*/
+                    registrazione();
                     break;
                 case 2:
                     /*add metodo per gestire il login*/
                     login();
-                    menuUtente(); /*da togliere una volta finito il metodo login, per ora questa è solo un modo per continuare la struttura del menu*/
+                    //menuUtente(); /*da togliere una volta finito il metodo login, per ora questa è solo un modo per continuare la struttura del menu*/
                     break;
                 case 3:
                     /*si esce dal while principale*/
@@ -173,48 +168,77 @@ public class Application {
         String input = scanner.nextLine();
         /*devo capire se è un utente o un admin */  /*gianluca*/
         /*fatto questo nel if else if che creeremo dobbiamo implementare i metodi che continueranno il menu*/
-        personaDao.findUserOrAdminById(UUID.fromString(input));
+        findUserOrAdminById2(UUID.fromString(input));
+
     }
 
-    public static void menuUtente() {
-        /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
-
-        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
-        System.out.println("1- Vidima Biglietto");
-        System.out.println("2- Acquista biglietto");
-        System.out.println("3- Abbonamenti");
-        System.out.println("4- Contattaci");
-        int scelta = gestioneInputIntMenu(1, 4);
-        switch (scelta) {
-            case 1:
-                /*metodo per vidimare il biglietto*/ /*gianluca*/
-                break;
-            case 2:
-                bigliettoDao.acquistaBiglietto();
-                break;
-            case 3:
-                /*metodo abbonamento*/
-                menuAbbonamento();
-                break;
-            case 4:
-                /*metodo contattaci che in realta posso gestire con due rughe qua*/
-
-                break;
-            default:
-                System.out.println("Scelta non valida");
-                break;
+    public static void findUserOrAdminById2(UUID personaId) {
+        Utente foundUser = em.find(Utente.class, personaId);
+        if (foundUser == null) {
+            Amministratore foundAdmin = em.find(Amministratore.class, personaId);
+            System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
+            /*metodo per avanzare nel menu amministratore*/
         }
-
+        System.out.println("Benvenuto/a utente " + foundUser.getNome());
+        menuUtente(foundUser);
     }
 
-    public static void menuAbbonamento() {
+    public static void menuUtente(Utente utente) {
+        if (!td.isTesseraValida(utente.getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
+            System.out.println("Attenzione: la tua tessera è scaduta! Vuoi rinnovarla?");
+            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
+            System.out.println("1- Rinnova tessera");
+            System.out.println("2- Non rinnovare");
+            int scelta = gestioneInputIntMenu(1, 2);
+            if (scelta == 1) {
+                Tessera tessera = utente.getTessera();
+                tessera.rinnovoTessera();
+            } else {
+                System.out.println("Tessera non rinnovata");
+            }
+        }
+        cicloMenuUtente:
+        while (true) {
+            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+            System.out.println("1- Validazione corsa");
+            System.out.println("2- Acquista biglietto");
+            System.out.println("3- Abbonamenti");
+            System.out.println("4- Contattaci");
+            System.out.println("5- Esci");
+            int scelta = gestioneInputIntMenu(1, 4);
+            switch (scelta) {
+                case 1:
+                    /*metodo per vidimare il biglietto*/ /*gianluca*/
+                    break;
+                case 2:
+                    bigliettoDao.acquistaBiglietto();
+                    break;
+                case 3:
+                    /*metodo abbonamento*/
+                    menuAbbonamento(utente);
+                    break;
+                case 4:
+                    /*messaggio che compare in contattaci*/
+                    System.out.println("Hai un problema che questo menu non riesce a soddisfare, contattaci al numero +00-111-222-3333");
+                    break;
+                case 5:
+                    break cicloMenuUtente;
+                default:
+                    System.out.println("Scelta non valida");
+                    break;
+            }
+
+        }
+    }
+
+    public static void menuAbbonamento(Utente utente) {
         System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
         System.out.println("1- Controlla validità");
         System.out.println("2- Acquista abbonamento");
         int scelta = gestioneInputIntMenu(1, 2);
         switch (scelta) {
             case 1:
-                /*metodo controllo data di scadenza abbonamento*/ /*cristiano*/
+                controllaValiditaAbbonamento(utente); /*cristiano*/
                 break;
             case 2:
                 /*metodo acquista abbonamento*/
@@ -225,147 +249,58 @@ public class Application {
         }
     }
 
-    /* -----------------MENU AMMINISTRATORE-------------------*/
-    public static void menuAdmin() {
-        System.out.println("Menu amministratore in sviluppo :)");
+    public static void controllaValiditaAbbonamento(Utente utente) {
 
-    }
+        /* 1 mi recupero tessera tramite tesseradao */
 
-    public static void salutaUtente(String uuid) {
-        System.out.println("Ciao CiccioGamer");
-    }
+        /*2 controllo se la tessera ha gia abbonamenti caricati
+         * 2.1 e se il piu recente è ancora valido
+         *
+         * 3 mi trovo l'abb piu recente
+         *
+         * 4 verifico la data discadenza*/
+        System.out.println("Inserisci l'UUID della tua tessera:");
+        String uuidInput = scanner.nextLine();
+        UUID tesseraId = UUID.fromString(uuidInput);
 
-    /*------------------CONTROLL0 TESSERA---------------------*/
-    public static void controllaTessera(String uuid) {
-        boolean tesseraValida = verificaValiditàTessera(uuid);
+        /*1*/
+        Tessera tessera;
+        try {
+            tessera = td.getById(tesseraId);
+        } catch (NotFoundException e) {
+            System.out.println("Tessera non trovata.");
+            return;
+        }
+        /*2*/
 
-        if (tesseraValida) {
-            opzioniUtente();
+        List<Abbonamento> abbonamenti = tessera.getAbbonamenti();
+        if (abbonamenti == null || abbonamenti.isEmpty()) {
+            System.out.println("Non ci sono abbonamenti associati a questa tessera.");
+            return;
+        }
+
+        /*3*/
+        Abbonamento abbonamentoRecente = abbonamenti.stream()
+                .max(Comparator.comparing(Abbonamento::getData_validazione))/*.max((a1, a2) -> a1.getData_validazione().compareTo(a2.getData_validazione()))*/
+                .orElse(null);
+
+        if (abbonamentoRecente == null) {
+            System.out.println("Nessun abbonamento valido trovato.");
+            return;
+        }
+
+        /*4*/
+        LocalDate dataScadenza = abbonamentoRecente.getData_scadenza();
+        if (dataScadenza != null && !dataScadenza.isBefore(LocalDate.now())) {
+            System.out.println("Il tuo abbonamento è ancora valido fino il: " + dataScadenza);
         } else {
-            System.out.println("La tua tessera è scaduta, vuoi rinnovarla?");
-            System.out.println("1- Rinnovo");
-            System.out.println("2- Esci");
-
-            int scelta = inputScanner();
-            switch (scelta) {
-                case 1:
-                    rinnovaTessera(uuid);
-                    break;
-                case 2:
-                    chiudiScanner();
-                    break;
-                default:
-                    System.out.println("Scelta non valida");
-                    controllaTessera(uuid);
-                    break;
-            }
+            System.out.println("Il tuo abbonamento è scaduto il: " + dataScadenza);
         }
     }
 
-    /*---------OPZIONI UTENTE--------------*/
-    public static void opzioniUtente() {
-        System.out.println("Cosa vuoi fare?");
-        System.out.println("1- Controlla data di scadenza tessera");
-        System.out.println("2- Controlla i biglietti disponibili");
-        System.out.println("3- Controlla il tuo abbonamento");
-        System.out.println("4- Acquista biglietto");
-        System.out.println("5- Acquista abbonamento");
-        System.out.println("6- Esci");
-        System.out.println("7- Contattaci");
-
-        int scelta = inputScanner();
-
-        switch (scelta) {
-            case 1:
-                controllaDataScadenza();
-                break;
-            case 2:
-                controllaBiglietti();
-                break;
-            case 3:
-                controllaAbbonamento();
-                break;
-            case 4:
-                /*acquistaBiglietto();*/
-                break;
-            case 5:
-                acquistaAbbonamento();
-                break;
-            case 6:
-                chiudiScanner();
-                break;
-            case 7:
-                contattaci();
-                break;
-            default:
-                System.out.println("Scelta non valida");
-                opzioniUtente();
-                break;
-        }
+    private static void registrazione() {
+        /*crei un utente, e subito dopo ti crei la tessera*/
     }
-
-    public static void rinnovaTessera(String uuid) {
-        System.out.println("Complimenti, hai pagato millemilaeuro ad ATAC e non ce lo meritiamo!");
-        chiudiScanner();
-    }
-
-    /*creare metodi per interazione utente*/
-
-    /*------- INTERAZIONE UTENTE-----------*/
-    public static int inputScanner() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            try {
-                System.out.print("Inserisci la tua scelta: ");
-                return Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Inserisci un numero valido.");
-            }
-        }
-    }
-
-    public static String inputScannerUUID() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Inserisci UUID: ");
-        return scanner.nextLine();
-    }
-
-
-    /*------IMPLEMENTARE LE LOGICHE---------*/
-    public static boolean trovaUtente(String uuid) {
-
-        return true;
-    }
-
-    public static boolean verificaValiditàTessera(String uuid) {
-
-        return true;
-    }
-
-    public static void controllaDataScadenza() {
-        System.out.println("La tua tessera scade il 31/12/2024.");
-    }
-
-    public static void controllaBiglietti() {
-        System.out.println("Hai 5 biglietti disponibili.");
-    }
-
-    public static void controllaAbbonamento() {
-        System.out.println("Il tuo abbonamento è attivo fino al 31/12/2024.");
-    }
-
-    public static void acquistaAbbonamento() {
-        System.out.println("Hai acquistato un abbonamento.");
-    }
-
-    public static void contattaci() {
-        System.out.println("Puoi contattarci al numero 123-456-7890.");
-    }
-
-    public static void chiudiScanner() {
-        System.out.println("Scanner chiuso. Arrivederci!");
-    }
-
 }
 
 
