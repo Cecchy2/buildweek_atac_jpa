@@ -15,7 +15,9 @@ public class Application {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("atac");
     private static Scanner scanner = new Scanner(System.in);
     private static EntityManager em = emf.createEntityManager();
-    /* Sezione DAO*/
+
+
+    //**************************   SEZIONE DAO  *********************************
     private static DistributoreDao db = new DistributoreDao(em);
     private static PersonaDao personaDao = new PersonaDao(em);
     private static RivenditoreDao rivDao = new RivenditoreDao(em);
@@ -176,9 +178,9 @@ public class Application {
 
     public static void menuUtente() {
         /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
-        
+
         System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
-        System.out.println("1- Validazione corsa");
+        System.out.println("1- Vidima Biglietto");
         System.out.println("2- Acquista biglietto");
         System.out.println("3- Abbonamenti");
         System.out.println("4- Contattaci");
@@ -188,7 +190,7 @@ public class Application {
                 /*metodo per vidimare il biglietto*/ /*gianluca*/
                 break;
             case 2:
-                /*metodo acquista biglietto*/ /*acquista biglietto*/
+                bigliettoDao.acquistaBiglietto();
                 break;
             case 3:
                 /*metodo abbonamento*/
@@ -284,7 +286,7 @@ public class Application {
                 controllaAbbonamento();
                 break;
             case 4:
-                acquistaBiglietto();
+                /*acquistaBiglietto();*/
                 break;
             case 5:
                 acquistaAbbonamento();
@@ -350,10 +352,6 @@ public class Application {
 
     public static void controllaAbbonamento() {
         System.out.println("Il tuo abbonamento è attivo fino al 31/12/2024.");
-    }
-
-    public static void acquistaBiglietto() {
-        System.out.println("Hai acquistato un biglietto.");
     }
 
     public static void acquistaAbbonamento() {
