@@ -209,18 +209,15 @@ public class Application {
                 int scelta = gestioneInputIntMenu(1, 4);
                 switch (scelta) {
                     case 1:
-                        //iserisciBiglietto
                         vidmazioneBiglietto(tessera);
                         break;
                     case 2:
                         bigliettoDao.acquistaBiglietto(tessera);
                         break;
                     case 3:
-                        /*metodo abbonamento*/
                         menuAbbonamento(tessera.getUtente());
                         break;
                     case 4:
-                        /*messaggio che compare in contattaci*/
                         System.out.println("Hai un problema che questo menu non riesce a soddisfare, contattaci al numero +00-111-222-3333");
                         break;
                     case 5:
@@ -255,7 +252,6 @@ public class Application {
     }
 
     public static void controllaValiditaAbbonamento(Utente utente) {
-
         System.out.println("Inserisci l'UUID della tua tessera:");
         String uuidInput = scanner.nextLine();
         UUID tesseraId = UUID.fromString(uuidInput);
@@ -314,26 +310,19 @@ public class Application {
             System.out.println(i + 1 + ". " + biglietto.getId());
         }
         int scelta = Integer.parseInt(scanner.nextLine());
-
         Biglietto biglietto = biglietti.get(scelta - 1);
-
         System.out.println("Scegli la tratta che desideri percorrere:");
-        //lista di tutte le tratte del DB
         List<Tratta> listaTratte = trattaDao.findAll();
-        //lista di oggetti delle colonne zona_partenza e capolinea
         List<Object[]> zonePartenzaCapolinea = trattaDao.getAllZonaPartenzaECapolinea();
         for (int i = 0; i < zonePartenzaCapolinea.size(); i++) {
             System.out.println(i + 1 + "- " + Arrays.toString(zonePartenzaCapolinea.get(i)));
         }
-
         int inputTratta = gestioneInputIntMenu(1, zonePartenzaCapolinea.size());
-        
         List<GiroTratta> giroTrattaDellaTrattaSelezionata = listaTratte.get(inputTratta).getGiritratte();
         System.out.println("Informazioni sul giro della tratta:");
         System.out.println("Tempo di partenza : " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_partenza());
         System.out.println("Tempo di arrivo: " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_arrivo());
         System.out.println("Mezzo : " + giroTrattaDellaTrattaSelezionata.getFirst().getMezzo_id().getTipo_mezzo());
-
         try {
             Vidimato vidimazione = new Vidimato(biglietto, giroTrattaDellaTrattaSelezionata.getFirst(), LocalDate.now());
             vidimatoDao.save(vidimazione);
@@ -375,7 +364,6 @@ public class Application {
                 System.out.println("password errata, riprova");
             }
         }
-
         cicloAdmin:
         while (true) {
             System.out.println("Quale comando vuoi eseguire?");
