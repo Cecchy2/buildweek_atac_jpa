@@ -51,7 +51,6 @@ public class UtenteDao {
 
         Utente utente = em.find(Utente.class, utenteId);
 
-
         if (utente == null) {
             System.out.println("Utente non trovato con ID: " + utenteId);
             transaction.commit();

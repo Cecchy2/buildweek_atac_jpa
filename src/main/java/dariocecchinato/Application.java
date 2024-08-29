@@ -403,6 +403,7 @@ public class Application {
                 case 1:
                     break;
                 case 2:
+                    eliminaUtente();
                     break;
                 case 3:
                     break;
@@ -432,6 +433,22 @@ public class Application {
     public static void tempoEffettivoMedioPercorrenza() {
         System.out.println("");
     }
+
+    public static void eliminaUtente() {
+        System.out.println("Inserisci l'UUID dell'utente da eliminare:");
+        String input = scanner.nextLine();
+        
+        try {
+            UUID utenteId = UUID.fromString(input);
+            ud.delete(utenteId);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Formato UUID non valido.");
+        } catch (Exception e) {
+            System.out.println("Errore durante l'eliminazione dell'utente: " + e.getMessage());
+        }
+    }
+
+
 }
 
 
