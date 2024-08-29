@@ -43,7 +43,7 @@ public class Utente extends Persona {
     @Override
     public String toString() {
         return "Utente{" +
-                ", zone_di_residenza='" + zone_di_residenza + '\'' +
-                '}';
+                "zone_di_residenza='" + zone_di_residenza + '\'' +
+                "} " + super.toString();
     }
 }

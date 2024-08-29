@@ -1,7 +1,6 @@
 package dariocecchinato.dao;
 
 import dariocecchinato.entities.Amministratore;
-import dariocecchinato.entities.Persona;
 import dariocecchinato.entities.Utente;
 import jakarta.persistence.EntityManager;
 
@@ -14,14 +13,14 @@ public class PersonaDao {
         this.em = em;
     }
 
-    public Persona findUserOrAdminById(UUID personaId) {
+    public void findUserOrAdminById(UUID personaId) {
         Utente foundUser = em.find(Utente.class, personaId);
         if (foundUser == null) {
             Amministratore foundAdmin = em.find(Amministratore.class, personaId);
             System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
-            return foundAdmin;
+            /*add method menuAdmin*/
         }
         System.out.println("Benvenuto/a utente " + foundUser.getNome());
-        return foundUser;
+
     }
 }
