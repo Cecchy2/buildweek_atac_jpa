@@ -387,7 +387,7 @@ public class Application {
         while (true) {
             System.out.println("Quale comando vuoi eseguire?");
             System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
-            System.out.println("1- Crea nuovo utente e tessera associata");
+            System.out.println("1- Crea nuovo utente e tessera associata"); /*kenny*/
             System.out.println("2- Elimina utente"); /*kenny dato un id*/
             System.out.println("3- Cerca stato di servizio di un mezzo");
             System.out.println("4- Cerca il numero di biglietto vidimati dato un mezzo");
@@ -437,7 +437,7 @@ public class Application {
     public static void eliminaUtente() {
         System.out.println("Inserisci l'UUID dell'utente da eliminare:");
         String input = scanner.nextLine();
-        
+
         try {
             UUID utenteId = UUID.fromString(input);
             ud.delete(utenteId);
