@@ -107,7 +107,7 @@ public class Application {
             //giroTrattaDao.save(giroTrattaSupplier.get());
         }
         List<GiroTratta> girotratte = giroTrattaDao.findAll();
-        numeroBigliettiVendutiInUnPeriodo();
+        
         startMenu();
         em.close();
         emf.close();
