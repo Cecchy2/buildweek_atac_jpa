@@ -178,7 +178,7 @@ public class Application {
             Amministratore foundAdmin = em.find(Amministratore.class, personaId);
             System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
             /*metodo per avanzare nel menu amministratore*/
-            //menuAdmin();
+            menuAdmin(foundAdmin);
             /*aggiungere un if per vedere se admni == null*/
         } else {
             System.out.println("Benvenuto/a utente " + foundUser.getNome());
@@ -342,6 +342,32 @@ public class Application {
         //per dare random il rivednitore o il dis. devi fare un random che sceglie tra i due
         /*poi devi scegliere random sulla lista tra il luogo scelto (riv o dis) e lo assegni random*/
         /*fai tu*/
+    }
+
+    public static void menuAdmin(Amministratore admin) {
+        controlloPassword:
+        while (true) {
+            System.out.println("Per continuare inserisci la password");
+            String password = scanner.nextLine();
+            if (Objects.equals(password, "sonounclown")) {
+                break controlloPassword;
+            } else {
+                System.out.println("password errata, riprova");
+            }
+        }
+        System.out.println("Quale comando vuoi eseguire?");
+        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+        System.out.println("1- Crea nuovo utente e tessera associata");
+        System.out.println("2- Elimina utente"); /*kenny dato un id*/
+        System.out.println("3- Cerca stato di servizio di un mezzo");
+        System.out.println("4- Cerca il numero di biglietto vidimati dato un mezzo");
+        System.out.println("5- Cerca il numero totale di biglietti vidimati");
+        System.out.println("6- Numero di biglietti venduti in un periodo");
+        System.out.println("7- Cerca il numero di volte che un mezzo fa una tratta");
+        System.out.println("8- Tempo effettivo medio di percorrenza di una tratta");
+        System.out.println("9- Tempo effettivo di percorrenza di una tratta");
+        System.out.println("10- Cerca id tessera e id utente dato un nome e cognome ed eta"); /*ultima cosa*/
+        System.out.println("11- Esci");
     }
 }
 
