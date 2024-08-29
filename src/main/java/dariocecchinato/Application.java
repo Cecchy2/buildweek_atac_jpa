@@ -388,6 +388,7 @@ public class Application {
                 case 7:
                     break;
                 case 8:
+                    tempoEffettivoMedioPercorrenza();
                     break;
                 case 9:
                     break;
@@ -399,6 +400,10 @@ public class Application {
                     break;
             }
         }
+    }
+
+    public static void tempoEffettivoMedioPercorrenza() {
+        System.out.println("");
     }
 }
 
