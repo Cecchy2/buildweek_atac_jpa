@@ -17,21 +17,26 @@ public class RivenditoreDao {
     }
 
     public void save(Rivenditore rivenditore) {
-        //NEL PROCESSO DI SCRITTURA BISOGNA UTILIZZARE UNA TRANSAZIONE PER ASSICURARSI CHE AVVENGA IN SICUREZZA
+        // NEL PROCESSO DI SCRITTURA BISOGNA UTILIZZARE UNA TRANSAZIONE PER ASSICURARSI CHE AVVENGA IN SICUREZZA
 
-        //1. chiedo all'entity manager di fornire una transazione
+        // 1. chiedo all'entity manager di fornire una transazione
         EntityTransaction transaction = em.getTransaction();
 
-        //2.avviamo la transazione
-        transaction.begin();
+        try {
+            // 2. avviamo la transazione
+            transaction.begin();
 
-        //3.aggiungo l'evento al persistence context
-        em.persist(rivenditore);
+            // 3. aggiungo l'evento al persistence context
+            em.persist(rivenditore);
 
-        //4.concludiamo la transazione salvando l'evento nel DB
-        transaction.commit();
+            // 4. concludiamo la transazione salvando l'evento nel DB
+            transaction.commit();
 
-        System.out.println("Il Rivenditore con ID : " + rivenditore.getId() + " " + " è stato salvato con successo!");
+            System.out.println("Il Rivenditore con ID : " + rivenditore.getId() + " è stato salvato con successo!");
+        } catch (Exception e) {
+            // Stampa del messaggio di errore
+            System.out.println("Errore durante il salvataggio del Rivenditore: " + e.getMessage());
+        }
     }
 
     public Rivenditore getById(UUID rivenditoreId) {
