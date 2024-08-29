@@ -405,7 +405,7 @@ public class Application {
             System.out.println("5- Cerca il numero totale di biglietti vidimati"); /*gianluca*/
             System.out.println("6- Numero di biglietti venduti in un periodo");
             System.out.println("7- Cerca il numero di volte che un mezzo fa una tratta");
-            System.out.println("8- Tempo effettivo medio di percorrenza di una tratta");
+            System.out.println("8- Tempo effettivo medio di percorrenza di una tratta"); /*diego*/
             System.out.println("9- Tempo effettivo di percorrenza di una tratta");
             System.out.println("10- Cerca id tessera e id utente dato un nome e cognome ed eta"); /*ultima cosa*/
             System.out.println("11- Esci");
@@ -442,7 +442,16 @@ public class Application {
     }
 
     public static void tempoEffettivoMedioPercorrenza() {
-        System.out.println("");
+        System.out.print("Inserisci l'ID della Tratta: ");
+        String trattaIdInput = scanner.nextLine();
+        UUID trattaId = UUID.fromString(trattaIdInput);
+        System.out.print("Inserisci l'ID del Mezzo: ");
+        String mezzoIdInput = scanner.nextLine();
+        UUID mezzoId = UUID.fromString(mezzoIdInput);
+        Tratta tratta = trattaDao.getById(trattaId);
+        Mezzo mezzo = mezzoDao.getById(mezzoId);
+        double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta, mezzo);
+        System.out.println("Il tempo medio effettivo di percorrenza è: " + tempoMedio + " minuti");
     }
 
     public static void eliminaUtente() {
