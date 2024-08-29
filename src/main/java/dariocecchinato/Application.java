@@ -403,10 +403,10 @@ public class Application {
             System.out.println("3- Cerca stato di servizio di un mezzo"); /*kenny*/
             System.out.println("4- Cerca il numero di biglietto vidimati dato un mezzo");
             System.out.println("5- Cerca il numero totale di biglietti vidimati"); /*gianluca*/
-            System.out.println("6- Numero di biglietti venduti in un periodo");
+            System.out.println("6- Numero di biglietti venduti in un periodo"); /*gianluca*/
             System.out.println("7- Cerca il numero di volte che un mezzo fa una tratta");
             System.out.println("8- Tempo effettivo medio di percorrenza di una tratta"); /*diego*/
-            System.out.println("9- Tempo effettivo di percorrenza di una tratta");
+            System.out.println("9- Tempo effettivo di percorrenza di una tratta"); /*diego*/
             System.out.println("10- Cerca id tessera e id utente dato un nome e cognome ed eta"); /*ultima cosa*/
             System.out.println("11- Esci");
             int scelta = gestioneInputIntMenu(1, 11);
