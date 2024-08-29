@@ -20,16 +20,24 @@ public class UtenteDao {
     //*************************************  Metodo SAVE  ****************************************
 
     public void save(Utente utente) {
-        //1.
+        //1. chiedo all'entity manager di fornire una transazione
         EntityTransaction transaction = em.getTransaction();
-        //2.
-        transaction.begin();
-        //3.
-        em.persist(utente);
-        //4.
-        transaction.commit();
 
-        System.out.println("L' utente " + utente.getNome() + " è stato salvato correttamente");
+        try {
+            //2. avviamo la transazione
+            transaction.begin();
+
+            //3. aggiungo l'utente al persistence context
+            em.persist(utente);
+
+            //4. concludiamo la transazione salvando l'utente nel DB
+            transaction.commit();
+
+            System.out.println("L' utente " + utente.getNome() + " è stato salvato correttamente");
+        } catch (Exception e) {
+            // Gestione dell'eccezione senza rollback
+            System.out.println("Errore durante il salvataggio dell'utente: " + e.getMessage());
+        }
     }
 
     public Utente getById(UUID utenteId) {
@@ -46,20 +54,33 @@ public class UtenteDao {
     //*************************************  Metodo Delete  ****************************************
 
     public void delete(UUID utenteId) {
+        //1. chiedo all'entity manager di fornire una transazione
         EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
 
-        Utente utente = em.find(Utente.class, utenteId);
+        try {
+            //2. avviamo la transazione
+            transaction.begin();
 
-        if (utente == null) {
-            System.out.println("Utente non trovato con ID: " + utenteId);
+            //3. Troviamo l'utente tramite ID
+            Utente utente = em.find(Utente.class, utenteId);
+
+            //4. Verifica se l'utente esiste
+            if (utente == null) {
+                System.out.println("Utente non trovato con ID: " + utenteId);
+                transaction.commit();
+                return;
+            }
+
+            //5. Rimuoviamo l'utente dal persistence context
+            em.remove(utente);
+
+            //6. Eseguiamo il commit della transazione se tutto va bene
             transaction.commit();
-            return;
+            System.out.println("L'utente con ID " + utenteId + " è stato cancellato correttamente");
+        } catch (Exception e) {
+            // Gestione dell'eccezione senza rollback
+            System.out.println("Errore durante l'eliminazione dell'utente: " + e.getMessage());
         }
-
-        em.remove(utente);
-        transaction.commit();
-        System.out.println("L'utente con ID " + utenteId + " è stato cancellato correttamente");
     }
 
 
