@@ -43,5 +43,25 @@ public class UtenteDao {
         return query.getResultList();
     }
 
+    //*************************************  Metodo Delete  ****************************************
+
+    public void delete(UUID utenteId) {
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+        Utente utente = em.find(Utente.class, utenteId);
+
+
+        if (utente == null) {
+            System.out.println("Utente non trovato con ID: " + utenteId);
+            transaction.commit();
+            return;
+        }
+
+        em.remove(utente);
+        transaction.commit();
+        System.out.println("L'utente con ID " + utenteId + " è stato cancellato correttamente");
+    }
+
 
 }
