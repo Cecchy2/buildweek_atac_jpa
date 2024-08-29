@@ -51,7 +51,7 @@ public class MezzoDao {
     public TipoServizio getUltimoStatoMezzo(UUID mezzoId) {
         try {
             TypedQuery<TipoServizio> query = em.createQuery(
-                    "SELECT s.stato FROM StatoServizio s WHERE s.mezzo.id = :mezzoId ORDER BY s.data DESC",
+                    "SELECT s.tipo_servizio FROM StatoServizio s WHERE s.mezzo_id = :mezzoId",
                     TipoServizio.class);
             query.setParameter("mezzoId", mezzoId);
             query.setMaxResults(1);

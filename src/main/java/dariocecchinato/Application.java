@@ -37,6 +37,8 @@ public class Application {
     private static Faker f = new Faker(Locale.ITALY);
 
     public static void main(String[] args) {
+        Amministratore amministratore = new Amministratore("Signor", "Palle", "signorpalle@gmail.com", 45, "12345");
+        amministratoreDao.save(amministratore);
 
         //**************************   CREAZIONE TRATTE  *********************************
         Supplier<Tratta> trattaSupplier = new TrattaSupplier();
@@ -111,8 +113,7 @@ public class Application {
         emf.close();
         System.out.println("fin qui ci siamo...");
 
-        Amministratore amministratore = new Amministratore("Signor", "Palle", "signorpalle@gmail.com", 45, "12345");
-        amministratoreDao.save(amministratore);
+
     }
 
     public static void startMenu() {
@@ -192,7 +193,7 @@ public class Application {
                 return;
             }
             System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
-            /*metodo per avanzare nel menu amministratore*/
+            menuAdmin(foundAdmin);
         }
         System.out.println("Benvenuto/a utente " + foundUser.getNome());
         menuUtente(foundUser.getTessera());
@@ -372,7 +373,7 @@ public class Application {
         while (true) {
             System.out.println("Per continuare inserisci la password");
             String password = scanner.nextLine();
-            if (Objects.equals(password, "sonounclown")) {
+            if (Objects.equals(password, "12345")) {
                 break controlloPassword;
             } else {
                 System.out.println("password errata, riprova");
@@ -471,6 +472,7 @@ public class Application {
             System.out.println("Errore: " + e.getMessage());
         }
     }
+
     public static void numeroBigliettiVendutiInUnPeriodo() {
         System.out.println("Devi inserire le date che indicano il periodo di tempo che vuoi analizzare");
         System.out.println("1- Inserisci la data di inzio periodo (formato YYYY-MM-DD): ");
