@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
+import dariocecchinato.enums.Tipo_abbonamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -178,7 +179,7 @@ public class Application {
             Amministratore foundAdmin = em.find(Amministratore.class, personaId);
             System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
             /*metodo per avanzare nel menu amministratore*/
-            menuAdmin(foundAdmin);
+            //menuAdmin();
             /*aggiungere un if per vedere se admni == null*/
         } else {
             System.out.println("Benvenuto/a utente " + foundUser.getNome());
@@ -338,10 +339,36 @@ public class Application {
     }
 
     public static void acquistaAbbonamento(Tessera tessera) {
-        /*deve scegliere se lo sta shoppando da un rivenditore o un distributore*/
-        //per dare random il rivednitore o il dis. devi fare un random che sceglie tra i due
-        /*poi devi scegliere random sulla lista tra il luogo scelto (riv o dis) e lo assegni random*/
-        /*fai tu*/
+        /*1 facciamo scegliere il tipo di abbonamento*/
+        /* 2genero random la scelta del distr o rivend*/
+        /*3 salvo nel db*/
+
+        /*1*/
+        System.out.println("Scegli il tipo di abbonamento:");
+        System.out.println("1- Settimanale");
+        System.out.println("2- Mensile");
+        int sceltaTipo = gestioneInputIntMenu(1, 2);
+        Tipo_abbonamento tipoAbbonamento = (sceltaTipo == 1) ? Tipo_abbonamento.SETTIMANALE : Tipo_abbonamento.MENSILE;
+
+        /*2*/
+        boolean isRivenditore = random.nextBoolean();
+
+        Abbonamento nuovoAbbonamento;
+
+        if (isRivenditore) {
+
+            Rivenditore rivenditore = rivDao.findAll().get(random.nextInt(rivDao.findAll().size()));
+            nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, rivenditore);
+        } else {
+
+            Distributore distributore = db.findAll().get(random.nextInt(db.findAll().size()));
+            nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, distributore);
+        }
+
+        /*3*/
+        ab.save(nuovoAbbonamento);
+
+        System.out.println("Abbonamento aggiunto con successo!");
     }
 
     public static void menuAdmin(Amministratore admin) {
@@ -355,19 +382,55 @@ public class Application {
                 System.out.println("password errata, riprova");
             }
         }
-        System.out.println("Quale comando vuoi eseguire?");
-        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
-        System.out.println("1- Crea nuovo utente e tessera associata");
-        System.out.println("2- Elimina utente"); /*kenny dato un id*/
-        System.out.println("3- Cerca stato di servizio di un mezzo");
-        System.out.println("4- Cerca il numero di biglietto vidimati dato un mezzo");
-        System.out.println("5- Cerca il numero totale di biglietti vidimati");
-        System.out.println("6- Numero di biglietti venduti in un periodo");
-        System.out.println("7- Cerca il numero di volte che un mezzo fa una tratta");
-        System.out.println("8- Tempo effettivo medio di percorrenza di una tratta");
-        System.out.println("9- Tempo effettivo di percorrenza di una tratta");
-        System.out.println("10- Cerca id tessera e id utente dato un nome e cognome ed eta"); /*ultima cosa*/
-        System.out.println("11- Esci");
+
+        cicloAdmin:
+        while (true) {
+            System.out.println("Quale comando vuoi eseguire?");
+            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+            System.out.println("1- Crea nuovo utente e tessera associata");
+            System.out.println("2- Elimina utente"); /*kenny dato un id*/
+            System.out.println("3- Cerca stato di servizio di un mezzo");
+            System.out.println("4- Cerca il numero di biglietto vidimati dato un mezzo");
+            System.out.println("5- Cerca il numero totale di biglietti vidimati");
+            System.out.println("6- Numero di biglietti venduti in un periodo");
+            System.out.println("7- Cerca il numero di volte che un mezzo fa una tratta");
+            System.out.println("8- Tempo effettivo medio di percorrenza di una tratta");
+            System.out.println("9- Tempo effettivo di percorrenza di una tratta");
+            System.out.println("10- Cerca id tessera e id utente dato un nome e cognome ed eta"); /*ultima cosa*/
+            System.out.println("11- Esci");
+            int scelta = gestioneInputIntMenu(1, 11);
+            switch (scelta) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    tempoEffettivoMedioPercorrenza();
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    break;
+                case 11:
+                    break cicloAdmin;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public static void tempoEffettivoMedioPercorrenza() {
+        System.out.println("");
     }
 }
 
