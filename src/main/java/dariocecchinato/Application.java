@@ -403,6 +403,7 @@ public class Application {
                     tempoEffettivoMedioPercorrenza();
                     break;
                 case 9:
+                    tempoEffettivoTratta();
                     break;
                 case 10:
                     break;
