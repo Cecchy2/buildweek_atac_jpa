@@ -18,16 +18,24 @@ public class TesseraDao {
     }
 
     public void save(Tessera tessera) {
-        //1.
+        //1. chiedo all'entity manager di fornire una transazione
         EntityTransaction transaction = em.getTransaction();
-        //2.
-        transaction.begin();
-        //3.
-        em.persist(tessera);
-        //4.
-        transaction.commit();
 
-        System.out.println("La tessera " + tessera.getId() + " è stata salvata correttamente");
+        try {
+            //2. avviamo la transazione
+            transaction.begin();
+
+            //3. aggiungo l'evento al persistence context
+            em.persist(tessera);
+
+            //4. concludiamo la transazione salvando l'evento nel DB
+            transaction.commit();
+
+            System.out.println("La tessera " + tessera.getId() + " è stata salvata correttamente");
+        } catch (Exception e) {
+            // Gestione dell'eccezione senza rollback
+            System.out.println("Errore durante il salvataggio della tessera: " + e.getMessage());
+        }
     }
 
     public Tessera getById(UUID idTessera) {

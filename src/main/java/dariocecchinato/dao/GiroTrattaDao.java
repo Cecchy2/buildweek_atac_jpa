@@ -1,6 +1,7 @@
 package dariocecchinato.dao;
 
 import dariocecchinato.entities.GiroTratta;
+import dariocecchinato.entities.Mezzo;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -43,5 +44,11 @@ public class GiroTrattaDao {
     public List<GiroTratta> findAll() {
         TypedQuery<GiroTratta> query = em.createQuery("SELECT m FROM GiroTratta m", GiroTratta.class);
         return query.getResultList();
+    }
+
+    public Long numeroGiriTrattaDiUnMezzo(Mezzo mezzo) {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(g) FROM GiroTratta g WHERE g.mezzo = :mezzoId", Long.class);
+        query.setParameter("mezzoId", mezzo);
+        return query.getSingleResult();
     }
 }
