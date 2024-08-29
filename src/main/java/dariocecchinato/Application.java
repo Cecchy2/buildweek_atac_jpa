@@ -162,7 +162,7 @@ public class Application {
         }
     }
 
-    public static void menuUtente(Utente utente) {
+    public static void menuUtente() {
         /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
         System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
         System.out.println("1- Validazione corsa");
@@ -174,27 +174,7 @@ public class Application {
             case 1:
 
                 /*metodo per vidimare il biglietto*/ /*gianluca*/
-                System.out.println("Scegli la tratta che desideri percorrere:");
-                //lista di tutte le tratte del DB
-                List<Tratta> listaTratte = trattaDao.findAll();
-                //lista di oggetti delle colonne zona_partenza e capolinea
-                List<Object[]> zonePartenzaCapolinea = trattaDao.getAllZonaPartenzaECapolinea();
-                for (int i = 0; i < zonePartenzaCapolinea.size(); i++) {
-                    System.out.println(i + 1 + "- " + Arrays.toString(zonePartenzaCapolinea.get(i)));
-                }
-
-                //raccolgo l'input dell'utente per la scelta della tratta
-                int inputTratta = gestioneInputIntMenu(1, zonePartenzaCapolinea.size());
-                //lista dei giri della tratta selezionata dall'utente
-                List<GiroTratta> giroTrattaDellaTrattaSelezionata = listaTratte.get(inputTratta).getGiritratte();
-                System.out.println("Informazioni sul giro della tratta:");
-                System.out.println("Tempo di partenza : " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_partenza());
-                System.out.println("Tempo di arrivo: " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_arrivo());
-                System.out.println("Mezzo : " + giroTrattaDellaTrattaSelezionata.getFirst().getMezzo_id().getTipo_mezzo());
-
-                Vidimato vidimazione = new Vidimato(utente.getTessera().getBiglietti().getFirst(), giroTrattaDellaTrattaSelezionata.getFirst(), LocalDate.now());
-                vidimatoDao.save(vidimazione);
-
+                
 
                 break;
             case 2:
@@ -349,10 +329,27 @@ public class Application {
         return true;
     }
 
-    public static void vidmazioneBiglietto(Biglietto biglietto, GiroTratta giroTratta) {
-        Vidimato bigliettoDaVidimare = new Vidimato(biglietto, giroTratta, LocalDate.now());
-        vidimatoDao.save(bigliettoDaVidimare);
-        System.out.println("Il biglietto è stato vidimato correttamente!");
+    public static void vidmazioneBiglietto(Utente utente) {
+        System.out.println("Scegli la tratta che desideri percorrere:");
+        //lista di tutte le tratte del DB
+        List<Tratta> listaTratte = trattaDao.findAll();
+        //lista di oggetti delle colonne zona_partenza e capolinea
+        List<Object[]> zonePartenzaCapolinea = trattaDao.getAllZonaPartenzaECapolinea();
+        for (int i = 0; i < zonePartenzaCapolinea.size(); i++) {
+            System.out.println(i + 1 + "- " + Arrays.toString(zonePartenzaCapolinea.get(i)));
+        }
+
+        //raccolgo l'input dell'utente per la scelta della tratta
+        int inputTratta = gestioneInputIntMenu(1, zonePartenzaCapolinea.size());
+        //lista dei giri della tratta selezionata dall'utente
+        List<GiroTratta> giroTrattaDellaTrattaSelezionata = listaTratte.get(inputTratta).getGiritratte();
+        System.out.println("Informazioni sul giro della tratta:");
+        System.out.println("Tempo di partenza : " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_partenza());
+        System.out.println("Tempo di arrivo: " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_arrivo());
+        System.out.println("Mezzo : " + giroTrattaDellaTrattaSelezionata.getFirst().getMezzo_id().getTipo_mezzo());
+
+        Vidimato vidimazione = new Vidimato(utente.getTessera().getBiglietti().getFirst(), giroTrattaDellaTrattaSelezionata.getFirst(), LocalDate.now());
+        vidimatoDao.save(vidimazione);
     }
 
     public static void controllaDataScadenza() {
