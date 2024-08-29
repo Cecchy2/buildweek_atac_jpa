@@ -211,6 +211,7 @@ public class Application {
             switch (scelta) {
                 case 1:
                     /*metodo per vidimare il biglietto*/ /*gianluca*/
+                    vidmazioneBiglietto(utente);
                     break;
                 case 2:
                     bigliettoDao.acquistaBiglietto(utente.getTessera());
@@ -333,6 +334,7 @@ public class Application {
 
 
     }
+
     public static void vidmazioneBiglietto(Utente utente) {
         System.out.println("Scegli la tratta che desideri percorrere:");
         //lista di tutte le tratte del DB

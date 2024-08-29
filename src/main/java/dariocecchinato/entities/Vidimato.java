@@ -65,7 +65,7 @@ public class Vidimato {
         return "Vidimato{" +
                 "id=" + id +
                 ", biglietto=" + biglietto +
-                ", mezzo=" + mezzo +
+                ", mezzo=" + giroTratta.getMezzo_id() +
                 ", dataVidimazione=" + dataVidimazione +
                 '}';
     }
