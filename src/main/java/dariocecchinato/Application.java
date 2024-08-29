@@ -39,7 +39,7 @@ public class Application {
 
     public static void main(String[] args) {
         Amministratore amministratore = new Amministratore("Signor", "Palle", "signorpalle@gmail.com", 45, "12345");
-        amministratoreDao.save(amministratore);
+        //amministratoreDao.save(amministratore);
 
         //**************************   CREAZIONE TRATTE  *********************************
         Supplier<Tratta> trattaSupplier = new TrattaSupplier();
@@ -62,7 +62,7 @@ public class Application {
         //**************************   CREAZIONE DISTRIBUTORI  *********************************
         Supplier<Distributore> distributoreSupplier = new DistributoreSupplier();
         for (int i = 0; i < 10; i++) {
-            // db.save(distributoreSupplier.get());
+            //db.save(distributoreSupplier.get());
         }
         List<Distributore> distributori = db.findAll();
         //**************************   CREAZIONE TESSERE  *********************************
@@ -91,17 +91,17 @@ public class Application {
         for (int i = 0; i < 4; i++) {
             //bigliettoDao.save(bigliettoSupplier.get());
         }
-       /* List<Biglietto> biglietti = bigliettoDao.findAll();
-        GiroTratta trattaAnalizzata = giroTrattaDao.getById(UUID.fromString("32ebdea8-028c-49f0-af6d-44085f764730"));
+        List<Biglietto> biglietti = bigliettoDao.findAll();
+        //GiroTratta trattaAnalizzata = giroTrattaDao.getById(UUID.fromString("32ebdea8-028c-49f0-af6d-44085f764730"));
         //**************VIDIMAZIONE DI BIGLIETTO
-        Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
+        /*Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
             Biglietto biglietto = biglietti.get(random.nextInt(biglietti.size()));
             LocalDate dataVidimazione = LocalDate.now();
             return new Vidimato(biglietto, trattaAnalizzata, dataVidimazione);
-        };
+        };*/
         for (int i = 0; i < 2; i++) {
-            vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
-        }*/
+            //vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
+        }
 
         //**************************   CREAZIONE GIROTRATTE  *********************************
         Supplier<GiroTratta> giroTrattaSupplier = new GiroTrattaSupplier(mezzi, tratte);
@@ -425,6 +425,7 @@ public class Application {
                     tempoEffettivoTratta();
                     break;
                 case 10:
+                    nonnoHaSmarritoTutto();
                     break;
                 case 11:
                     break cicloAdmin;
@@ -535,6 +536,17 @@ public class Application {
         }
     }
 
+    public static void nonnoHaSmarritoTutto() {
+        System.out.print("Inserisci il nome: ");
+        String nome = scanner.nextLine();
+        System.out.print("Inserisci il cognome: ");
+        String cognome = scanner.nextLine();
+        System.out.print("Inserisci l'età: ");
+        int eta = scanner.nextInt();
+        Utente utente = ud.ricercaNonnoUtente(nome, cognome, eta);
+        System.out.println("id del utente: " + utente.getId());
+        System.out.println("id della tessera: " + utente.getTessera().getId());
+    }
 }
 
 
