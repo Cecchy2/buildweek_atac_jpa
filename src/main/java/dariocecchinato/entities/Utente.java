@@ -23,6 +23,7 @@ public class Utente extends Persona {
 
     }
 
+
     public String getZone_di_residenza() {
         return zone_di_residenza;
     }

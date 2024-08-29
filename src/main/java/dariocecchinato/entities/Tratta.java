@@ -54,6 +54,10 @@ public class Tratta {
         this.tempo_percorrenza = tempo_percorrenza;
     }
 
+    public List<GiroTratta> getGiritratte() {
+        return giritratte;
+    }
+
     @Override
     public String toString() {
         return "Tratta{" +

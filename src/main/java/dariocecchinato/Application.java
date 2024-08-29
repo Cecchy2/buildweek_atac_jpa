@@ -87,16 +87,18 @@ public class Application {
         for (int i = 0; i < 4; i++) {
             //bigliettoDao.save(bigliettoSupplier.get());
         }
-        List<Biglietto> biglietti = bigliettoDao.findAll();
+       /* List<Biglietto> biglietti = bigliettoDao.findAll();
+        GiroTratta trattaAnalizzata = giroTrattaDao.getById(UUID.fromString("32ebdea8-028c-49f0-af6d-44085f764730"));
         //**************VIDIMAZIONE DI BIGLIETTO
-        /*Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
+        Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
             Biglietto biglietto = biglietti.get(random.nextInt(biglietti.size()));
             LocalDate dataVidimazione = LocalDate.now();
-            return new Vidimato(biglietto, tramFromDb, dataVidimazione);
+            return new Vidimato(biglietto, trattaAnalizzata, dataVidimazione);
         };
         for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
         }*/
+
         //**************************   CREAZIONE GIROTRATTE  *********************************
         Supplier<GiroTratta> giroTrattaSupplier = new GiroTrattaSupplier(mezzi, tratte);
         for (int i = 0; i < 10; i++) {
@@ -104,7 +106,7 @@ public class Application {
         }
         List<GiroTratta> girotratte = giroTrattaDao.findAll();
 
-        /**/
+
         /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
         System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
 
@@ -205,11 +207,12 @@ public class Application {
             System.out.println("2- Acquista biglietto");
             System.out.println("3- Abbonamenti");
             System.out.println("4- Contattaci");
-            System.out.println("5- Esci");
+            System.out.println("5- Torna indietro");
             int scelta = gestioneInputIntMenu(1, 4);
             switch (scelta) {
                 case 1:
                     /*metodo per vidimare il biglietto*/ /*gianluca*/
+                    vidmazioneBiglietto(tessera.getUtente());
                     break;
                 case 2:
                     bigliettoDao.acquistaBiglietto(tessera);
@@ -300,8 +303,10 @@ public class Application {
     }
 
     private static void registrazione() {
-        /*crei un utente, e subit1o dopo ti crei la tessera*/
+        /*crei un utente, e subito dopo ti crei la tessera*/
+
         // dati per la registrazione
+
         System.out.println("Inserisci il tuo nome:");
         String nome = scanner.nextLine();
         System.out.println("Inserisci il tuo cognome:");
@@ -324,6 +329,29 @@ public class Application {
         menuUtente(nuovaTessera);
 
 
+    }
+
+    public static void vidmazioneBiglietto(Utente utente) {
+        System.out.println("Scegli la tratta che desideri percorrere:");
+        //lista di tutte le tratte del DB
+        List<Tratta> listaTratte = trattaDao.findAll();
+        //lista di oggetti delle colonne zona_partenza e capolinea
+        List<Object[]> zonePartenzaCapolinea = trattaDao.getAllZonaPartenzaECapolinea();
+        for (int i = 0; i < zonePartenzaCapolinea.size(); i++) {
+            System.out.println(i + 1 + "- " + Arrays.toString(zonePartenzaCapolinea.get(i)));
+        }
+
+        //raccolgo l'input dell'utente per la scelta della tratta
+        int inputTratta = gestioneInputIntMenu(1, zonePartenzaCapolinea.size());
+        //lista dei giri della tratta selezionata dall'utente
+        List<GiroTratta> giroTrattaDellaTrattaSelezionata = listaTratte.get(inputTratta).getGiritratte();
+        System.out.println("Informazioni sul giro della tratta:");
+        System.out.println("Tempo di partenza : " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_partenza());
+        System.out.println("Tempo di arrivo: " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_arrivo());
+        System.out.println("Mezzo : " + giroTrattaDellaTrattaSelezionata.getFirst().getMezzo_id().getTipo_mezzo());
+
+        Vidimato vidimazione = new Vidimato(utente.getTessera().getBiglietti().getFirst(), giroTrattaDellaTrattaSelezionata.getFirst(), LocalDate.now());
+        vidimatoDao.save(vidimazione);
     }
 }
 

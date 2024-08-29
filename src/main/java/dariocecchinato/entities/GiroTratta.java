@@ -82,4 +82,13 @@ public class GiroTratta {
     }
 
 
+    @Override
+    public String toString() {
+        return "GiroTratta{" +
+                "mezzo_id=" + mezzo_id +
+                ", tratta_id=" + tratta_id +
+                ", tempo_partenza=" + tempo_partenza +
+                ", tempo_arrivo=" + tempo_arrivo +
+                '}';
+    }
 }

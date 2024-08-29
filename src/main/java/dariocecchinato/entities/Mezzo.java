@@ -52,4 +52,15 @@ public class Mezzo {
     public UUID getMezzo_id() {
         return mezzo_id;
     }
+
+    @Override
+    public String toString() {
+        return "Mezzo{" +
+                "mezzo_id=" + mezzo_id +
+                ", stato_servizio=" + stato_servizio +
+                
+                ", capienza_max=" + capienza_max +
+                ", tipo_mezzo=" + tipo_mezzo +
+                '}';
+    }
 }
