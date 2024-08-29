@@ -355,19 +355,50 @@ public class Application {
                 System.out.println("password errata, riprova");
             }
         }
-        System.out.println("Quale comando vuoi eseguire?");
-        System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
-        System.out.println("1- Crea nuovo utente e tessera associata");
-        System.out.println("2- Elimina utente"); /*kenny dato un id*/
-        System.out.println("3- Cerca stato di servizio di un mezzo");
-        System.out.println("4- Cerca il numero di biglietto vidimati dato un mezzo");
-        System.out.println("5- Cerca il numero totale di biglietti vidimati");
-        System.out.println("6- Numero di biglietti venduti in un periodo");
-        System.out.println("7- Cerca il numero di volte che un mezzo fa una tratta");
-        System.out.println("8- Tempo effettivo medio di percorrenza di una tratta");
-        System.out.println("9- Tempo effettivo di percorrenza di una tratta");
-        System.out.println("10- Cerca id tessera e id utente dato un nome e cognome ed eta"); /*ultima cosa*/
-        System.out.println("11- Esci");
+
+        cicloAdmin:
+        while (true) {
+            System.out.println("Quale comando vuoi eseguire?");
+            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+            System.out.println("1- Crea nuovo utente e tessera associata");
+            System.out.println("2- Elimina utente"); /*kenny dato un id*/
+            System.out.println("3- Cerca stato di servizio di un mezzo");
+            System.out.println("4- Cerca il numero di biglietto vidimati dato un mezzo");
+            System.out.println("5- Cerca il numero totale di biglietti vidimati");
+            System.out.println("6- Numero di biglietti venduti in un periodo");
+            System.out.println("7- Cerca il numero di volte che un mezzo fa una tratta");
+            System.out.println("8- Tempo effettivo medio di percorrenza di una tratta");
+            System.out.println("9- Tempo effettivo di percorrenza di una tratta");
+            System.out.println("10- Cerca id tessera e id utente dato un nome e cognome ed eta"); /*ultima cosa*/
+            System.out.println("11- Esci");
+            int scelta = gestioneInputIntMenu(1, 11);
+            switch (scelta) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    break;
+                case 11:
+                    break cicloAdmin;
+                default:
+                    break;
+            }
+        }
     }
 }
 
