@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
+import dariocecchinato.enums.TipoServizio;
 import dariocecchinato.enums.Tipo_abbonamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -111,6 +112,9 @@ public class Application {
         em.close();
         emf.close();
         System.out.println("fin qui ci siamo...");
+
+        Amministratore amministratore = new Amministratore("Signor", "Palle", "signorpalle@gmail.com", 45, "12345");
+        amministratoreDao.save(amministratore);
     }
 
     public static void startMenu() {
@@ -399,6 +403,7 @@ public class Application {
                     eliminaUtente();
                     break;
                 case 3:
+                    cercaStatoMezzo();
                     break;
                 case 4:
                     break;
@@ -484,6 +489,22 @@ public class Application {
         }
     }
 
+    public static void cercaStatoMezzo() {
+        System.out.println("Inserisci l'UUID del mezzo per cui vuoi conoscere lo stato:");
+        String input = scanner.nextLine();
+
+        try {
+            UUID mezzoId = UUID.fromString(input);
+            TipoServizio statoMezzo = mezzoDao.getUltimoStatoMezzo(mezzoId);
+            if (statoMezzo != null) {
+                System.out.println("Ultimo stato del mezzo: " + statoMezzo.name());
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Formato UUID non valido.");
+        } catch (Exception e) {
+            System.out.println("Errore durante la ricerca dello stato del mezzo: " + e.getMessage());
+        }
+    }
 
 }
 
