@@ -40,7 +40,7 @@ public class Application {
 
     public static void main(String[] args) {
         Amministratore amministratore = new Amministratore("Signor", "Palle", "signorpalle@gmail.com", 45, "12345");
-        // amministratoreDao.save(amministratore);
+        //amministratoreDao.save(amministratore);
 
         //**************************   CREAZIONE TRATTE  *********************************
         Supplier<Tratta> trattaSupplier = new TrattaSupplier();
@@ -427,6 +427,7 @@ public class Application {
                     tempoEffettivoTratta();
                     break;
                 case 10:
+                    nonnoHaSmarritoTutto();
                     break;
                 case 11:
                     break cicloAdmin;
@@ -491,7 +492,7 @@ public class Application {
             String input = scanner.nextLine();
             UUID trattaId = UUID.fromString(input);
             Tratta tratta = trattaDao.getById(trattaId);
-            double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta);
+            double tempoMedio = amministratoreDao.calcolaTempoEffettivo(tratta);
             System.out.println("Il tempo medio effettivo di percorrenza per la tratta selezionata è: " + tempoMedio + " minuti");
         } catch (IllegalArgumentException e) {
             System.out.println("L'UUID inserito non è valido. Assicurati di inserire un UUID corretto.");
@@ -553,6 +554,17 @@ public class Application {
         }
     }
 
+    public static void nonnoHaSmarritoTutto() {
+        System.out.print("Inserisci il nome: ");
+        String nome = scanner.nextLine();
+        System.out.print("Inserisci il cognome: ");
+        String cognome = scanner.nextLine();
+        System.out.print("Inserisci l'età: ");
+        int eta = scanner.nextInt();
+        Utente utente = ud.ricercaNonnoUtente(nome, cognome, eta);
+        System.out.println("id del utente: " + utente.getId());
+        System.out.println("id della tessera: " + utente.getTessera().getId());
+    }
 }
 
 
