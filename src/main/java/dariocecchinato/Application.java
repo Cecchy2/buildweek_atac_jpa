@@ -142,6 +142,7 @@ public class Application {
                     break menuAtac;
                 default:
                     System.out.println("Scelta non valida");
+                    startMenu();
                     break;
             }
         }
@@ -179,12 +180,9 @@ public class Application {
             Amministratore foundAdmin = em.find(Amministratore.class, personaId);
             System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
             /*metodo per avanzare nel menu amministratore*/
-            //menuAdmin();
-            /*aggiungere un if per vedere se admni == null*/
-        } else {
-            System.out.println("Benvenuto/a utente " + foundUser.getNome());
-            menuUtente(foundUser.getTessera());
         }
+        System.out.println("Benvenuto/a utente " + foundUser.getNome());
+        menuUtente(foundUser.getTessera());
     }
 
     public static void menuUtente(Tessera tessera) {
@@ -316,6 +314,19 @@ public class Application {
     }
 
     public static void vidmazioneBiglietto(Utente utente) {
+        /*List<Biglietto> bigliettiUtenteNonVidimati = utente.getTessera().getBiglietti().stream().filter(biglietto -> biglietto.getVidimato() == null).toList();
+        for (int i = 0; i < utente.getTessera().getBiglietti().size(); i++) {
+            Vidimato bigliettoNonVidimato=utente.getTessera().getBiglietti().get(i).getVidimato();
+            if(utente.getTessera().getBiglietti().get(i).getVidimato()!=null){
+                bigliettiUtenteNonVidimati.add(utente.getTessera().getBiglietti().get(i));
+            }
+        }
+        if (utente.getTessera().getBiglietti() == null) {
+            System.out.println("Non possiedi alcun biglietto, comprane uno!!");
+            menuUtente(utente);
+        } else if (bigliettiUtenteVidimati == null) {
+            System.out.println("");
+        }*/
         System.out.println("Scegli la tratta che desideri percorrere:");
         //lista di tutte le tratte del DB
         List<Tratta> listaTratte = trattaDao.findAll();
