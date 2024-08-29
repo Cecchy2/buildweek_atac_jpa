@@ -204,7 +204,7 @@ public class Application {
             System.out.println("2- Acquista biglietto");
             System.out.println("3- Abbonamenti");
             System.out.println("4- Contattaci");
-            System.out.println("5- Esci");
+            System.out.println("5- Torna indietro");
             int scelta = gestioneInputIntMenu(1, 4);
             switch (scelta) {
                 case 1:
