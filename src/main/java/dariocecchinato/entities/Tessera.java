@@ -3,6 +3,7 @@ package dariocecchinato.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,11 +18,11 @@ public class Tessera {
     @JoinColumn(name = "utente_id")
     private Utente utente;
 
-    @OneToMany(mappedBy = "tessera_id")
-    private List<Biglietto> biglietti;
+    @OneToMany(mappedBy = "tessera")
+    private List<Biglietto> biglietti = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tessera_id")
-    private List<Abbonamento> abbonamenti;
+    @OneToMany(mappedBy = "tessera")
+    private List<Abbonamento> abbonamenti = new ArrayList<>();
 
 
     public Tessera(LocalDate data_emissione, Utente utente) {

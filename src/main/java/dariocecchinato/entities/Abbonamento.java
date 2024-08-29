@@ -17,13 +17,13 @@ public class Abbonamento {
     private Tipo_abbonamento tipo_abbonamento;
     @ManyToOne
     @JoinColumn(name = "tessera_id")
-    private Tessera tessera_id;
+    private Tessera tessera;
     @ManyToOne
     @JoinColumn(name = "distributore_id")
-    private Distributore distributore_id;
+    private Distributore distributore;
     @ManyToOne
     @JoinColumn(name = "rivenditore_id")
-    private Rivenditore rivenditore_id;
+    private Rivenditore rivenditore;
 
 
     public Abbonamento(LocalDate data_validazione, Tipo_abbonamento tipo_abbonamento, Tessera tessera, Rivenditore rivenditore) {
@@ -32,8 +32,8 @@ public class Abbonamento {
         this.data_scadenza = tipo_abbonamento == Tipo_abbonamento.MENSILE ?
                 data_validazione.plusMonths(1) :
                 data_validazione.plusWeeks(1);
-        this.tessera_id = tessera;
-        this.rivenditore_id = rivenditore;
+        this.tessera = tessera;
+        this.rivenditore = rivenditore;
 
     }
 
@@ -43,8 +43,8 @@ public class Abbonamento {
         this.data_scadenza = tipo_abbonamento == Tipo_abbonamento.MENSILE ?
                 data_validazione.plusMonths(1) :
                 data_validazione.plusWeeks(1);
-        this.tessera_id = tessera;
-        this.distributore_id = distributore;
+        this.tessera = tessera;
+        this.distributore = distributore;
     }
 
 
@@ -61,6 +61,30 @@ public class Abbonamento {
 
     public void setData_validazione(LocalDate data_validazione) {
         this.data_validazione = data_validazione;
+    }
+
+    public Tessera getTessera() {
+        return tessera;
+    }
+
+    public void setTessera(Tessera tessera) {
+        this.tessera = tessera;
+    }
+
+    public Distributore getDistributore() {
+        return distributore;
+    }
+
+    public void setDistributore(Distributore distributore) {
+        this.distributore = distributore;
+    }
+
+    public Rivenditore getRivenditore() {
+        return rivenditore;
+    }
+
+    public void setRivenditore(Rivenditore rivenditore) {
+        this.rivenditore = rivenditore;
     }
 
     public LocalDate getData_scadenza() {
