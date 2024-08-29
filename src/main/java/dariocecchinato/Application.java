@@ -182,18 +182,17 @@ public class Application {
             /*metodo per avanzare nel menu amministratore*/
         }
         System.out.println("Benvenuto/a utente " + foundUser.getNome());
-        menuUtente(foundUser);
+        menuUtente(foundUser.getTessera());
     }
 
-    public static void menuUtente(Utente utente) {
-        if (!td.isTesseraValida(utente.getTessera().getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
+    public static void menuUtente(Tessera tessera) {
+        if (!td.isTesseraValida(tessera.getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
             System.out.println("Attenzione: la tua tessera è scaduta! Vuoi rinnovarla?");
             System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
             System.out.println("1- Rinnova tessera");
             System.out.println("2- Non rinnovare");
             int scelta = gestioneInputIntMenu(1, 2);
             if (scelta == 1) {
-                Tessera tessera = utente.getTessera();
                 tessera.rinnovoTessera();
             } else {
                 System.out.println("Tessera non rinnovata");
@@ -214,11 +213,11 @@ public class Application {
                     vidmazioneBiglietto(tessera.getUtente());
                     break;
                 case 2:
-                    bigliettoDao.acquistaBiglietto(utente.getTessera());
+                    bigliettoDao.acquistaBiglietto(tessera);
                     break;
                 case 3:
                     /*metodo abbonamento*/
-                    menuAbbonamento(utente);
+                    menuAbbonamento(tessera.getUtente());
                     break;
                 case 4:
                     /*messaggio che compare in contattaci*/
