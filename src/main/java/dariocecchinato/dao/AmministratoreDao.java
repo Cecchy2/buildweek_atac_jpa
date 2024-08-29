@@ -1,8 +1,9 @@
 package dariocecchinato.dao;
 
 import dariocecchinato.entities.Amministratore;
-import dariocecchinato.exceptions.NotFoundException;
+import dariocecchinato.entities.Mezzo;
 import dariocecchinato.entities.Tratta;
+import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
@@ -38,11 +39,14 @@ public class AmministratoreDao {
         return found;
     }
 
-    public double calcolaTempoMedioEffettivo(Tratta tratta) {
-        TypedQuery<Double> query = em.createQuery("SELECT AVG(g.tempo_effettivo_percorrenza) FROM GiroTratta g WHERE g.tratta_id = :tratta", Double.class);
+    public double calcolaTempoMedioEffettivo(Tratta tratta, Mezzo mezzo) {
+        TypedQuery<Double> query = em.createQuery("SELECT AVG(g.tempo_effettivo_percorrenza) FROM GiroTratta g WHERE g.tratta_id = :tratta AND g.mezzo = :mezzo", Double.class);
         query.setParameter("tratta", tratta);
-        Double tempoMedioInSecondi = query.getSingleResult();
-        Double tempoMedioInMinuti = tempoMedioInSecondi / 60;
+        query.setParameter("mezzo", mezzo);
+        Double tempoMedioInMinuti = query.getSingleResult();
+        if (tempoMedioInMinuti == null) {
+            System.out.println("Questo mezzo non ha ancora percorso questa tratta.");
+        }
         return tempoMedioInMinuti;
     }
 }
