@@ -12,7 +12,7 @@ public class Vidimato {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "biglietto_id", nullable = false)
     private Biglietto biglietto;
     @ManyToOne
@@ -60,4 +60,13 @@ public class Vidimato {
     }
 
 
+    @Override
+    public String toString() {
+        return "Vidimato{" +
+                "id=" + id +
+                ", biglietto=" + biglietto +
+                ", mezzo=" + mezzo +
+                ", dataVidimazione=" + dataVidimazione +
+                '}';
+    }
 }
