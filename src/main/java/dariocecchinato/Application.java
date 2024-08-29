@@ -186,9 +186,6 @@ public class Application {
     }
 
     public static void menuUtente(Tessera tessera) {
-
-
-        System.out.println(tessera);
         if (!td.isTesseraValida(tessera.getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
             System.out.println("Attenzione: la tua tessera è scaduta! Vuoi rinnovarla?");
             System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
@@ -303,7 +300,7 @@ public class Application {
     }
 
     private static void registrazione() {
-        /*crei un utente, e subito dopo ti crei la tessera*/
+        /*crei un utente, e subit1o dopo ti crei la tessera*/
         // dati per la registrazione
         System.out.println("Inserisci il tuo nome:");
         String nome = scanner.nextLine();
@@ -321,8 +318,8 @@ public class Application {
         ud.save(nuovoUtente);
         Tessera nuovaTessera = new Tessera(LocalDate.now(), nuovoUtente);
         td.save(nuovaTessera);
-        System.out.println("Utente creato: " + nuovoUtente);
-        System.out.println("Tessera associata:" + nuovaTessera);
+        //System.out.println("Utente creato: " + nuovoUtente);
+        //System.out.println("Tessera associata:" + nuovaTessera);
         /*passo la tessera di che si trova in java perche in questo momento si trova ancora nel transistor*/
         menuUtente(nuovaTessera);
 
