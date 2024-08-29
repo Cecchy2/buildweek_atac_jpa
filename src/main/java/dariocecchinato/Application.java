@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
-import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -142,7 +141,6 @@ public class Application {
                     break menuAtac;
                 default:
                     System.out.println("Scelta non valida");
-                    startMenu();
                     break;
             }
         }
@@ -180,6 +178,7 @@ public class Application {
             Amministratore foundAdmin = em.find(Amministratore.class, personaId);
             System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
             /*metodo per avanzare nel menu amministratore*/
+            //menuAdmin();
             /*aggiungere un if per vedere se admni == null*/
         } else {
             System.out.println("Benvenuto/a utente " + foundUser.getNome());
@@ -246,6 +245,7 @@ public class Application {
                 break;
             case 2:
                 /*metodo acquista abbonamento*/
+                acquistaAbbonamento(utente.getTessera()); /*cristiano*/
                 break;
             default:
                 System.out.println("Scelta non valida");
@@ -266,18 +266,7 @@ public class Application {
         System.out.println("Inserisci l'UUID della tua tessera:");
         String uuidInput = scanner.nextLine();
         UUID tesseraId = UUID.fromString(uuidInput);
-
-        /*1*/
-        Tessera tessera;
-        try {
-            tessera = td.getById(tesseraId);
-        } catch (NotFoundException e) {
-            System.out.println("Tessera non trovata.");
-            return;
-        }
-        /*2*/
-
-        List<Abbonamento> abbonamenti = tessera.getAbbonamenti();
+        List<Abbonamento> abbonamenti = utente.getTessera().getAbbonamenti();
         if (abbonamenti == null || abbonamenti.isEmpty()) {
             System.out.println("Non ci sono abbonamenti associati a questa tessera.");
             return;
@@ -346,6 +335,13 @@ public class Application {
 
         Vidimato vidimazione = new Vidimato(utente.getTessera().getBiglietti().getFirst(), giroTrattaDellaTrattaSelezionata.getFirst(), LocalDate.now());
         vidimatoDao.save(vidimazione);
+    }
+
+    public static void acquistaAbbonamento(Tessera tessera) {
+        /*deve scegliere se lo sta shoppando da un rivenditore o un distributore*/
+        //per dare random il rivednitore o il dis. devi fare un random che sceglie tra i due
+        /*poi devi scegliere random sulla lista tra il luogo scelto (riv o dis) e lo assegni random*/
+        /*fai tu*/
     }
 }
 
