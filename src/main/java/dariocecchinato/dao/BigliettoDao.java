@@ -59,9 +59,7 @@ public class BigliettoDao {
     public void acquistaBiglietto(Tessera tessera) {
         Scanner scanner = new Scanner(System.in);
 
-
         while (true) {
-
             System.out.println("Vuoi acquistare da un Distributore o da un Rivenditore?");
             System.out.println("1. Distributore");
             System.out.println("2. Rivenditore");
