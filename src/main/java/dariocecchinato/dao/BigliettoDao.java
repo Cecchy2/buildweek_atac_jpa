@@ -107,4 +107,18 @@ public class BigliettoDao {
             }
         }
     }
+
+    public Long counterBigliettiVendutiInUnPeriodo(LocalDate dataInizio, LocalDate dataFine) {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(b) FROM Biglietto b WHERE b.dataEmissione BETWEEN :data_inizio AND :data_fine", Long.class);
+        query.setParameter("data_inizio", dataInizio);
+        query.setParameter("data_fine", dataFine);
+        return query.getSingleResult();
+    }
+
+    public List<Biglietto> listaBigliettiVendutiInUnPeriodo(LocalDate dataInizio, LocalDate dataFine) {
+        TypedQuery<Biglietto> query = em.createQuery("SELECT b FROM Biglietto b WHERE b.dataEmissione BETWEEN :data_inizio AND :data_fine", Biglietto.class);
+        query.setParameter("data_inizio", dataInizio);
+        query.setParameter("data_fine", dataFine);
+        return query.getResultList();
+    }
 }

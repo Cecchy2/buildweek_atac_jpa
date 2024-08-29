@@ -109,7 +109,8 @@ public class Application {
 
         /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
         System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
-       
+
+
         startMenu();
         em.close();
         emf.close();
@@ -426,6 +427,7 @@ public class Application {
                     vidimatoDao.findAll().forEach(System.out::println);
                     break;
                 case 6:
+                    numeroBigliettiVendutiInUnPeriodo();
                     break;
                 case 7:
                     break;
@@ -469,6 +471,17 @@ public class Application {
         } catch (Exception e) {
             System.out.println("Errore durante l'eliminazione dell'utente: " + e.getMessage());
         }
+    }
+
+    public static void numeroBigliettiVendutiInUnPeriodo() {
+        System.out.println("Devi inserire le date che indicano il periodo di tempo che vuoi analizzare");
+        System.out.println("1- Inserisci la data di inzio periodo (formato YYYY-MM-DD): ");
+        LocalDate dataInizioInput = LocalDate.parse(scanner.nextLine());
+        System.out.println("2- Inserisci la data di fine periodo (formato YYYY-MM-DD): ");
+        LocalDate dataFineInput = LocalDate.parse(scanner.nextLine());
+        System.out.println("I biglietti venduti nel periodo tra " + dataInizioInput + " e " + dataFineInput + " sono: " + bigliettoDao.counterBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput));
+        System.out.println("Qui sotto la lista completa: ");
+        bigliettoDao.listaBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput).forEach(System.out::println);
     }
 
 
