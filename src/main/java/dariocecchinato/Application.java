@@ -5,7 +5,6 @@ import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
 import dariocecchinato.enums.Tipo_abbonamento;
-import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -318,7 +317,6 @@ public class Application {
 
         Biglietto biglietto = biglietti.get(scelta - 1);
 
-
         System.out.println("Scegli la tratta che desideri percorrere:");
         //lista di tutte le tratte del DB
         List<Tratta> listaTratte = trattaDao.findAll();
@@ -328,19 +326,14 @@ public class Application {
             System.out.println(i + 1 + "- " + Arrays.toString(zonePartenzaCapolinea.get(i)));
         }
 
-        //raccolgo l'input dell'utente per la scelta della tratta
         int inputTratta = gestioneInputIntMenu(1, zonePartenzaCapolinea.size());
-        //lista dei giri della tratta selezionata dall'utente
+        
         List<GiroTratta> giroTrattaDellaTrattaSelezionata = listaTratte.get(inputTratta).getGiritratte();
         System.out.println("Informazioni sul giro della tratta:");
         System.out.println("Tempo di partenza : " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_partenza());
         System.out.println("Tempo di arrivo: " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_arrivo());
         System.out.println("Mezzo : " + giroTrattaDellaTrattaSelezionata.getFirst().getMezzo_id().getTipo_mezzo());
 
-        /*System.out.println(tessera);
-        Tessera tesseraFromDb = td.getById(tessera.getId());
-
-        Biglietto bigliettoFromDb = tesseraFromDb.getBiglietti().get(0);*/
         try {
             Vidimato vidimazione = new Vidimato(biglietto, giroTrattaDellaTrattaSelezionata.getFirst(), LocalDate.now());
             vidimatoDao.save(vidimazione);
@@ -350,33 +343,22 @@ public class Application {
     }
 
     public static void acquistaAbbonamento(Tessera tessera) {
-        /*1 facciamo scegliere il tipo di abbonamento*/
-        /* 2genero random la scelta del distr o rivend*/
-        /*3 salvo nel db*/
-
-        /*1*/
         System.out.println("Scegli il tipo di abbonamento:");
         System.out.println("1- Settimanale");
         System.out.println("2- Mensile");
         int sceltaTipo = gestioneInputIntMenu(1, 2);
         Tipo_abbonamento tipoAbbonamento = (sceltaTipo == 1) ? Tipo_abbonamento.SETTIMANALE : Tipo_abbonamento.MENSILE;
 
-        /*2*/
         boolean isRivenditore = random.nextBoolean();
 
         Abbonamento nuovoAbbonamento;
-
         if (isRivenditore) {
-
             Rivenditore rivenditore = rivDao.findAll().get(random.nextInt(rivDao.findAll().size()));
             nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, rivenditore);
         } else {
-
             Distributore distributore = db.findAll().get(random.nextInt(db.findAll().size()));
             nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, distributore);
         }
-
-        /*3*/
         ab.save(nuovoAbbonamento);
 
         System.out.println("Abbonamento aggiunto con successo!");
@@ -460,7 +442,6 @@ public class Application {
     public static void eliminaUtente() {
         System.out.println("Inserisci l'UUID dell'utente da eliminare:");
         String input = scanner.nextLine();
-
         try {
             UUID utenteId = UUID.fromString(input);
             ud.delete(utenteId);
@@ -470,8 +451,6 @@ public class Application {
             System.out.println("Errore durante l'eliminazione dell'utente: " + e.getMessage());
         }
     }
-
-
 }
 
 
