@@ -6,6 +6,7 @@ import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
 import dariocecchinato.enums.TipoServizio;
 import dariocecchinato.enums.Tipo_abbonamento;
+import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -39,7 +40,7 @@ public class Application {
 
     public static void main(String[] args) {
         Amministratore amministratore = new Amministratore("Signor", "Palle", "signorpalle@gmail.com", 45, "12345");
-        amministratoreDao.save(amministratore);
+        // amministratoreDao.save(amministratore);
 
         //**************************   CREAZIONE TRATTE  *********************************
         Supplier<Tratta> trattaSupplier = new TrattaSupplier();
@@ -417,6 +418,7 @@ public class Application {
                     numeroBigliettiVendutiInUnPeriodo();
                     break;
                 case 7:
+                    numeroDiGiriEffettuatiDaUnMezzo();
                     break;
                 case 8:
                     tempoEffettivoMedioPercorrenza();
@@ -509,6 +511,22 @@ public class Application {
             System.out.println("Formato UUID non valido.");
         } catch (Exception e) {
             System.out.println("Errore durante la ricerca dello stato del mezzo: " + e.getMessage());
+        }
+    }
+
+    public static void numeroDiGiriEffettuatiDaUnMezzo() {
+        while (true) {
+            try {
+                System.out.println("Inserisci l'ID del mezzo per sapere quanti volte percorre una tratta: ");
+                String inputMezzoId = scanner.nextLine();
+                Mezzo mezzoFromDB = mezzoDao.getById(UUID.fromString(inputMezzoId));
+                System.out.println("Il mezzo selezionato è un " + mezzoFromDB.getTipo_mezzo() + " ed ha percorso la tratta " + giroTrattaDao.numeroGiriTrattaDiUnMezzo(mezzoFromDB) + " volte");
+                break;
+            } catch (NotFoundException e) {
+                System.out.println(e.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
