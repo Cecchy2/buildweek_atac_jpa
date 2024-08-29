@@ -178,7 +178,7 @@ public class Application {
             Amministratore foundAdmin = em.find(Amministratore.class, personaId);
             System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
             /*metodo per avanzare nel menu amministratore*/
-            menuAdmin(foundAdmin);
+            //menuAdmin();
             /*aggiungere un if per vedere se admni == null*/
         } else {
             System.out.println("Benvenuto/a utente " + foundUser.getNome());
@@ -338,10 +338,36 @@ public class Application {
     }
 
     public static void acquistaAbbonamento(Tessera tessera) {
-        /*deve scegliere se lo sta shoppando da un rivenditore o un distributore*/
-        //per dare random il rivednitore o il dis. devi fare un random che sceglie tra i due
-        /*poi devi scegliere random sulla lista tra il luogo scelto (riv o dis) e lo assegni random*/
-        /*fai tu*/
+        /*1 facciamo scegliere il tipo di abbonamento*/
+        /* 2genero random la scelta del distr o rivend*/
+        /*3 salvo nel db*/
+
+        /*1*/
+        System.out.println("Scegli il tipo di abbonamento:");
+        System.out.println("1- Settimanale");
+        System.out.println("2- Mensile");
+        int sceltaTipo = gestioneInputIntMenu(1, 2);
+        Tipo_abbonamento tipoAbbonamento = (sceltaTipo == 1) ? Tipo_abbonamento.SETTIMANALE : Tipo_abbonamento.MENSILE;
+
+        /*2*/
+        boolean isRivenditore = random.nextBoolean();
+
+        Abbonamento nuovoAbbonamento;
+
+        if (isRivenditore) {
+
+            Rivenditore rivenditore = rivDao.findAll().get(random.nextInt(rivDao.findAll().size()));
+            nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, rivenditore);
+        } else {
+
+            Distributore distributore = db.findAll().get(random.nextInt(db.findAll().size()));
+            nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, distributore);
+        }
+
+        /*3*/
+        ab.save(nuovoAbbonamento);
+
+        System.out.println("Abbonamento aggiunto con successo!");
     }
 
     public static void menuAdmin(Amministratore admin) {
