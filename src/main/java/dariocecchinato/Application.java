@@ -211,6 +211,7 @@ public class Application {
             switch (scelta) {
                 case 1:
                     /*metodo per vidimare il biglietto*/ /*gianluca*/
+                    //***********************GESTIRE ERRORI*******************************
                     vidmazioneBiglietto(utente);
                     break;
                 case 2:
@@ -336,6 +337,19 @@ public class Application {
     }
 
     public static void vidmazioneBiglietto(Utente utente) {
+        /*List<Biglietto> bigliettiUtenteNonVidimati = utente.getTessera().getBiglietti().stream().filter(biglietto -> biglietto.getVidimato() == null).toList();
+        for (int i = 0; i < utente.getTessera().getBiglietti().size(); i++) {
+            Vidimato bigliettoNonVidimato=utente.getTessera().getBiglietti().get(i).getVidimato();
+            if(utente.getTessera().getBiglietti().get(i).getVidimato()!=null){
+                bigliettiUtenteNonVidimati.add(utente.getTessera().getBiglietti().get(i));
+            }
+        }
+        if (utente.getTessera().getBiglietti() == null) {
+            System.out.println("Non possiedi alcun biglietto, comprane uno!!");
+            menuUtente(utente);
+        } else if (bigliettiUtenteVidimati == null) {
+            System.out.println("");
+        }*/
         System.out.println("Scegli la tratta che desideri percorrere:");
         //lista di tutte le tratte del DB
         List<Tratta> listaTratte = trattaDao.findAll();
