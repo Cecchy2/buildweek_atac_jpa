@@ -50,7 +50,7 @@ public class AmministratoreDao {
         return tempoMedioInMinuti;
     }
 
-    public double calcolaTempoMedioEffettivo(Tratta tratta) {
+    public double calcolaTempoEffettivo(Tratta tratta) {
         TypedQuery<Long> query = em.createQuery("SELECT g.tempo_effettivo_percorrenza FROM GiroTratta g WHERE g.tratta_id = :tratta", Long.class);
         query.setParameter("tratta", tratta);
         List<Long> tempiEffettivi = query.getResultList();

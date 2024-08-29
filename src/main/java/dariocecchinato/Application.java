@@ -463,7 +463,7 @@ public class Application {
             String input = scanner.nextLine();
             UUID trattaId = UUID.fromString(input);
             Tratta tratta = trattaDao.getById(trattaId);
-            double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta);
+            double tempoMedio = amministratoreDao.calcolaTempoEffettivo(tratta);
             System.out.println("Il tempo medio effettivo di percorrenza per la tratta selezionata è: " + tempoMedio + " minuti");
         } catch (IllegalArgumentException e) {
             System.out.println("L'UUID inserito non è valido. Assicurati di inserire un UUID corretto.");
@@ -471,6 +471,7 @@ public class Application {
             System.out.println("Errore: " + e.getMessage());
         }
     }
+
     public static void numeroBigliettiVendutiInUnPeriodo() {
         System.out.println("Devi inserire le date che indicano il periodo di tempo che vuoi analizzare");
         System.out.println("1- Inserisci la data di inzio periodo (formato YYYY-MM-DD): ");
