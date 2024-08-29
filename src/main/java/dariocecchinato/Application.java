@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
+import dariocecchinato.enums.Tipo_abbonamento;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -179,11 +180,9 @@ public class Application {
             }
             System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
             /*metodo per avanzare nel menu amministratore*/
-            /*aggiungere un if per vedere se admni == null*/
-        } else {
-            System.out.println("Benvenuto/a utente " + foundUser.getNome());
-            menuUtente(foundUser.getTessera());
         }
+        System.out.println("Benvenuto/a utente " + foundUser.getNome());
+        menuUtente(foundUser.getTessera());
     }
 
     public static void menuUtente(Tessera tessera) {
@@ -248,6 +247,7 @@ public class Application {
                 break;
             case 2:
                 /*metodo acquista abbonamento*/
+                acquistaAbbonamento(utente.getTessera()); /*cristiano*/
                 break;
             default:
                 System.out.println("Scelta non valida");
@@ -260,15 +260,7 @@ public class Application {
         System.out.println("Inserisci l'UUID della tua tessera:");
         String uuidInput = scanner.nextLine();
         UUID tesseraId = UUID.fromString(uuidInput);
-
-        Tessera tessera;
-        try {
-            tessera = td.getById(tesseraId);
-        } catch (NotFoundException e) {
-            System.out.println("Tessera non trovata.");
-            return;
-        }
-        List<Abbonamento> abbonamenti = tessera.getAbbonamenti();
+        List<Abbonamento> abbonamenti = utente.getTessera().getAbbonamenti();
         if (abbonamenti == null || abbonamenti.isEmpty()) {
             System.out.println("Non ci sono abbonamenti associati a questa tessera.");
             return;
@@ -356,6 +348,130 @@ public class Application {
             System.out.println(e.getMessage());
         }
     }
+
+    public static void acquistaAbbonamento(Tessera tessera) {
+        /*1 facciamo scegliere il tipo di abbonamento*/
+        /* 2genero random la scelta del distr o rivend*/
+        /*3 salvo nel db*/
+
+        /*1*/
+        System.out.println("Scegli il tipo di abbonamento:");
+        System.out.println("1- Settimanale");
+        System.out.println("2- Mensile");
+        int sceltaTipo = gestioneInputIntMenu(1, 2);
+        Tipo_abbonamento tipoAbbonamento = (sceltaTipo == 1) ? Tipo_abbonamento.SETTIMANALE : Tipo_abbonamento.MENSILE;
+
+        /*2*/
+        boolean isRivenditore = random.nextBoolean();
+
+        Abbonamento nuovoAbbonamento;
+
+        if (isRivenditore) {
+
+            Rivenditore rivenditore = rivDao.findAll().get(random.nextInt(rivDao.findAll().size()));
+            nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, rivenditore);
+        } else {
+
+            Distributore distributore = db.findAll().get(random.nextInt(db.findAll().size()));
+            nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, distributore);
+        }
+
+        /*3*/
+        ab.save(nuovoAbbonamento);
+
+        System.out.println("Abbonamento aggiunto con successo!");
+    }
+
+    public static void menuAdmin(Amministratore admin) {
+        controlloPassword:
+        while (true) {
+            System.out.println("Per continuare inserisci la password");
+            String password = scanner.nextLine();
+            if (Objects.equals(password, "sonounclown")) {
+                break controlloPassword;
+            } else {
+                System.out.println("password errata, riprova");
+            }
+        }
+
+        cicloAdmin:
+        while (true) {
+            System.out.println("Quale comando vuoi eseguire?");
+            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+            System.out.println("1- Crea nuovo utente e tessera associata"); /*kenny*/
+            System.out.println("2- Elimina utente"); /*kenny dato un id*/
+            System.out.println("3- Cerca stato di servizio di un mezzo"); /*kenny*/
+            System.out.println("4- Cerca il numero di biglietto vidimati dato un mezzo");
+            System.out.println("5- Cerca il numero totale di biglietti vidimati"); /*gianluca*/
+            System.out.println("6- Numero di biglietti venduti in un periodo"); /*gianluca*/
+            System.out.println("7- Cerca il numero di volte che un mezzo fa una tratta");
+            System.out.println("8- Tempo effettivo medio di percorrenza di una tratta"); /*diego*/
+            System.out.println("9- Tempo effettivo di percorrenza di una tratta"); /*diego*/
+            System.out.println("10- Cerca id tessera e id utente dato un nome e cognome ed eta"); /*ultima cosa*/
+            System.out.println("11- Esci");
+            int scelta = gestioneInputIntMenu(1, 11);
+            switch (scelta) {
+                case 1:
+                    break;
+                case 2:
+                    eliminaUtente();
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    System.out.println("Il numero totale di biglietti vidimanti è: " + vidimatoDao.restituisciNumeroTotaleBigliettiVidimati());
+                    System.out.println("Qui sotto la lista completa: ");
+                    vidimatoDao.findAll().forEach(System.out::println);
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    tempoEffettivoMedioPercorrenza();
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    break;
+                case 11:
+                    break cicloAdmin;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public static void tempoEffettivoMedioPercorrenza() {
+        System.out.print("Inserisci l'ID della Tratta: ");
+        String trattaIdInput = scanner.nextLine();
+        UUID trattaId = UUID.fromString(trattaIdInput);
+        System.out.print("Inserisci l'ID del Mezzo: ");
+        String mezzoIdInput = scanner.nextLine();
+        UUID mezzoId = UUID.fromString(mezzoIdInput);
+        Tratta tratta = trattaDao.getById(trattaId);
+        Mezzo mezzo = mezzoDao.getById(mezzoId);
+        double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta, mezzo);
+        System.out.println("Il tempo medio effettivo di percorrenza è: " + tempoMedio + " minuti");
+    }
+
+    public static void eliminaUtente() {
+        System.out.println("Inserisci l'UUID dell'utente da eliminare:");
+        String input = scanner.nextLine();
+
+        try {
+            UUID utenteId = UUID.fromString(input);
+            ud.delete(utenteId);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Formato UUID non valido.");
+        } catch (Exception e) {
+            System.out.println("Errore durante l'eliminazione dell'utente: " + e.getMessage());
+        }
+    }
+
+
 }
 
 
