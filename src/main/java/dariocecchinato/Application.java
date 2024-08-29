@@ -303,9 +303,6 @@ public class Application {
     }
 
     private static void registrazione() {
-        /*crei un utente, e subito dopo ti crei la tessera*/
-
-        // dati per la registrazione
 
         System.out.println("Inserisci il tuo nome:");
         String nome = scanner.nextLine();
@@ -317,15 +314,12 @@ public class Application {
         int eta = gestioneInputIntMenu(12, 95);
         System.out.println("Inserisci la tua zona di residenza:");
         String zonaDiResidenza = scanner.nextLine();
-
         // creazione nuovo utente
         Utente nuovoUtente = new Utente(nome, cognome, email, eta, zonaDiResidenza);
         ud.save(nuovoUtente);
         Tessera nuovaTessera = new Tessera(LocalDate.now(), nuovoUtente);
         td.save(nuovaTessera);
-        //System.out.println("Utente creato: " + nuovoUtente);
-        //System.out.println("Tessera associata:" + nuovaTessera);
-        /*passo la tessera di che si trova in java perche in questo momento si trova ancora nel transistor*/
+
         menuUtente(nuovaTessera);
 
 
