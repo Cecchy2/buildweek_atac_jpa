@@ -16,7 +16,7 @@ public class Mezzo {
     @OneToMany(mappedBy = "mezzo")
     private List<StatoServizio> stato_servizio;
 
-    @OneToMany(mappedBy = "mezzo_id")
+    @OneToMany(mappedBy = "mezzo")
     private List<GiroTratta> giri_tratta;
 
     private long capienza_max;
@@ -58,7 +58,7 @@ public class Mezzo {
         return "Mezzo{" +
                 "mezzo_id=" + mezzo_id +
                 ", stato_servizio=" + stato_servizio +
-                
+
                 ", capienza_max=" + capienza_max +
                 ", tipo_mezzo=" + tipo_mezzo +
                 '}';

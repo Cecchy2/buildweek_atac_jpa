@@ -105,12 +105,6 @@ public class Application {
             //giroTrattaDao.save(giroTrattaSupplier.get());
         }
         List<GiroTratta> girotratte = giroTrattaDao.findAll();
-
-
-        /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
-        System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
-
-
         startMenu();
         em.close();
         emf.close();
@@ -120,36 +114,43 @@ public class Application {
     public static void startMenu() {
         menuAtac:
         while (true) {
-            System.out.println("Benvenuto in Atac");
-            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
-            System.out.println("1- Registrati");
-            System.out.println("2- Login");
-            System.out.println("3- Esci");
+            try {
+                System.out.println("Benvenuto in Atac");
+                System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
+                System.out.println("1- Registrati");
+                System.out.println("2- Login");
+                System.out.println("3- Esci");
 
-            int scelta = gestioneInputIntMenu(1, 3);
-
-            switch (scelta) {
-                case 1:
-                    /*aggiungere metodo per la gestione del registrati*/
-                    registrazione();
-                    break;
-                case 2:
-                    /*add metodo per gestire il login*/
-                    login();
-                    //menuUtente(); /*da togliere una volta finito il metodo login, per ora questa è solo un modo per continuare la struttura del menu*/
-                    break;
-                case 3:
-                    /*si esce dal while principale*/
-                    break menuAtac;
-                default:
-                    System.out.println("Scelta non valida");
-                    startMenu();
-                    break;
+                int scelta = gestioneInputIntMenu(1, 3);
+                if (scelta < 1 || scelta > 3) {
+                    System.out.println("Il numero inserito non è valido");
+                    return;
+                }
+                switch (scelta) {
+                    case 1:
+                        /*aggiungere metodo per la gestione del registrati*/
+                        registrazione();
+                        break;
+                    case 2:
+                        /*add metodo per gestire il login*/
+                        login();
+                        //menuUtente(); /*da togliere una volta finito il metodo login, per ora questa è solo un modo per continuare la struttura del menu*/
+                        break;
+                    case 3:
+                        /*si esce dal while principale*/
+                        break menuAtac;
+                    default:
+                        System.out.println("Scelta non valida");
+                        startMenu();
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
 
-    private static int gestioneInputIntMenu(int min, int max) {
+    public static int gestioneInputIntMenu(int min, int max) {
         while (true) {
             try {
                 int input = scanner.nextInt();
@@ -169,16 +170,23 @@ public class Application {
     private static void login() {
         System.out.println("inserisci il tuo codice UUID");
         String input = scanner.nextLine();
-        /*devo capire se è un utente o un admin */  /*gianluca*/
-        /*fatto questo nel if else if che creeremo dobbiamo implementare i metodi che continueranno il menu*/
-        findUserOrAdminById2(UUID.fromString(input));
-
+        try {
+            UUID uuid = UUID.fromString(input);
+            findUserOrAdminById2(uuid);
+        } catch (Exception e) {
+            System.out.println("id non valido, reinserisci un id valido");
+            login();
+        }
     }
 
     public static void findUserOrAdminById2(UUID personaId) {
         Utente foundUser = em.find(Utente.class, personaId);
         if (foundUser == null) {
             Amministratore foundAdmin = em.find(Amministratore.class, personaId);
+            if (foundAdmin == null) {
+                System.out.println("Utente o Amministratore non trovato, controlla l' ID");
+                return;
+            }
             System.out.println("Benvenuto/a " + foundAdmin.getNome() + " Accesso effettuato come amministratore!");
             /*metodo per avanzare nel menu amministratore*/
         }
@@ -201,36 +209,36 @@ public class Application {
         }
         cicloMenuUtente:
         while (true) {
-            System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
-            System.out.println("1- Validazione corsa");
-            System.out.println("2- Acquista biglietto");
-            System.out.println("3- Abbonamenti");
-            System.out.println("4- Contattaci");
-            System.out.println("5- Torna indietro");
-            int scelta = gestioneInputIntMenu(1, 4);
-            switch (scelta) {
-                case 1:
-                    /*metodo per vidimare il biglietto*/ /*gianluca*/
-                    vidmazioneBiglietto(tessera.getUtente());
-                    break;
-                case 2:
-                    bigliettoDao.acquistaBiglietto(tessera);
-                    break;
-                case 3:
-                    /*metodo abbonamento*/
-                    menuAbbonamento(tessera.getUtente());
-                    break;
-                case 4:
-                    /*messaggio che compare in contattaci*/
-                    System.out.println("Hai un problema che questo menu non riesce a soddisfare, contattaci al numero +00-111-222-3333");
-                    break;
-                case 5:
-                    break cicloMenuUtente;
-                default:
-                    System.out.println("Scelta non valida");
-                    break;
+            try {
+                System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione da effettuare:");
+                System.out.println("1- Validazione corsa");
+                System.out.println("2- Acquista biglietto");
+                System.out.println("3- Abbonamenti");
+                System.out.println("4- Contattaci");
+                System.out.println("5- Torna indietro");
+                int scelta = gestioneInputIntMenu(1, 4);
+                switch (scelta) {
+                    case 1:
+                        vidmazioneBiglietto(tessera);
+                        break;
+                    case 2:
+                        bigliettoDao.acquistaBiglietto(tessera);
+                        break;
+                    case 3:
+                        menuAbbonamento(tessera.getUtente());
+                        break;
+                    case 4:
+                        System.out.println("Hai un problema che questo menu non riesce a soddisfare, contattaci al numero +00-111-222-3333");
+                        break;
+                    case 5:
+                        break cicloMenuUtente;
+                    default:
+                        System.out.println("Scelta non valida");
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
-
         }
     }
 
@@ -254,15 +262,6 @@ public class Application {
     }
 
     public static void controllaValiditaAbbonamento(Utente utente) {
-
-        /* 1 mi recupero tessera tramite tesseradao */
-
-        /*2 controllo se la tessera ha gia abbonamenti caricati
-         * 2.1 e se il piu recente è ancora valido
-         *
-         * 3 mi trovo l'abb piu recente
-         *
-         * 4 verifico la data discadenza*/
         System.out.println("Inserisci l'UUID della tua tessera:");
         String uuidInput = scanner.nextLine();
         UUID tesseraId = UUID.fromString(uuidInput);
@@ -271,18 +270,13 @@ public class Application {
             System.out.println("Non ci sono abbonamenti associati a questa tessera.");
             return;
         }
-
-        /*3*/
         Abbonamento abbonamentoRecente = abbonamenti.stream()
                 .max(Comparator.comparing(Abbonamento::getData_validazione))/*.max((a1, a2) -> a1.getData_validazione().compareTo(a2.getData_validazione()))*/
                 .orElse(null);
-
         if (abbonamentoRecente == null) {
             System.out.println("Nessun abbonamento valido trovato.");
             return;
         }
-
-        /*4*/
         LocalDate dataScadenza = abbonamentoRecente.getData_scadenza();
         if (dataScadenza != null && !dataScadenza.isBefore(LocalDate.now())) {
             System.out.println("Il tuo abbonamento è ancora valido fino il: " + dataScadenza);
@@ -310,74 +304,60 @@ public class Application {
         td.save(nuovaTessera);
 
         menuUtente(nuovaTessera);
-
-
     }
 
-    public static void vidmazioneBiglietto(Utente utente) {
-        /*List<Biglietto> bigliettiUtenteNonVidimati = utente.getTessera().getBiglietti().stream().filter(biglietto -> biglietto.getVidimato() == null).toList();
-        for (int i = 0; i < utente.getTessera().getBiglietti().size(); i++) {
-            Vidimato bigliettoNonVidimato=utente.getTessera().getBiglietti().get(i).getVidimato();
-            if(utente.getTessera().getBiglietti().get(i).getVidimato()!=null){
-                bigliettiUtenteNonVidimati.add(utente.getTessera().getBiglietti().get(i));
-            }
+    public static void vidmazioneBiglietto(Tessera tessera) {
+
+        List<Biglietto> biglietti = tessera.getBiglietti();
+        if (biglietti.isEmpty()) {
+            System.out.println("Non hai biglietti disponibili");
+            return;
         }
-        if (utente.getTessera().getBiglietti() == null) {
-            System.out.println("Non possiedi alcun biglietto, comprane uno!!");
-            menuUtente(utente);
-        } else if (bigliettiUtenteVidimati == null) {
-            System.out.println("");
-        }*/
+
+        System.out.println("Scegli il biglietto da vidimare");
+        for (int i = 0; i < biglietti.size(); i++) {
+            Biglietto biglietto = biglietti.get(i);
+            System.out.println(i + 1 + ". " + biglietto.getId());
+        }
+        int scelta = Integer.parseInt(scanner.nextLine());
+        Biglietto biglietto = biglietti.get(scelta - 1);
         System.out.println("Scegli la tratta che desideri percorrere:");
-        //lista di tutte le tratte del DB
         List<Tratta> listaTratte = trattaDao.findAll();
-        //lista di oggetti delle colonne zona_partenza e capolinea
         List<Object[]> zonePartenzaCapolinea = trattaDao.getAllZonaPartenzaECapolinea();
         for (int i = 0; i < zonePartenzaCapolinea.size(); i++) {
             System.out.println(i + 1 + "- " + Arrays.toString(zonePartenzaCapolinea.get(i)));
         }
-
-        //raccolgo l'input dell'utente per la scelta della tratta
         int inputTratta = gestioneInputIntMenu(1, zonePartenzaCapolinea.size());
-        //lista dei giri della tratta selezionata dall'utente
         List<GiroTratta> giroTrattaDellaTrattaSelezionata = listaTratte.get(inputTratta).getGiritratte();
         System.out.println("Informazioni sul giro della tratta:");
         System.out.println("Tempo di partenza : " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_partenza());
         System.out.println("Tempo di arrivo: " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_arrivo());
         System.out.println("Mezzo : " + giroTrattaDellaTrattaSelezionata.getFirst().getMezzo_id().getTipo_mezzo());
-
-        Vidimato vidimazione = new Vidimato(utente.getTessera().getBiglietti().getFirst(), giroTrattaDellaTrattaSelezionata.getFirst(), LocalDate.now());
-        vidimatoDao.save(vidimazione);
+        try {
+            Vidimato vidimazione = new Vidimato(biglietto, giroTrattaDellaTrattaSelezionata.getFirst(), LocalDate.now());
+            vidimatoDao.save(vidimazione);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public static void acquistaAbbonamento(Tessera tessera) {
-        /*1 facciamo scegliere il tipo di abbonamento*/
-        /* 2genero random la scelta del distr o rivend*/
-        /*3 salvo nel db*/
-
-        /*1*/
         System.out.println("Scegli il tipo di abbonamento:");
         System.out.println("1- Settimanale");
         System.out.println("2- Mensile");
         int sceltaTipo = gestioneInputIntMenu(1, 2);
         Tipo_abbonamento tipoAbbonamento = (sceltaTipo == 1) ? Tipo_abbonamento.SETTIMANALE : Tipo_abbonamento.MENSILE;
 
-        /*2*/
         boolean isRivenditore = random.nextBoolean();
 
         Abbonamento nuovoAbbonamento;
-
         if (isRivenditore) {
-
             Rivenditore rivenditore = rivDao.findAll().get(random.nextInt(rivDao.findAll().size()));
             nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, rivenditore);
         } else {
-
             Distributore distributore = db.findAll().get(random.nextInt(db.findAll().size()));
             nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, distributore);
         }
-
-        /*3*/
         ab.save(nuovoAbbonamento);
 
         System.out.println("Abbonamento aggiunto con successo!");
@@ -394,7 +374,6 @@ public class Application {
                 System.out.println("password errata, riprova");
             }
         }
-
         cicloAdmin:
         while (true) {
             System.out.println("Quale comando vuoi eseguire?");
@@ -404,10 +383,10 @@ public class Application {
             System.out.println("3- Cerca stato di servizio di un mezzo"); /*kenny*/
             System.out.println("4- Cerca il numero di biglietto vidimati dato un mezzo");
             System.out.println("5- Cerca il numero totale di biglietti vidimati"); /*gianluca*/
-            System.out.println("6- Numero di biglietti venduti in un periodo");
+            System.out.println("6- Numero di biglietti venduti in un periodo"); /*gianluca*/
             System.out.println("7- Cerca il numero di volte che un mezzo fa una tratta");
             System.out.println("8- Tempo effettivo medio di percorrenza di una tratta"); /*diego*/
-            System.out.println("9- Tempo effettivo di percorrenza di una tratta");
+            System.out.println("9- Tempo effettivo di percorrenza di una tratta"); /*diego*/
             System.out.println("10- Cerca id tessera e id utente dato un nome e cognome ed eta"); /*ultima cosa*/
             System.out.println("11- Esci");
             int scelta = gestioneInputIntMenu(1, 11);
@@ -435,6 +414,7 @@ public class Application {
                     tempoEffettivoMedioPercorrenza();
                     break;
                 case 9:
+                    tempoEffettivoTratta();
                     break;
                 case 10:
                     break;
@@ -462,7 +442,6 @@ public class Application {
     public static void eliminaUtente() {
         System.out.println("Inserisci l'UUID dell'utente da eliminare:");
         String input = scanner.nextLine();
-
         try {
             UUID utenteId = UUID.fromString(input);
             ud.delete(utenteId);
@@ -473,6 +452,20 @@ public class Application {
         }
     }
 
+    private static void tempoEffettivoTratta() {
+        try {
+            System.out.println("Inserisci l'UUID della tratta per la quale vuoi calcolare il tempo medio effettivo:");
+            String input = scanner.nextLine();
+            UUID trattaId = UUID.fromString(input);
+            Tratta tratta = trattaDao.getById(trattaId);
+            double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta);
+            System.out.println("Il tempo medio effettivo di percorrenza per la tratta selezionata è: " + tempoMedio + " minuti");
+        } catch (IllegalArgumentException e) {
+            System.out.println("L'UUID inserito non è valido. Assicurati di inserire un UUID corretto.");
+        } catch (Exception e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
     public static void numeroBigliettiVendutiInUnPeriodo() {
         System.out.println("Devi inserire le date che indicano il periodo di tempo che vuoi analizzare");
         System.out.println("1- Inserisci la data di inzio periodo (formato YYYY-MM-DD): ");

@@ -17,16 +17,20 @@ public class Biglietto {
     private double prezzo;
     @ManyToOne
     @JoinColumn(name = "distributore_id")
-    private Distributore distributore_id;
+    private Distributore distributore;
     @ManyToOne
     @JoinColumn(name = "rivenditore_id")
-    private Rivenditore rivenditore_id;
+    private Rivenditore rivenditore;
     @OneToOne(mappedBy = "biglietto")
     private Vidimato vidimato;
 
     @OneToOne
     @JoinColumn(name = "tessera_id")
-    private Tessera tessera_id;
+    private Tessera tessera;
+
+    public Biglietto(Tessera tessera) {
+        this.tessera = tessera;
+    }
 
     public Biglietto() {
     }
@@ -34,18 +38,16 @@ public class Biglietto {
     public Biglietto(LocalDate dataEmissione, double prezzo, Distributore distributore_id, Tessera tessera_id) {
         this.dataEmissione = dataEmissione;
         this.prezzo = prezzo;
-        this.distributore_id = distributore_id;
-        this.rivenditore_id = rivenditore_id;
-
-        this.tessera_id = tessera_id;
+        this.distributore = distributore_id;
+        this.tessera = tessera_id;
     }
 
     public Biglietto(LocalDate dataEmissione, double prezzo, Rivenditore rivenditore_id, Tessera tessera_id) {
         this.dataEmissione = dataEmissione;
         this.prezzo = prezzo;
-        this.rivenditore_id = rivenditore_id;
+        this.rivenditore = rivenditore_id;
 
-        this.tessera_id = tessera_id;
+        this.tessera = tessera_id;
     }
 
 
@@ -79,27 +81,27 @@ public class Biglietto {
     }
 
     public Tessera getTessera_id() {
-        return tessera_id;
+        return tessera;
     }
 
     public void setTessera_id(Tessera tessera_id) {
-        this.tessera_id = tessera_id;
+        this.tessera = tessera_id;
     }
 
     public Rivenditore getRivenditore_id() {
-        return rivenditore_id;
+        return rivenditore;
     }
 
     public void setRivenditore_id(Rivenditore rivenditore_id) {
-        this.rivenditore_id = rivenditore_id;
+        this.rivenditore = rivenditore_id;
     }
 
     public Distributore getDistributore_id() {
-        return distributore_id;
+        return distributore;
     }
 
     public void setDistributore_id(Distributore distributore_id) {
-        this.distributore_id = distributore_id;
+        this.distributore = distributore_id;
     }
 
     @Override

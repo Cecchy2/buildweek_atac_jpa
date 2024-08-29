@@ -15,7 +15,7 @@ public class GiroTratta {
 
     @ManyToOne
     @JoinColumn(name = "mezzo_id")
-    private Mezzo mezzo_id;
+    private Mezzo mezzo;
 
     @ManyToOne
     @JoinColumn(name = "tratta_id")
@@ -29,7 +29,7 @@ public class GiroTratta {
     }
 
     public GiroTratta(Mezzo mezzo_id, Tratta tratta_id, LocalDateTime tempo_partenza, LocalDateTime tempo_arrivo) {
-        this.mezzo_id = mezzo_id;
+        this.mezzo = mezzo_id;
         this.tratta_id = tratta_id;
         this.tempo_partenza = tempo_partenza;
         this.tempo_arrivo = tempo_arrivo;
@@ -50,11 +50,19 @@ public class GiroTratta {
     }
 
     public Mezzo getMezzo_id() {
-        return mezzo_id;
+        return mezzo;
+    }
+
+    public void setMezzo_id(Mezzo mezzo_id) {
+        this.mezzo = mezzo_id;
     }
 
     public Tratta getTratta_id() {
         return tratta_id;
+    }
+
+    public void setTratta_id(Tratta tratta_id) {
+        this.tratta_id = tratta_id;
     }
 
     public LocalDateTime getTempo_partenza() {
@@ -85,7 +93,7 @@ public class GiroTratta {
     @Override
     public String toString() {
         return "GiroTratta{" +
-                "mezzo_id=" + mezzo_id +
+                "mezzo_id=" + mezzo +
                 ", tratta_id=" + tratta_id +
                 ", tempo_partenza=" + tempo_partenza +
                 ", tempo_arrivo=" + tempo_arrivo +
