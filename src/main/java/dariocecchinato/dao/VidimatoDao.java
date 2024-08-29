@@ -4,7 +4,9 @@ import dariocecchinato.entities.Vidimato;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
+import java.util.List;
 import java.util.UUID;
 
 public class VidimatoDao {
@@ -36,5 +38,15 @@ public class VidimatoDao {
         Vidimato found = em.find(Vidimato.class, vidimatoId);
         if (found == null) throw new NotFoundException(vidimatoId);
         return found;
+    }
+
+    public List<Vidimato> findAll() {
+        TypedQuery<Vidimato> query = em.createQuery("SELECT v FROM Vidimato v", Vidimato.class);
+        return query.getResultList();
+    }
+
+    public Long restituisciNumeroTotaleBigliettiVidimati() {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(v) FROM Vidimato v", Long.class);
+        return query.getSingleResult();
     }
 }

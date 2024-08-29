@@ -109,7 +109,7 @@ public class Application {
 
         /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
         System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
-
+       
         startMenu();
         em.close();
         emf.close();
@@ -421,6 +421,9 @@ public class Application {
                 case 4:
                     break;
                 case 5:
+                    System.out.println("Il numero totale di biglietti vidimanti è: " + vidimatoDao.restituisciNumeroTotaleBigliettiVidimati());
+                    System.out.println("Qui sotto la lista completa: ");
+                    vidimatoDao.findAll().forEach(System.out::println);
                     break;
                 case 6:
                     break;
