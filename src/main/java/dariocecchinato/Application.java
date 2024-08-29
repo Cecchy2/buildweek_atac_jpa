@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -105,6 +106,7 @@ public class Application {
             //giroTrattaDao.save(giroTrattaSupplier.get());
         }
         List<GiroTratta> girotratte = giroTrattaDao.findAll();
+        numeroBigliettiVendutiInUnPeriodo();
         startMenu();
         em.close();
         emf.close();
@@ -466,15 +468,20 @@ public class Application {
             System.out.println("Errore: " + e.getMessage());
         }
     }
+
     public static void numeroBigliettiVendutiInUnPeriodo() {
-        System.out.println("Devi inserire le date che indicano il periodo di tempo che vuoi analizzare");
-        System.out.println("1- Inserisci la data di inzio periodo (formato YYYY-MM-DD): ");
-        LocalDate dataInizioInput = LocalDate.parse(scanner.nextLine());
-        System.out.println("2- Inserisci la data di fine periodo (formato YYYY-MM-DD): ");
-        LocalDate dataFineInput = LocalDate.parse(scanner.nextLine());
-        System.out.println("I biglietti venduti nel periodo tra " + dataInizioInput + " e " + dataFineInput + " sono: " + bigliettoDao.counterBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput));
-        System.out.println("Qui sotto la lista completa: ");
-        bigliettoDao.listaBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput).forEach(System.out::println);
+        try {
+            System.out.println("Devi inserire le date che indicano il periodo di tempo che vuoi analizzare");
+            System.out.println("1- Inserisci la data di inzio periodo (formato YYYY-MM-DD): ");
+            LocalDate dataInizioInput = LocalDate.parse(scanner.nextLine());
+            System.out.println("2- Inserisci la data di fine periodo (formato YYYY-MM-DD): ");
+            LocalDate dataFineInput = LocalDate.parse(scanner.nextLine());
+            System.out.println("I biglietti venduti nel periodo tra " + dataInizioInput + " e " + dataFineInput + " sono: " + bigliettoDao.counterBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput));
+            System.out.println("Qui sotto la lista completa: ");
+            bigliettoDao.listaBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput).forEach(System.out::println);
+        } catch (DateTimeParseException e) {
+            System.out.println("FORMATO DATA INSERITO NON VALIDO");
+        }
     }
 
 
