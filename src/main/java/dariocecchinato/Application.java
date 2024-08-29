@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
+import dariocecchinato.enums.Tipo_abbonamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
