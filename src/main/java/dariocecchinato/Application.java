@@ -109,7 +109,7 @@ public class Application {
             //giroTrattaDao.save(giroTrattaSupplier.get());
         }
         List<GiroTratta> girotratte = giroTrattaDao.findAll();
-        
+
         startMenu();
         em.close();
         emf.close();
@@ -435,16 +435,39 @@ public class Application {
     }
 
     public static void tempoEffettivoMedioPercorrenza() {
-        System.out.print("Inserisci l'ID della Tratta: ");
-        String trattaIdInput = scanner.nextLine();
-        UUID trattaId = UUID.fromString(trattaIdInput);
-        System.out.print("Inserisci l'ID del Mezzo: ");
-        String mezzoIdInput = scanner.nextLine();
-        UUID mezzoId = UUID.fromString(mezzoIdInput);
-        Tratta tratta = trattaDao.getById(trattaId);
-        Mezzo mezzo = mezzoDao.getById(mezzoId);
-        double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta, mezzo);
-        System.out.println("Il tempo medio effettivo di percorrenza è: " + tempoMedio + " minuti");
+        try {
+            System.out.print("Inserisci l'ID della Tratta: ");
+            String trattaIdInput = scanner.nextLine();
+            UUID trattaId = UUID.fromString(trattaIdInput);
+
+            System.out.print("Inserisci l'ID del Mezzo: ");
+            String mezzoIdInput = scanner.nextLine();
+            UUID mezzoId = UUID.fromString(mezzoIdInput);
+
+
+            Tratta tratta = trattaDao.getById(trattaId);
+            if (tratta == null) {
+                System.out.println("Errore: Tratta con ID " + trattaId + " non trovata.");
+                return;
+            }
+
+            Mezzo mezzo = mezzoDao.getById(mezzoId);
+            if (mezzo == null) {
+                System.out.println("Errore: Mezzo con ID " + mezzoId + " non trovato.");
+                return;
+            }
+
+
+            double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta, mezzo);
+            System.out.println("Il tempo medio effettivo di percorrenza è: " + tempoMedio + " minuti");
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Errore: L'ID inserito non è valido. Assicurati di inserire un UUID corretto.");
+        } catch (NullPointerException e) {
+            System.out.println("Errore: Si è verificato un problema nel recupero della tratta o del mezzo. Verifica che gli ID siano corretti.");
+        } catch (Exception e) {
+            System.out.println("Errore: Si è verificato un errore imprevisto. Dettagli: " + e.getMessage());
+        }
     }
 
     public static void eliminaUtente() {
