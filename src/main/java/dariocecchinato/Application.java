@@ -475,17 +475,22 @@ public class Application {
     }
 
     public static void numeroBigliettiVendutiInUnPeriodo() {
-        try {
-            System.out.println("Devi inserire le date che indicano il periodo di tempo che vuoi analizzare");
-            System.out.println("1- Inserisci la data di inzio periodo (formato YYYY-MM-DD): ");
-            LocalDate dataInizioInput = LocalDate.parse(scanner.nextLine());
-            System.out.println("2- Inserisci la data di fine periodo (formato YYYY-MM-DD): ");
-            LocalDate dataFineInput = LocalDate.parse(scanner.nextLine());
-            System.out.println("I biglietti venduti nel periodo tra " + dataInizioInput + " e " + dataFineInput + " sono: " + bigliettoDao.counterBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput));
-            System.out.println("Qui sotto la lista completa: ");
-            bigliettoDao.listaBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput).forEach(System.out::println);
-        } catch (DateTimeParseException e) {
-            System.out.println("FORMATO DATA INSERITO NON VALIDO");
+        while (true) {
+
+            try {
+                System.out.println("Devi inserire le date che indicano il periodo di tempo che vuoi analizzare");
+                System.out.println("1- Inserisci la data di inzio periodo (formato YYYY-MM-DD): ");
+                LocalDate dataInizioInput = LocalDate.parse(scanner.nextLine());
+                System.out.println("2- Inserisci la data di fine periodo (formato YYYY-MM-DD): ");
+                LocalDate dataFineInput = LocalDate.parse(scanner.nextLine());
+                System.out.println("I biglietti venduti nel periodo tra " + dataInizioInput + " e " + dataFineInput + " sono: " + bigliettoDao.counterBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput));
+                System.out.println("Qui sotto la lista completa: ");
+                bigliettoDao.listaBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput).forEach(System.out::println);
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("FORMATO DATA INSERITO NON VALIDO");
+            }
+
         }
     }
 
