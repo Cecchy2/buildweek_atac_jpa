@@ -301,9 +301,7 @@ public class Application {
     private static void registrazione() {
         /*crei un utente, e subito dopo ti crei la tessera*/
 
-
         // dati per la registrazione
-
 
         System.out.println("Inserisci il tuo nome:");
         String nome = scanner.nextLine();
@@ -328,7 +326,7 @@ public class Application {
 
         System.out.println("Utente creato: " + nuovoUtente);
         System.out.println("Tessera associata:" + nuovaTessera);
-        
+
         menuUtente(nuovoUtente);
 
 
