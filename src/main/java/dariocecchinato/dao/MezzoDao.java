@@ -1,11 +1,9 @@
 package dariocecchinato.dao;
 
 import dariocecchinato.entities.Mezzo;
-import dariocecchinato.enums.TipoServizio;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
@@ -46,20 +44,6 @@ public class MezzoDao {
     public List<Mezzo> findAll() {
         TypedQuery<Mezzo> query = em.createQuery("SELECT m FROM Mezzo m", Mezzo.class);
         return query.getResultList();
-    }
-
-    public TipoServizio getUltimoStatoMezzo(UUID mezzoId) {
-        try {
-            TypedQuery<TipoServizio> query = em.createQuery(
-                    "SELECT s.tipo_servizio FROM StatoServizio s WHERE s.mezzo_id = :mezzoId",
-                    TipoServizio.class);
-            query.setParameter("mezzoId", mezzoId);
-            query.setMaxResults(1);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            System.out.println("Nessun stato registrato per il mezzo con ID " + mezzoId);
-            return null;
-        }
     }
 
 

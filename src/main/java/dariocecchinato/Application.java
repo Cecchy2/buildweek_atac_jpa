@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
-import dariocecchinato.enums.TipoServizio;
 import dariocecchinato.enums.Tipo_abbonamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -33,12 +32,15 @@ public class Application {
     private static GiroTrattaDao giroTrattaDao = new GiroTrattaDao(em);
     private static AmministratoreDao amministratoreDao = new AmministratoreDao(em);
     private static VidimatoDao vidimatoDao = new VidimatoDao(em);
+    private static StatoServizioDao ssd = new StatoServizioDao(em);
+
+
     private static Random random = new Random();
     private static Faker f = new Faker(Locale.ITALY);
 
     public static void main(String[] args) {
         Amministratore amministratore = new Amministratore("Signor", "Palle", "signorpalle@gmail.com", 45, "12345");
-        amministratoreDao.save(amministratore);
+        //amministratoreDao.save(amministratore);
 
         //**************************   CREAZIONE TRATTE  *********************************
         Supplier<Tratta> trattaSupplier = new TrattaSupplier();
@@ -61,7 +63,7 @@ public class Application {
         //**************************   CREAZIONE DISTRIBUTORI  *********************************
         Supplier<Distributore> distributoreSupplier = new DistributoreSupplier();
         for (int i = 0; i < 10; i++) {
-            // db.save(distributoreSupplier.get());
+            //db.save(distributoreSupplier.get());
         }
         List<Distributore> distributori = db.findAll();
         //**************************   CREAZIONE TESSERE  *********************************
@@ -90,17 +92,7 @@ public class Application {
         for (int i = 0; i < 4; i++) {
             //bigliettoDao.save(bigliettoSupplier.get());
         }
-       /* List<Biglietto> biglietti = bigliettoDao.findAll();
-        GiroTratta trattaAnalizzata = giroTrattaDao.getById(UUID.fromString("32ebdea8-028c-49f0-af6d-44085f764730"));
-        //**************VIDIMAZIONE DI BIGLIETTO
-        Supplier<Vidimato> validazioneDiUnBigliettoRandomSupplier = () -> {
-            Biglietto biglietto = biglietti.get(random.nextInt(biglietti.size()));
-            LocalDate dataVidimazione = LocalDate.now();
-            return new Vidimato(biglietto, trattaAnalizzata, dataVidimazione);
-        };
-        for (int i = 0; i < 2; i++) {
-            vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
-        }*/
+        List<Biglietto> biglietti = bigliettoDao.findAll();
 
         //**************************   CREAZIONE GIROTRATTE  *********************************
         Supplier<GiroTratta> giroTrattaSupplier = new GiroTrattaSupplier(mezzi, tratte);
@@ -108,12 +100,21 @@ public class Application {
             //giroTrattaDao.save(giroTrattaSupplier.get());
         }
         List<GiroTratta> girotratte = giroTrattaDao.findAll();
+
+        //**************************   CREAZIONE STATO SERVIZIO PER MEZZI  *********************************
+        mezzi.forEach(mezzo -> {
+            int numeroStati = random.nextInt(4) + 1;
+
+            for (int i = 0; i < numeroStati; i++) {
+                boolean statoCorrente = (i == numeroStati - 1);
+                StatoServizioSupplier statoServizioSupplier = new StatoServizioSupplier(mezzo, statoCorrente);
+                StatoServizio statoServizio = statoServizioSupplier.get();
+                //ssd.save(statoServizio);
+            }
+        });
         startMenu();
         em.close();
         emf.close();
-        System.out.println("fin qui ci siamo...");
-
-
     }
 
     public static void startMenu() {
@@ -485,22 +486,26 @@ public class Application {
     }
 
     public static void cercaStatoMezzo() {
-        System.out.println("Inserisci l'UUID del mezzo per cui vuoi conoscere lo stato:");
-        String input = scanner.nextLine();
+        System.out.println("Inserisci l'UUID del mezzo per cui vuoi conoscere lo stato");
+        String input = scanner.nextLine().trim();
 
+        System.out.println("UUID inserito: '" + input + "'");
         try {
             UUID mezzoId = UUID.fromString(input);
-            TipoServizio statoMezzo = mezzoDao.getUltimoStatoMezzo(mezzoId);
+            System.out.println("UUID convertito è" + mezzoId);
+            StatoServizio statoMezzo = ssd.getUltimoStatoMezzo(mezzoId);
             if (statoMezzo != null) {
-                System.out.println("Ultimo stato del mezzo: " + statoMezzo.name());
+                System.out.println("Ultimo stato del mezzo: " + statoMezzo.getTipo_servizio());
+            } else {
+                System.out.println("Nessun mezzo trovato con questo id");
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Formato UUID non valido.");
+            e.printStackTrace(); // Stampa dettagliata dell'errore
         } catch (Exception e) {
             System.out.println("Errore durante la ricerca dello stato del mezzo: " + e.getMessage());
         }
     }
-
 }
 
 

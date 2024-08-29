@@ -16,18 +16,20 @@ public class StatoServizio {
     @ManyToOne
     @JoinColumn(name = "mezzo_id")
     private Mezzo mezzo;
-
     private LocalDate data_inizio;
     private LocalDate data_fine;
 
     @Enumerated(EnumType.STRING)
     private TipoServizio tipo_servizio;
 
-    public StatoServizio(LocalDate data_inizio, LocalDate data_fine, TipoServizio
-            tipo_servizio) {
+    public StatoServizio(Mezzo mezzo, LocalDate data_inizio, LocalDate data_fine, TipoServizio tipo_servizio) {
+        this.mezzo = mezzo;
         this.data_inizio = data_inizio;
         this.data_fine = data_fine;
         this.tipo_servizio = tipo_servizio;
+    }
+
+    public StatoServizio() {
     }
 
     public LocalDate getData_inizio() {
