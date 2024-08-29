@@ -11,6 +11,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -108,6 +109,7 @@ public class Application {
             //giroTrattaDao.save(giroTrattaSupplier.get());
         }
         List<GiroTratta> girotratte = giroTrattaDao.findAll();
+
         startMenu();
         em.close();
         emf.close();
@@ -433,16 +435,39 @@ public class Application {
     }
 
     public static void tempoEffettivoMedioPercorrenza() {
-        System.out.print("Inserisci l'ID della Tratta: ");
-        String trattaIdInput = scanner.nextLine();
-        UUID trattaId = UUID.fromString(trattaIdInput);
-        System.out.print("Inserisci l'ID del Mezzo: ");
-        String mezzoIdInput = scanner.nextLine();
-        UUID mezzoId = UUID.fromString(mezzoIdInput);
-        Tratta tratta = trattaDao.getById(trattaId);
-        Mezzo mezzo = mezzoDao.getById(mezzoId);
-        double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta, mezzo);
-        System.out.println("Il tempo medio effettivo di percorrenza è: " + tempoMedio + " minuti");
+        try {
+            System.out.print("Inserisci l'ID della Tratta: ");
+            String trattaIdInput = scanner.nextLine();
+            UUID trattaId = UUID.fromString(trattaIdInput);
+
+            System.out.print("Inserisci l'ID del Mezzo: ");
+            String mezzoIdInput = scanner.nextLine();
+            UUID mezzoId = UUID.fromString(mezzoIdInput);
+
+
+            Tratta tratta = trattaDao.getById(trattaId);
+            if (tratta == null) {
+                System.out.println("Errore: Tratta con ID " + trattaId + " non trovata.");
+                return;
+            }
+
+            Mezzo mezzo = mezzoDao.getById(mezzoId);
+            if (mezzo == null) {
+                System.out.println("Errore: Mezzo con ID " + mezzoId + " non trovato.");
+                return;
+            }
+
+
+            double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta, mezzo);
+            System.out.println("Il tempo medio effettivo di percorrenza è: " + tempoMedio + " minuti");
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Errore: L'ID inserito non è valido. Assicurati di inserire un UUID corretto.");
+        } catch (NullPointerException e) {
+            System.out.println("Errore: Si è verificato un problema nel recupero della tratta o del mezzo. Verifica che gli ID siano corretti.");
+        } catch (Exception e) {
+            System.out.println("Errore: Si è verificato un errore imprevisto. Dettagli: " + e.getMessage());
+        }
     }
 
     public static void eliminaUtente() {
@@ -474,14 +499,23 @@ public class Application {
     }
 
     public static void numeroBigliettiVendutiInUnPeriodo() {
-        System.out.println("Devi inserire le date che indicano il periodo di tempo che vuoi analizzare");
-        System.out.println("1- Inserisci la data di inzio periodo (formato YYYY-MM-DD): ");
-        LocalDate dataInizioInput = LocalDate.parse(scanner.nextLine());
-        System.out.println("2- Inserisci la data di fine periodo (formato YYYY-MM-DD): ");
-        LocalDate dataFineInput = LocalDate.parse(scanner.nextLine());
-        System.out.println("I biglietti venduti nel periodo tra " + dataInizioInput + " e " + dataFineInput + " sono: " + bigliettoDao.counterBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput));
-        System.out.println("Qui sotto la lista completa: ");
-        bigliettoDao.listaBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput).forEach(System.out::println);
+        while (true) {
+
+            try {
+                System.out.println("Devi inserire le date che indicano il periodo di tempo che vuoi analizzare");
+                System.out.println("1- Inserisci la data di inzio periodo (formato YYYY-MM-DD): ");
+                LocalDate dataInizioInput = LocalDate.parse(scanner.nextLine());
+                System.out.println("2- Inserisci la data di fine periodo (formato YYYY-MM-DD): ");
+                LocalDate dataFineInput = LocalDate.parse(scanner.nextLine());
+                System.out.println("I biglietti venduti nel periodo tra " + dataInizioInput + " e " + dataFineInput + " sono: " + bigliettoDao.counterBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput));
+                System.out.println("Qui sotto la lista completa: ");
+                bigliettoDao.listaBigliettiVendutiInUnPeriodo(dataInizioInput, dataFineInput).forEach(System.out::println);
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("FORMATO DATA INSERITO NON VALIDO");
+            }
+
+        }
     }
 
     public static void cercaStatoMezzo() {
