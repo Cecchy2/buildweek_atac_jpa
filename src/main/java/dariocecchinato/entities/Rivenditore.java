@@ -13,9 +13,9 @@ public class Rivenditore {
     private UUID id;
     @Column(name = "nome_locale")
     private String nomeLocale;
-    @OneToMany(mappedBy = "rivenditore_id")
+    @OneToMany(mappedBy = "rivenditore")
     private List<Abbonamento> abbonamenti;
-    @OneToMany(mappedBy = "rivenditore_id")
+    @OneToMany(mappedBy = "rivenditore")
     private List<Biglietto> biglietti;
 
 
@@ -30,6 +30,21 @@ public class Rivenditore {
         return id;
     }
 
+    public List<Abbonamento> getAbbonamenti() {
+        return abbonamenti;
+    }
+
+    public void setAbbonamenti(List<Abbonamento> abbonamenti) {
+        this.abbonamenti = abbonamenti;
+    }
+
+    public List<Biglietto> getBiglietti() {
+        return biglietti;
+    }
+
+    public void setBiglietti(List<Biglietto> biglietti) {
+        this.biglietti = biglietti;
+    }
 
     public String getNomeLocale() {
         return nomeLocale;

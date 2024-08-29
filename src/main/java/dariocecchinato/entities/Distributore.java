@@ -17,9 +17,9 @@ public class Distributore {
     private StatoDistributore stato;
     @Column(name = "ubicazione")
     private String ubicazione;
-    @OneToMany(mappedBy = "distributore_id")
+    @OneToMany(mappedBy = "distributore")
     private List<Abbonamento> abbonamenti;
-    @OneToMany(mappedBy = "distributore_id")
+    @OneToMany(mappedBy = "distributore")
     private List<Biglietto> biglietti;
 
     public Distributore() {
@@ -34,6 +34,22 @@ public class Distributore {
         return id;
     }
 
+
+    public List<Abbonamento> getAbbonamenti() {
+        return abbonamenti;
+    }
+
+    public void setAbbonamenti(List<Abbonamento> abbonamenti) {
+        this.abbonamenti = abbonamenti;
+    }
+
+    public List<Biglietto> getBiglietti() {
+        return biglietti;
+    }
+
+    public void setBiglietti(List<Biglietto> biglietti) {
+        this.biglietti = biglietti;
+    }
 
     public StatoDistributore getStato() {
         return stato;

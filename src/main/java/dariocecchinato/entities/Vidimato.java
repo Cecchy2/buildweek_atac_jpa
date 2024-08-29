@@ -25,11 +25,13 @@ public class Vidimato {
     public Vidimato() {
     }
 
+
     public Vidimato(Biglietto biglietto, GiroTratta giroTratta, LocalDate dataVidimazione) {
         this.biglietto = biglietto;
         this.giroTratta = giroTratta;
         this.dataVidimazione = dataVidimazione;
     }
+
 
     public UUID getId() {
         return id;
@@ -50,6 +52,7 @@ public class Vidimato {
     public void setGiroTratta(GiroTratta giroTratta) {
         this.giroTratta = giroTratta;
     }
+
 
     public LocalDate getDataVidimazione() {
         return dataVidimazione;
