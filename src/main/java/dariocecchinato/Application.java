@@ -440,6 +440,21 @@ public class Application {
             System.out.println("Errore durante l'eliminazione dell'utente: " + e.getMessage());
         }
     }
+
+    private static void tempoEffettivoTratta() {
+        try {
+            System.out.println("Inserisci l'UUID della tratta per la quale vuoi calcolare il tempo medio effettivo:");
+            String input = scanner.nextLine();
+            UUID trattaId = UUID.fromString(input);
+            Tratta tratta = trattaDao.getById(trattaId);
+            double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta);
+            System.out.println("Il tempo medio effettivo di percorrenza per la tratta selezionata è: " + tempoMedio + " minuti");
+        } catch (IllegalArgumentException e) {
+            System.out.println("L'UUID inserito non è valido. Assicurati di inserire un UUID corretto.");
+        } catch (Exception e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
 }
 
 
