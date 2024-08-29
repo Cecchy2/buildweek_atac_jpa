@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
+import dariocecchinato.enums.TipoServizio;
 import dariocecchinato.enums.Tipo_abbonamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -40,25 +41,25 @@ public class Application {
         //**************************   CREAZIONE TRATTE  *********************************
         Supplier<Tratta> trattaSupplier = new TrattaSupplier();
         for (int i = 0; i < 10; i++) {
-            //trattaDao.save(trattaSupplier.get());
+            trattaDao.save(trattaSupplier.get());
         }
         List<Tratta> tratte = trattaDao.findAll();
         //**************************   CREAZIONE RIVENDITORI  *********************************
         Supplier<Rivenditore> randomRivenditoreSupplier = new RivenditoreSupplier();
         for (int i = 0; i < 5; i++) {
-            //rivDao.save(randomRivenditoreSupplier.get());
+            rivDao.save(randomRivenditoreSupplier.get());
         }
         List<Rivenditore> rivenditori = rivDao.findAll();
         //**************************   CREAZIONE UTENTI  *********************************
         Supplier<Utente> randomUtenteSupplier = new UtenteSupplier();
         for (int i = 0; i < 20; i++) {
-            //ud.save(randomUtenteSupplier.get());
+            ud.save(randomUtenteSupplier.get());
         }
         List<Utente> utenti = ud.findAll();
         //**************************   CREAZIONE DISTRIBUTORI  *********************************
         Supplier<Distributore> distributoreSupplier = new DistributoreSupplier();
         for (int i = 0; i < 10; i++) {
-            // db.save(distributoreSupplier.get());
+            db.save(distributoreSupplier.get());
         }
         List<Distributore> distributori = db.findAll();
         //**************************   CREAZIONE TESSERE  *********************************
@@ -67,25 +68,25 @@ public class Application {
                 .forEach(utente -> {
                     Supplier<Tessera> tesseraSupplier = new TesseraSupplier(utente);
                     Tessera tessera = tesseraSupplier.get();
-                    //td.save(tessera);
+                    td.save(tessera);
                 });
         List<Tessera> tessere = td.findAll();
         //**************************   CREAZIONE ABBONAMENTI  *********************************
         Supplier<Abbonamento> randomAbbonamentoSupplier = new AbbonamentoSupplier(tessere, rivenditori, distributori);
         for (int i = 0; i < 15; i++) {
-            //ab.save(randomAbbonamentoSupplier.get());
+            ab.save(randomAbbonamentoSupplier.get());
         }
         List<Abbonamento> abbonamenti = ab.findAll();
         //**************************   CREAZIONE MEZZI  *********************************
         Supplier<Mezzo> mezzoSupplier = new MezzoSupplier();
         for (int i = 0; i < 25; i++) {
-            //mezzoDao.save(mezzoSupplier.get());
+            mezzoDao.save(mezzoSupplier.get());
         }
         List<Mezzo> mezzi = mezzoDao.findAll();
         //**************************   CREAZIONE BIGLIETTI  *********************************
         Supplier<Biglietto> bigliettoSupplier = new BigliettoSupplier(tessere, rivenditori, distributori);
         for (int i = 0; i < 4; i++) {
-            //bigliettoDao.save(bigliettoSupplier.get());
+            //2bigliettoDao.save(bigliettoSupplier.get());
         }
        /* List<Biglietto> biglietti = bigliettoDao.findAll();
         GiroTratta trattaAnalizzata = giroTrattaDao.getById(UUID.fromString("32ebdea8-028c-49f0-af6d-44085f764730"));
@@ -97,23 +98,26 @@ public class Application {
         };
         for (int i = 0; i < 2; i++) {
             vidimatoDao.save(validazioneDiUnBigliettoRandomSupplier.get());
-        }*/
+        }
 
         //**************************   CREAZIONE GIROTRATTE  *********************************
         Supplier<GiroTratta> giroTrattaSupplier = new GiroTrattaSupplier(mezzi, tratte);
         for (int i = 0; i < 10; i++) {
-            //giroTrattaDao.save(giroTrattaSupplier.get());
+            giroTrattaDao.save(giroTrattaSupplier.get());
         }
         List<GiroTratta> girotratte = giroTrattaDao.findAll();
 
 
         /*Tratta trattaAnalizzata = trattaDao.getById(UUID.fromString("7aa0af42-9fa6-420d-9a53-a7fdeac6fb91"));
         System.out.println("Tempo medio effettivo in minuti: " + amministratoreDao.calcolaTempoMedioEffettivo(trattaAnalizzata));*/
-       
+
         startMenu();
         em.close();
         emf.close();
         System.out.println("fin qui ci siamo...");
+
+        Amministratore amministratore = new Amministratore("Signor", "Palle", "signorpalle@gmail.com", 45, "12345");
+        amministratoreDao.save(amministratore);
     }
 
     public static void startMenu() {
@@ -417,6 +421,7 @@ public class Application {
                     eliminaUtente();
                     break;
                 case 3:
+                    cercaStatoMezzo();
                     break;
                 case 4:
                     break;
@@ -471,6 +476,22 @@ public class Application {
         }
     }
 
+    public static void cercaStatoMezzo() {
+        System.out.println("Inserisci l'UUID del mezzo per cui vuoi conoscere lo stato:");
+        String input = scanner.nextLine();
+
+        try {
+            UUID mezzoId = UUID.fromString(input);
+            TipoServizio statoMezzo = mezzoDao.getUltimoStatoMezzo(mezzoId);
+            if (statoMezzo != null) {
+                System.out.println("Ultimo stato del mezzo: " + statoMezzo.name());
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Formato UUID non valido.");
+        } catch (Exception e) {
+            System.out.println("Errore durante la ricerca dello stato del mezzo: " + e.getMessage());
+        }
+    }
 
 }
 
