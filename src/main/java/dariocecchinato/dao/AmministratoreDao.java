@@ -49,4 +49,19 @@ public class AmministratoreDao {
         }
         return tempoMedioInMinuti;
     }
+
+    public double calcolaTempoMedioEffettivo(Tratta tratta) {
+        TypedQuery<Long> query = em.createQuery("SELECT g.tempo_effettivo_percorrenza FROM GiroTratta g WHERE g.tratta_id = :tratta", Long.class);
+        query.setParameter("tratta", tratta);
+        List<Long> tempiEffettivi = query.getResultList();
+        if (tempiEffettivi.isEmpty()) {
+            throw new NotFoundException("Nessun GiroTratta trovato per la tratta specificata.");
+        }
+        double somma = 0;
+        for (Long tempo : tempiEffettivi) {
+            somma += tempo;
+        }
+        double media = somma / tempiEffettivi.size();
+        return media;
+    }
 }
