@@ -3,7 +3,6 @@ package dariocecchinato.dao;
 import dariocecchinato.entities.StatoServizio;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
 import java.util.UUID;
@@ -35,17 +34,14 @@ public class StatoServizioDao {
     }
 
     public StatoServizio getUltimoStatoMezzo(UUID mezzoId) {
-        try {
-            TypedQuery<StatoServizio> query = em.createQuery(
-                    "SELECT s FROM StatoServizio s WHERE s.mezzo.mezzo_id = :mezzoId",
-                    StatoServizio.class);
-            query.setParameter("mezzoId", mezzoId);
-            query.setMaxResults(1);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            System.out.println("Nessun stato registrato per il mezzo con ID " + mezzoId);
-            return null;
-        }
+
+        TypedQuery<StatoServizio> query = em.createQuery(
+                "SELECT s FROM StatoServizio s WHERE s.mezzo.mezzo_id = :mezzoId",
+                StatoServizio.class);
+        query.setParameter("mezzoId", mezzoId);
+        query.setMaxResults(1);
+        return query.getSingleResult();
+
     }
 
 }

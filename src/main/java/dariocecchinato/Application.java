@@ -8,6 +8,7 @@ import dariocecchinato.enums.Tipo_abbonamento;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
@@ -418,9 +419,7 @@ public class Application {
                     }
                     break;
                 case 5:
-                    System.out.println("Il numero totale di biglietti vidimanti è: " + vidimatoDao.restituisciNumeroTotaleBigliettiVidimati());
-                    System.out.println("Qui sotto la lista completa: ");
-                    vidimatoDao.findAll().forEach(System.out::println);
+                    numeroTotaleBigliettiVidimati();
                     break;
                 case 6:
                     numeroBigliettiVendutiInUnPeriodo();
@@ -493,17 +492,21 @@ public class Application {
     }
 
     private static void tempoEffettivoTratta() {
-        try {
-            System.out.println("Inserisci l'UUID della tratta per la quale vuoi calcolare il tempo medio effettivo:");
-            String input = scanner.nextLine();
-            UUID trattaId = UUID.fromString(input);
-            Tratta tratta = trattaDao.getById(trattaId);
-            double tempoMedio = amministratoreDao.calcolaTempoEffettivo(tratta);
-            System.out.println("Il tempo medio effettivo di percorrenza per la tratta selezionata è: " + tempoMedio + " minuti");
-        } catch (IllegalArgumentException e) {
-            System.out.println("L'UUID inserito non è valido. Assicurati di inserire un UUID corretto.");
-        } catch (Exception e) {
-            System.out.println("Errore: " + e.getMessage());
+        while (true) {
+            try {
+                System.out.println("Inserisci l'UUID della tratta per la quale vuoi calcolare il tempo medio effettivo:");
+                String input = scanner.nextLine();
+                UUID trattaId = UUID.fromString(input);
+                Tratta tratta = trattaDao.getById(trattaId);
+                double tempoMedio = amministratoreDao.calcolaTempoEffettivo(tratta);
+                System.out.println("Il tempo medio effettivo di percorrenza per la tratta selezionata è: " + tempoMedio + " minuti");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("L'UUID inserito non è valido. Assicurati di inserire un UUID corretto.");
+            } catch (Exception e) {
+                System.out.println("Errore: " + e.getMessage());
+            }
+
         }
     }
 
@@ -527,23 +530,25 @@ public class Application {
     }
 
     public static void cercaStatoMezzo() {
-        System.out.println("Inserisci l'UUID del mezzo per cui vuoi conoscere lo stato");
-        String input = scanner.nextLine().trim();
+        while (true) {
+            try {
+                System.out.println("Inserisci l'UUID del mezzo per cui vuoi conoscere lo stato");
+                String input = scanner.nextLine().trim();
 
-        System.out.println("UUID inserito: '" + input + "'");
-        try {
-            UUID mezzoId = UUID.fromString(input);
-            System.out.println("UUID convertito è" + mezzoId);
-            StatoServizio statoMezzo = ssd.getUltimoStatoMezzo(mezzoId);
-            if (statoMezzo != null) {
+                System.out.println("UUID inserito: '" + input + "'");
+                UUID mezzoId = UUID.fromString(input);
+                System.out.println("UUID convertito è" + mezzoId);
+                StatoServizio statoMezzo = ssd.getUltimoStatoMezzo(mezzoId);
+
                 System.out.println("Ultimo stato del mezzo: " + statoMezzo.getTipo_servizio());
-            } else {
-                System.out.println("Nessun mezzo trovato con questo id");
+
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Formato UUID non valido.");
+                // Stampa dettagliata dell'errore
+            } catch (NoResultException e) {
+                System.out.println("Errore durante la ricerca dello stato del mezzo: ");
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Formato UUID non valido.");
-        } catch (Exception e) {
-            System.out.println("Errore durante la ricerca dello stato del mezzo: " + e.getMessage());
         }
     }
 
@@ -624,6 +629,16 @@ public class Application {
             System.out.println("Errore durante il salvataggio dell'utente o della tessera: " + e.getMessage());
         }
 
+    }
+
+    public static void numeroTotaleBigliettiVidimati() {
+        try {
+            System.out.println("Il numero totale di biglietti vidimanti è: " + vidimatoDao.restituisciNumeroTotaleBigliettiVidimati());
+            System.out.println("Qui sotto la lista completa: ");
+            vidimatoDao.findAll().forEach(System.out::println);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
 
