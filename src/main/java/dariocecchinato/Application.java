@@ -574,31 +574,39 @@ public class Application {
     }
 
     public static void nonnoHaSmarritoTutto() {
-        try {
-            System.out.print("Inserisci il nome: ");
-            String nome = scanner.nextLine();
-            System.out.print("Inserisci il cognome: ");
-            String cognome = scanner.nextLine();
-            System.out.print("Inserisci l'età: ");
-            int eta = scanner.nextInt();
-            scanner.nextLine();
+        while (true) {
+            try {
+                System.out.print("Inserisci il nome: ");
+                String nome = scanner.nextLine();
+                System.out.print("Inserisci il cognome: ");
+                String cognome = scanner.nextLine();
+                System.out.print("Inserisci l'età: ");
+                int eta = scanner.nextInt();
+                scanner.nextLine();
 
-            Utente utente = ud.ricercaNonnoUtente(nome, cognome, eta);
+                Utente utente = ud.ricercaNonnoUtente(nome, cognome, eta);
 
-            if (utente != null) {
-                System.out.println("ID dell'utente: " + utente.getId());
-                if (utente.getTessera() != null) {
-                    System.out.println("ID della tessera: " + utente.getTessera().getId());
+                if (utente != null) {
+                    System.out.println("ID dell'utente: " + utente.getId());
+                    if (utente.getTessera() != null) {
+                        System.out.println("ID della tessera: " + utente.getTessera().getId());
+                    } else {
+                        System.out.println("L'utente non ha una tessera associata.");
+                    }
+                    break; // Esce dal ciclo se l'utente è trovato
                 } else {
-                    System.out.println("L'utente non ha una tessera associata.");
+                    System.out.println("Utente non trovato. Vuoi riprovare? (s/n)");
+                    String risposta = scanner.nextLine();
+                    if (!risposta.equalsIgnoreCase("s")) {
+                        break; // Esce dal ciclo se l'utente decide di non riprovare
+                    }
                 }
-            } else {
-                System.out.println("Utente non trovato.");
+            } catch (Exception e) {
+                System.out.println("Errore durante la ricerca dell'utente: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println("Errore durante la ricerca dell'utente: " + e.getMessage());
         }
     }
+
 
     public static void creazioneUteteLatoAdmin() {
         String nome = null;
