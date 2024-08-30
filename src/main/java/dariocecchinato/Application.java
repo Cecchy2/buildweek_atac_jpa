@@ -116,7 +116,8 @@ public class Application {
                 //ssd.save(statoServizio);
             }
         });
-        numeroTotaleBigliettiVidimati();
+
+        
         startMenu();
         em.close();
         emf.close();
