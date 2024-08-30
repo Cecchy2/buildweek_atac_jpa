@@ -117,7 +117,6 @@ public class Application {
             }
         });
 
-
         startMenu();
         em.close();
         emf.close();
@@ -321,7 +320,6 @@ public class Application {
             System.out.println("Non hai biglietti disponibili");
             return;
         }
-
         System.out.println("Scegli il biglietto da vidimare");
         for (int i = 0; i < biglietti.size(); i++) {
             Biglietto biglietto = biglietti.get(i);
@@ -329,8 +327,6 @@ public class Application {
         }
         int scelta = Integer.parseInt(scanner.nextLine());
         Biglietto biglietto = biglietti.get(scelta - 1);
-
-        // Controllo se il biglietto è già stato vidimato
         if (biglietto.getVidimato() != null) {
             System.out.println("Questo biglietto è già stato vidimato. Non puoi vidimarlo di nuovo.");
             return;
@@ -350,12 +346,10 @@ public class Application {
             System.out.println("Errore nella selezione della tratta. Riprova.");
             return;
         }
-
         System.out.println("Informazioni sul giro della tratta:");
         System.out.println("Tempo di partenza : " + giroTratta.getTempo_partenza());
         System.out.println("Tempo di arrivo: " + giroTratta.getTempo_arrivo());
         System.out.println("Mezzo : " + giroTratta.getMezzo_id().getTipo_mezzo());
-
         try {
             Vidimato vidimazione = new Vidimato(biglietto, giroTratta, LocalDate.now());
             vidimatoDao.save(vidimazione);
@@ -372,9 +366,7 @@ public class Application {
         System.out.println("2- Mensile");
         int sceltaTipo = gestioneInputIntMenu(1, 2);
         Tipo_abbonamento tipoAbbonamento = (sceltaTipo == 1) ? Tipo_abbonamento.SETTIMANALE : Tipo_abbonamento.MENSILE;
-
         boolean isRivenditore = random.nextBoolean();
-
         Abbonamento nuovoAbbonamento;
         if (isRivenditore) {
             Rivenditore rivenditore = rivDao.findAll().get(random.nextInt(rivDao.findAll().size()));
@@ -384,7 +376,6 @@ public class Application {
             nuovoAbbonamento = new Abbonamento(LocalDate.now(), tipoAbbonamento, tessera, distributore);
         }
         ab.save(nuovoAbbonamento);
-
         System.out.println("Abbonamento aggiunto con successo!");
     }
 
@@ -427,7 +418,6 @@ public class Application {
                     cercaStatoMezzo();
                     break;
                 case 4:
-
                     System.out.println("Inserisci L'UUID del mezzo");
                     try {
                         UUID mezzoId = UUID.fromString(scanner.nextLine());
@@ -509,7 +499,6 @@ public class Application {
             System.out.println("Formato UUID non valido.");
         } catch (Exception e) {
             System.out.println("Errore durante l'eliminazione dell'utente: " + e.getMessage());
-
         }
     }
 
@@ -528,7 +517,6 @@ public class Application {
             } catch (Exception e) {
                 System.out.println("Errore: " + e.getMessage());
             }
-
         }
     }
 
@@ -558,9 +546,7 @@ public class Application {
                 String input = scanner.nextLine().trim();
                 UUID mezzoId = UUID.fromString(input);
                 StatoServizio statoMezzo = ssd.getUltimoStatoMezzo(mezzoId);
-
                 System.out.println("Ultimo stato del mezzo: " + statoMezzo.getTipo_servizio());
-
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Formato UUID non valido.");
@@ -597,9 +583,7 @@ public class Application {
                 System.out.print("Inserisci l'età: ");
                 int eta = scanner.nextInt();
                 scanner.nextLine();
-
                 Utente utente = ud.ricercaNonnoUtente(nome, cognome, eta);
-
                 if (utente != null) {
                     System.out.println("ID dell'utente: " + utente.getId());
                     if (utente.getTessera() != null) {
@@ -620,7 +604,6 @@ public class Application {
             }
         }
     }
-
 
     public static void creazioneUteteLatoAdmin() {
         String nome = null;
@@ -655,7 +638,6 @@ public class Application {
         } catch (Exception e) {
             System.out.println("Errore durante il salvataggio dell'utente o della tessera: " + e.getMessage());
         }
-
     }
 
     public static void numeroTotaleBigliettiVidimati() {
