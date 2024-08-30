@@ -73,21 +73,29 @@ public class UtenteDao {
     public void delete(UUID utenteId) {
         EntityTransaction transaction = em.getTransaction();
         try {
+<<<<<<< HEAD
             transaction.begin();
             Utente utente = em.find(Utente.class, utenteId);
+=======
+            Utente utente = em.find(Utente.class, utenteId);
+            transaction.begin();
+>>>>>>> b40ca8245dfe75ebe3f0695061a1c08e6dd36cff
             if (utente == null) {
                 System.out.println("Utente non trovato con ID: " + utenteId);
                 transaction.commit();
                 return;
             }
+<<<<<<< HEAD
             em.remove(utente.getTessera());
             em.remove(utente);
 
+=======
+            em.remove(utente);
+>>>>>>> b40ca8245dfe75ebe3f0695061a1c08e6dd36cff
             transaction.commit();
 
             System.out.println("L'utente con ID " + utenteId + " è stato cancellato correttamente");
         } catch (Exception e) {
-            // Gestione dell'eccezione senza rollback
             System.out.println("Errore durante l'eliminazione dell'utente: " + e.getMessage());
         }
     }
