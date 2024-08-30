@@ -68,31 +68,19 @@ public class UtenteDao {
     }
 
     public void delete(UUID utenteId) {
-        //1. chiedo all'entity manager di fornire una transazione
         EntityTransaction transaction = em.getTransaction();
-
         try {
-            //2. avviamo la transazione
-            transaction.begin();
-
-            //3. Troviamo l'utente tramite ID
             Utente utente = em.find(Utente.class, utenteId);
-
-            //4. Verifica se l'utente esiste
+            transaction.begin();
             if (utente == null) {
                 System.out.println("Utente non trovato con ID: " + utenteId);
                 transaction.commit();
                 return;
             }
-
-            //5. Rimuoviamo l'utente dal persistence context
             em.remove(utente);
-
-            //6. Eseguiamo il commit della transazione se tutto va bene
             transaction.commit();
             System.out.println("L'utente con ID " + utenteId + " è stato cancellato correttamente");
         } catch (Exception e) {
-            // Gestione dell'eccezione senza rollback
             System.out.println("Errore durante l'eliminazione dell'utente: " + e.getMessage());
         }
     }
