@@ -527,11 +527,8 @@ public class Application {
     public static void cercaStatoMezzo() {
         System.out.println("Inserisci l'UUID del mezzo per cui vuoi conoscere lo stato");
         String input = scanner.nextLine().trim();
-
-        System.out.println("UUID inserito: '" + input + "'");
         try {
             UUID mezzoId = UUID.fromString(input);
-            System.out.println("UUID convertito è" + mezzoId);
             StatoServizio statoMezzo = ssd.getUltimoStatoMezzo(mezzoId);
             if (statoMezzo != null) {
                 System.out.println("Ultimo stato del mezzo: " + statoMezzo.getTipo_servizio());
