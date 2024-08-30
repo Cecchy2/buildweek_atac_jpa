@@ -8,6 +8,7 @@ import dariocecchinato.enums.Tipo_abbonamento;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
@@ -115,7 +116,7 @@ public class Application {
                 //ssd.save(statoServizio);
             }
         });
-
+        cercaStatoMezzo();
         startMenu();
         em.close();
         emf.close();
@@ -524,24 +525,25 @@ public class Application {
     }
 
     public static void cercaStatoMezzo() {
-        System.out.println("Inserisci l'UUID del mezzo per cui vuoi conoscere lo stato");
-        String input = scanner.nextLine().trim();
+        while (true) {
+            try {
+                System.out.println("Inserisci l'UUID del mezzo per cui vuoi conoscere lo stato");
+                String input = scanner.nextLine().trim();
 
-        System.out.println("UUID inserito: '" + input + "'");
-        try {
-            UUID mezzoId = UUID.fromString(input);
-            System.out.println("UUID convertito è" + mezzoId);
-            StatoServizio statoMezzo = ssd.getUltimoStatoMezzo(mezzoId);
-            if (statoMezzo != null) {
+                System.out.println("UUID inserito: '" + input + "'");
+                UUID mezzoId = UUID.fromString(input);
+                System.out.println("UUID convertito è" + mezzoId);
+                StatoServizio statoMezzo = ssd.getUltimoStatoMezzo(mezzoId);
+
                 System.out.println("Ultimo stato del mezzo: " + statoMezzo.getTipo_servizio());
-            } else {
-                System.out.println("Nessun mezzo trovato con questo id");
+
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Formato UUID non valido.");
+                // Stampa dettagliata dell'errore
+            } catch (NoResultException e) {
+                System.out.println("Errore durante la ricerca dello stato del mezzo: ");
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Formato UUID non valido.");
-            e.printStackTrace(); // Stampa dettagliata dell'errore
-        } catch (Exception e) {
-            System.out.println("Errore durante la ricerca dello stato del mezzo: " + e.getMessage());
         }
     }
 
