@@ -11,50 +11,50 @@ public class Biglietto {
     @Id
     @GeneratedValue
     private UUID id;
+
     @Column(name = "data_emissione")
     private LocalDate dataEmissione;
+
     @Column(name = "prezzo")
     private double prezzo;
+
     @ManyToOne
     @JoinColumn(name = "distributore_id")
     private Distributore distributore;
+
     @ManyToOne
     @JoinColumn(name = "rivenditore_id")
     private Rivenditore rivenditore;
+
     @OneToOne(mappedBy = "biglietto")
     private Vidimato vidimato;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "tessera_id")
     private Tessera tessera;
 
-    public Biglietto(Tessera tessera) {
-        this.tessera = tessera;
-    }
-
+    // Costruttori
     public Biglietto() {
     }
 
-    public Biglietto(LocalDate dataEmissione, double prezzo, Distributore distributore_id, Tessera tessera_id) {
+    public Biglietto(LocalDate dataEmissione, double prezzo, Distributore distributore, Tessera tessera) {
         this.dataEmissione = dataEmissione;
         this.prezzo = prezzo;
-        this.distributore = distributore_id;
-        this.tessera = tessera_id;
+        this.distributore = distributore;
+        this.tessera = tessera;
     }
 
-    public Biglietto(LocalDate dataEmissione, double prezzo, Rivenditore rivenditore_id, Tessera tessera_id) {
+    public Biglietto(LocalDate dataEmissione, double prezzo, Rivenditore rivenditore, Tessera tessera) {
         this.dataEmissione = dataEmissione;
         this.prezzo = prezzo;
-        this.rivenditore = rivenditore_id;
-
-        this.tessera = tessera_id;
+        this.rivenditore = rivenditore;
+        this.tessera = tessera;
     }
 
-
+    // Getter e Setter
     public UUID getId() {
         return id;
     }
-
 
     public LocalDate getDataEmissione() {
         return dataEmissione;
@@ -80,28 +80,28 @@ public class Biglietto {
         this.vidimato = vidimato;
     }
 
-    public Tessera getTessera_id() {
-        return tessera;
-    }
-
-    public void setTessera_id(Tessera tessera_id) {
-        this.tessera = tessera_id;
-    }
-
-    public Rivenditore getRivenditore_id() {
-        return rivenditore;
-    }
-
-    public void setRivenditore_id(Rivenditore rivenditore_id) {
-        this.rivenditore = rivenditore_id;
-    }
-
-    public Distributore getDistributore_id() {
+    public Distributore getDistributore() {
         return distributore;
     }
 
-    public void setDistributore_id(Distributore distributore_id) {
-        this.distributore = distributore_id;
+    public void setDistributore(Distributore distributore) {
+        this.distributore = distributore;
+    }
+
+    public Rivenditore getRivenditore() {
+        return rivenditore;
+    }
+
+    public void setRivenditore(Rivenditore rivenditore) {
+        this.rivenditore = rivenditore;
+    }
+
+    public Tessera getTessera() {
+        return tessera;
+    }
+
+    public void setTessera(Tessera tessera) {
+        this.tessera = tessera;
     }
 
     @Override
@@ -110,8 +110,6 @@ public class Biglietto {
                 "id=" + id +
                 ", dataEmissione=" + dataEmissione +
                 ", prezzo=" + prezzo +
-
-
                 '}';
     }
 }

@@ -18,12 +18,11 @@ public class Tessera {
     @JoinColumn(name = "utente_id")
     private Utente utente;
 
-    @OneToMany(mappedBy = "tessera")
+    @OneToMany(mappedBy = "tessera", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Biglietto> biglietti = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tessera")
+    @OneToMany(mappedBy = "tessera", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Abbonamento> abbonamenti = new ArrayList<>();
-
 
     public Tessera(LocalDate data_emissione, Utente utente) {
         this.data_emissione = data_emissione;
@@ -61,6 +60,10 @@ public class Tessera {
         return data_scadenza;
     }
 
+    public void setData_scadenza(LocalDate data_scadenza) {
+        this.data_scadenza = data_scadenza;
+    }
+
     public Utente getUtente() {
         return utente;
     }
@@ -85,6 +88,18 @@ public class Tessera {
         this.abbonamenti = abbonamenti;
     }
 
+    // Nuovo metodo per aggiungere un biglietto
+    public void addBiglietto(Biglietto biglietto) {
+        biglietti.add(biglietto);
+        biglietto.setTessera(this); // Assicura la bidirezionalità
+    }
+
+    // Nuovo metodo per rinnovare la tessera
+    /*public void rinnovoTessera() {
+        this.data_scadenza = LocalDate.now().plusYears(1);
+        System.out.println("Tessera rinnovata. Nuova data di scadenza: " + data_scadenza);
+    }*/
+
     @Override
     public String toString() {
         return "Tessera{" +
@@ -92,6 +107,7 @@ public class Tessera {
                 ", data_emissione=" + data_emissione +
                 ", data_scadenza=" + data_scadenza +
                 ", utente=" + utente +
+                ", biglietti=" + biglietti +
                 ", abbonamenti=" + abbonamenti +
                 '}';
     }

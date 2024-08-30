@@ -32,21 +32,18 @@ public class BigliettoDao {
     }
 
     public void save(Biglietto biglietto) {
-        //NEL PROCESSO DI SCRITTURA BISOGNA UTILIZZARE UNA TRANSAZIONE PER ASSICURARSI CHE AVVENGA IN SICUREZZA
-
-        //1. chiedo all'entity manager di fornire una transazione
         EntityTransaction transaction = em.getTransaction();
-
-        //2.avviamo la transazione
-        transaction.begin();
-
-        //3.aggiungo l'evento al persistence context
-        em.persist(biglietto);
-
-        //4.concludiamo la transazione salvando l'evento nel DB
-        transaction.commit();
-
-        System.out.println("Il Biglietto con ID : " + biglietto.getId() + " " + " è stato salvato con successo!");
+        try {
+            transaction.begin();
+            em.persist(biglietto);
+            transaction.commit();
+            System.out.println("Il Biglietto con ID : " + biglietto.getId() + " è stato salvato con successo!");
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace(); // Questo stamperà l'errore completo
+        }
     }
 
     //*************************************  Metodo getById  ****************************************
@@ -99,13 +96,12 @@ public class BigliettoDao {
 
                         Distributore distributore = distributori.get(indiceDistributore - 1);
                         Biglietto biglietto = new Biglietto(LocalDate.now(), 1.50, distributore, tessera);
-                        tessera.setBiglietti(biglietto.getTessera_id().getBiglietti());
-                        tessera.getBiglietti().add(biglietto);
+                        tessera.addBiglietto(biglietto); // Aggiungi il biglietto alla tessera
                         save(biglietto);
 
                         System.out.println("Hai acquistato Il Biglietto " + biglietto.getId());
 
-                        menuUtente(biglietto.getTessera_id());
+                        menuUtente(tessera);
                         break;
 
                     case "2":
@@ -119,10 +115,9 @@ public class BigliettoDao {
                         Rivenditore rivenditore = rivenditori.get(indiceRivenditore - 1);
 
                         Biglietto biglietto2 = new Biglietto(LocalDate.now(), 2.0, rivenditore, tessera);
-                        tessera.setBiglietti(biglietto2.getTessera_id().getBiglietti());
-                        tessera.getBiglietti().add(biglietto2);
+                        tessera.addBiglietto(biglietto2); // Aggiungi il biglietto alla tessera
                         save(biglietto2);
-                        System.out.println("Hai acquistato Il Biglietto" + biglietto2.getId());
+                        System.out.println("Hai acquistato Il Biglietto " + biglietto2.getId());
                         break;
 
                     case "0":
@@ -138,6 +133,7 @@ public class BigliettoDao {
             }
         }
     }
+
 
     //*************************************  Metodo counterBigliettiVendutiInUnPeriodo  ****************************************
     public Long counterBigliettiVendutiInUnPeriodo(LocalDate dataInizio, LocalDate dataFine) {
