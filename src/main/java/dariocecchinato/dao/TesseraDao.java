@@ -58,15 +58,13 @@ public class TesseraDao {
         return query.getResultList();
     }
 
-    public void updateDataEmissioneTessera(LocalDate oldDate, LocalDate newDate) {
+    public void updateDataEmissioneTessera(UUID id, LocalDate newDate) {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
-
-        Query updateQuery = em.createQuery("UPDATE Tessera t SET t.data_emissione = :new_date WHERE t.data_emissione = :old_date");
+        Query updateQuery = em.createQuery("UPDATE Tessera t SET t.data_emissione = :new_date WHERE t.id = :id");
         updateQuery.setParameter("new_date", newDate);
-        updateQuery.setParameter("old_date", oldDate);
+        updateQuery.setParameter("id", id);
         transaction.commit();
-
     }
 
 

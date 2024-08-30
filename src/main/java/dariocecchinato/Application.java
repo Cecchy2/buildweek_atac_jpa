@@ -654,12 +654,9 @@ public class Application {
     }
 
     public static void rinnovoTessera(Tessera tessera) {
-
         if (LocalDate.now().isAfter(tessera.getData_scadenza())) {
-
-            td.updateDataEmissioneTessera(tessera.getData_emissione(), LocalDate.now());
-
-            System.out.println("Tessera rinnovata. Nuova data di scadenza: " + LocalDate.now());
+            td.updateDataEmissioneTessera(tessera.getId(), LocalDate.now());
+            System.out.println("Tessera rinnovata. Nuova data di scadenza: " + LocalDate.now().plusYears(1));
         } else {
             System.out.println("La tessera è ancora valida fino al: " + tessera.getData_scadenza());
         }
