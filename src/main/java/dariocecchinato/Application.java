@@ -43,7 +43,7 @@ public class Application {
 
     public static void main(String[] args) {
 
-        Amministratore amministratore = new Amministratore("Signor", "Palle", "signorpalle@gmail.com", 45, "12345");
+        Amministratore amministratore = new Amministratore("Elon", "Musk", "ElonMusk@gmail.com", 45, "12345");
         //amministratoreDao.save(amministratore);
 
         //**************************   CREAZIONE TRATTE  *********************************
@@ -256,6 +256,7 @@ public class Application {
         System.out.println("1- Controlla validità");
         System.out.println("2- Acquista abbonamento");
         int scelta = gestioneInputIntMenu(1, 2);
+        em.refresh(utente);
         switch (scelta) {
             case 1:
                 controllaValiditaAbbonamento(utente); /*cristiano*/

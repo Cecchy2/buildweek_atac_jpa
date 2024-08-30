@@ -60,15 +60,6 @@ public class BigliettoDao {
 
     //*************************************  Metodo acquistaBiglietto  ****************************************
     public void acquistaBiglietto(Tessera tessera) {
-        List<Biglietto> existingTickets = em.createQuery("SELECT b FROM Biglietto b WHERE b.tessera = :tessera", Biglietto.class)
-                .setParameter("tessera", tessera)
-                .getResultList();
-
-        if (!existingTickets.isEmpty()) {
-            System.out.println("Esiste già un biglietto associato a questa tessera.");
-            return;
-        }
-
         if (!td.isTesseraValida(tessera.getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
             System.out.println("Attenzione: la tua tessera è scaduta! Vuoi rinnovarla?");
             System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
@@ -104,13 +95,12 @@ public class BigliettoDao {
 
                         Distributore distributore = distributori.get(indiceDistributore - 1);
                         Biglietto biglietto = new Biglietto(LocalDate.now(), 1.50, distributore, tessera);
-                        tessera.setBiglietti(biglietto.getTessera().getBiglietti());
-                        tessera.getBiglietti().add(biglietto);
+                        tessera.addBiglietto(biglietto); // Aggiungi il biglietto alla tessera
                         save(biglietto);
 
                         System.out.println("Hai acquistato Il Biglietto " + biglietto.getId());
 
-                        menuUtente(biglietto.getTessera());
+                        menuUtente(tessera);
                         break;
 
                     case "2":
@@ -124,10 +114,9 @@ public class BigliettoDao {
                         Rivenditore rivenditore = rivenditori.get(indiceRivenditore - 1);
 
                         Biglietto biglietto2 = new Biglietto(LocalDate.now(), 2.0, rivenditore, tessera);
-                        tessera.setBiglietti(biglietto2.getTessera().getBiglietti());
-                        tessera.getBiglietti().add(biglietto2);
+                        tessera.addBiglietto(biglietto2); // Aggiungi il biglietto alla tessera
                         save(biglietto2);
-                        System.out.println("Hai acquistato Il Biglietto" + biglietto2.getId());
+                        System.out.println("Hai acquistato Il Biglietto " + biglietto2.getId());
                         break;
 
                     case "0":
@@ -143,6 +132,7 @@ public class BigliettoDao {
             }
         }
     }
+
 
     //*************************************  Metodo counterBigliettiVendutiInUnPeriodo  ****************************************
     public Long counterBigliettiVendutiInUnPeriodo(LocalDate dataInizio, LocalDate dataFine) {
