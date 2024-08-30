@@ -1,5 +1,6 @@
 package dariocecchinato.dao;
 
+import dariocecchinato.Application;
 import dariocecchinato.entities.Biglietto;
 import dariocecchinato.entities.Distributore;
 import dariocecchinato.entities.Rivenditore;
@@ -70,7 +71,7 @@ public class BigliettoDao {
             System.out.println("2- Non rinnovare");
             int scelta = gestioneInputIntMenu(1, 2);
             if (scelta == 1) {
-                tessera.rinnovoTessera();
+                Application.rinnovoTessera(tessera);
             } else {
                 System.out.println("Tessera non rinnovata");
                 return;

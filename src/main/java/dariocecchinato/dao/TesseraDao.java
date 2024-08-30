@@ -4,6 +4,7 @@ import dariocecchinato.entities.Tessera;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
@@ -56,4 +57,17 @@ public class TesseraDao {
         TypedQuery<Tessera> query = em.createQuery("SELECT t FROM Tessera t", Tessera.class);
         return query.getResultList();
     }
+
+    public void updateDataEmissioneTessera(LocalDate oldDate, LocalDate newDate) {
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+        Query updateQuery = em.createQuery("UPDATE Tessera t SET t.data_emissione = :new_date WHERE t.data_emissione = :old_date");
+        updateQuery.setParameter("new_date", newDate);
+        updateQuery.setParameter("old_date", oldDate);
+        transaction.commit();
+
+    }
+
+
 }
