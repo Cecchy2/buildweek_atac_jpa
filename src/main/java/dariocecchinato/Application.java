@@ -138,17 +138,14 @@ public class Application {
                 }
                 switch (scelta) {
                     case 1:
-                        /*aggiungere metodo per la gestione del registrati*/
                         registrazione();
                         break;
                     case 2:
-                        /*add metodo per gestire il login*/
                         login();
-                        //menuUtente(); /*da togliere una volta finito il metodo login, per ora questa è solo un modo per continuare la struttura del menu*/
                         break;
                     case 3:
-                        /*si esce dal while principale*/
-                        break menuAtac;
+                        System.exit(0);
+                        break;
                     default:
                         System.out.println("Scelta non valida");
                         startMenu();
@@ -226,7 +223,7 @@ public class Application {
                 System.out.println("3- Abbonamenti");
                 System.out.println("4- Contattaci");
                 System.out.println("5- Torna indietro");
-                int scelta = gestioneInputIntMenu(1, 4);
+                int scelta = gestioneInputIntMenu(1, 5);
                 switch (scelta) {
                     case 1:
                         vidmazioneBiglietto(tessera);
@@ -296,7 +293,6 @@ public class Application {
     }
 
     private static void registrazione() {
-
         System.out.println("Inserisci il tuo nome:");
         String nome = scanner.nextLine();
         System.out.println("Inserisci il tuo cognome:");
@@ -398,8 +394,9 @@ public class Application {
             System.out.println("8- Tempo effettivo medio di percorrenza di una tratta"); /*diego*/
             System.out.println("9- Tempo effettivo di percorrenza di una tratta"); /*diego*/
             System.out.println("10- Cerca id tessera e id utente dato un nome e cognome ed eta"); /*ultima cosa*/
-            System.out.println("11- Esci");
-            int scelta = gestioneInputIntMenu(1, 11);
+            System.out.println("11- Torna indietro");
+            System.out.println("12- Disconnetti");
+            int scelta = gestioneInputIntMenu(1, 12);
             switch (scelta) {
                 case 1:
                     break;
@@ -410,6 +407,14 @@ public class Application {
                     cercaStatoMezzo();
                     break;
                 case 4:
+                    System.out.println("Inserisci L'UUID del mezzo");
+                    try {
+                        UUID mezzoId = UUID.fromString(scanner.nextLine());
+                        Long numeroBiglietti = vidimatoDao.restituisciNumeroTotaleBigliettiVidimatiPerMezzo(mezzoId);
+                        System.out.println("Il Numero di biglietti per questo mezzo è: " + numeroBiglietti);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 5:
                     System.out.println("Il numero totale di biglietti vidimanti è: " + vidimatoDao.restituisciNumeroTotaleBigliettiVidimati());
@@ -432,7 +437,11 @@ public class Application {
                     nonnoHaSmarritoTutto();
                     break;
                 case 11:
-                    break cicloAdmin;
+                    startMenu();
+                    break;
+                case 12:
+                    System.exit(0);
+                    break;
                 default:
                     break;
             }
@@ -444,28 +453,21 @@ public class Application {
             System.out.print("Inserisci l'ID della Tratta: ");
             String trattaIdInput = scanner.nextLine();
             UUID trattaId = UUID.fromString(trattaIdInput);
-
             System.out.print("Inserisci l'ID del Mezzo: ");
             String mezzoIdInput = scanner.nextLine();
             UUID mezzoId = UUID.fromString(mezzoIdInput);
-
-
             Tratta tratta = trattaDao.getById(trattaId);
             if (tratta == null) {
                 System.out.println("Errore: Tratta con ID " + trattaId + " non trovata.");
                 return;
             }
-
             Mezzo mezzo = mezzoDao.getById(mezzoId);
             if (mezzo == null) {
                 System.out.println("Errore: Mezzo con ID " + mezzoId + " non trovato.");
                 return;
             }
-
-
             double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta, mezzo);
             System.out.println("Il tempo medio effettivo di percorrenza è: " + tempoMedio + " minuti");
-
         } catch (IllegalArgumentException e) {
             System.out.println("Errore: L'ID inserito non è valido. Assicurati di inserire un UUID corretto.");
         } catch (NullPointerException e) {
@@ -485,6 +487,7 @@ public class Application {
             System.out.println("Formato UUID non valido.");
         } catch (Exception e) {
             System.out.println("Errore durante l'eliminazione dell'utente: " + e.getMessage());
+
         }
     }
 
@@ -519,7 +522,6 @@ public class Application {
             } catch (DateTimeParseException e) {
                 System.out.println("FORMATO DATA INSERITO NON VALIDO");
             }
-
         }
     }
 
@@ -539,7 +541,6 @@ public class Application {
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Formato UUID non valido.");
-            e.printStackTrace(); // Stampa dettagliata dell'errore
         } catch (Exception e) {
             System.out.println("Errore durante la ricerca dello stato del mezzo: " + e.getMessage());
         }

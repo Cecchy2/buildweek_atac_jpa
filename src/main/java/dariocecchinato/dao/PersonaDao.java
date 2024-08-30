@@ -13,6 +13,7 @@ public class PersonaDao {
         this.em = em;
     }
 
+    //*************************************  Metodo findUserOrAdminById  ****************************************
     public void findUserOrAdminById(UUID personaId) {
         Utente foundUser = em.find(Utente.class, personaId);
         if (foundUser == null) {

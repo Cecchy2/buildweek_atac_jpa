@@ -12,15 +12,12 @@ public class GiroTratta {
     @Id
     @GeneratedValue
     private UUID giro_tratta_id;
-
     @ManyToOne
     @JoinColumn(name = "mezzo_id")
     private Mezzo mezzo;
-
     @ManyToOne
     @JoinColumn(name = "tratta_id")
     private Tratta tratta_id;
-
     private LocalDateTime tempo_partenza;
     private LocalDateTime tempo_arrivo;
     private Long tempo_effettivo_percorrenza;

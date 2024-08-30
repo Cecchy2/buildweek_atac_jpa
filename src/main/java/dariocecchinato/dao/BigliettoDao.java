@@ -48,17 +48,20 @@ public class BigliettoDao {
         System.out.println("Il Biglietto con ID : " + biglietto.getId() + " " + " è stato salvato con successo!");
     }
 
+    //*************************************  Metodo getById  ****************************************
     public Biglietto getById(UUID bigliettoId) {
         Biglietto found = em.find(Biglietto.class, bigliettoId);
         if (found == null) throw new NotFoundException(bigliettoId);
         return found;
     }
 
+    //*************************************  Metodo findAll  ****************************************
     public List<Biglietto> findAll() {
         TypedQuery<Biglietto> query = em.createQuery("SELECT b FROM Biglietto b", Biglietto.class);
         return query.getResultList();
     }
 
+    //*************************************  Metodo acquistaBiglietto  ****************************************
     public void acquistaBiglietto(Tessera tessera) {
         if (!td.isTesseraValida(tessera.getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
             System.out.println("Attenzione: la tua tessera è scaduta! Vuoi rinnovarla?");
@@ -135,6 +138,7 @@ public class BigliettoDao {
         }
     }
 
+    //*************************************  Metodo counterBigliettiVendutiInUnPeriodo  ****************************************
     public Long counterBigliettiVendutiInUnPeriodo(LocalDate dataInizio, LocalDate dataFine) {
         TypedQuery<Long> query = em.createQuery("SELECT COUNT(b) FROM Biglietto b WHERE b.dataEmissione BETWEEN :data_inizio AND :data_fine", Long.class);
         query.setParameter("data_inizio", dataInizio);
@@ -142,6 +146,7 @@ public class BigliettoDao {
         return query.getSingleResult();
     }
 
+    //*************************************  Metodo listaBigliettiVendutiInUnPeriodo  ****************************************
     public List<Biglietto> listaBigliettiVendutiInUnPeriodo(LocalDate dataInizio, LocalDate dataFine) {
         TypedQuery<Biglietto> query = em.createQuery("SELECT b FROM Biglietto b WHERE b.dataEmissione BETWEEN :data_inizio AND :data_fine", Biglietto.class);
         query.setParameter("data_inizio", dataInizio);

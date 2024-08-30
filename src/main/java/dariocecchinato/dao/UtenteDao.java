@@ -17,7 +17,7 @@ public class UtenteDao {
     }
 
 
-    //*************************************  Metodo SAVE  ****************************************
+    //*************************************  Metodo ricercaNonnoUtente ****************************************
 
     public Utente ricercaNonnoUtente(String nome, String cognome, int eta) {
         TypedQuery<Utente> query = em.createQuery("SELECT u FROM Utente u WHERE LOWER(u.nome) = :nome AND LOWER(u.cognome) = :cognome AND u.eta = :eta", Utente.class);
@@ -33,6 +33,7 @@ public class UtenteDao {
         return utente;
     }
 
+    //*************************************  Metodo Save  ****************************************
     public void save(Utente utente) {
         //1. chiedo all'entity manager di fornire una transazione
         EntityTransaction transaction = em.getTransaction();
@@ -54,42 +55,36 @@ public class UtenteDao {
         }
     }
 
+    //*************************************  Metodo getById  ****************************************
     public Utente getById(UUID utenteId) {
         Utente found = em.find(Utente.class, utenteId);
         if (found == null) throw new NotFoundException(utenteId);
         return found;
     }
 
-    //*************************************  Metodo Delete  ****************************************
+    //*************************************  Metodo FindAll  ****************************************
 
     public List<Utente> findAll() {
         TypedQuery<Utente> query = em.createQuery("SELECT p FROM Utente p", Utente.class);
         return query.getResultList();
     }
 
+    //*************************************  Metodo Delete  ****************************************
     public void delete(UUID utenteId) {
-        //1. chiedo all'entity manager di fornire una transazione
         EntityTransaction transaction = em.getTransaction();
-
         try {
-            //2. avviamo la transazione
             transaction.begin();
-
-            //3. Troviamo l'utente tramite ID
             Utente utente = em.find(Utente.class, utenteId);
-
-            //4. Verifica se l'utente esiste
             if (utente == null) {
                 System.out.println("Utente non trovato con ID: " + utenteId);
                 transaction.commit();
                 return;
             }
-
-            //5. Rimuoviamo l'utente dal persistence context
+            em.remove(utente.getTessera());
             em.remove(utente);
 
-            //6. Eseguiamo il commit della transazione se tutto va bene
             transaction.commit();
+
             System.out.println("L'utente con ID " + utenteId + " è stato cancellato correttamente");
         } catch (Exception e) {
             // Gestione dell'eccezione senza rollback

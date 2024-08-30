@@ -14,6 +14,8 @@ public class AbbonamentoDao {
         this.em = em;
     }
 
+
+    //*************************************  Metodo save  ****************************************
     public void save(Abbonamento abbonamento) {
         //1.
         EntityTransaction transaction = em.getTransaction();
@@ -27,6 +29,7 @@ public class AbbonamentoDao {
         System.out.println("L' abbonamento " + abbonamento.getTipo_abbonamento() + " è stato salvato correttamente");
     }
 
+    //*************************************  Metodo findAll  ****************************************
     public List<Abbonamento> findAll() {
         TypedQuery<Abbonamento> query = em.createQuery("SELECT p FROM Abbonamento p", Abbonamento.class);
         return query.getResultList();

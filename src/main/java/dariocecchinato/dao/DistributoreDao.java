@@ -16,6 +16,7 @@ public class DistributoreDao {
         this.em = em;
     }
 
+    //*************************************  Metodo save  ****************************************
     public void save(Distributore distributore) {
         //NEL PROCESSO DI SCRITTURA BISOGNA UTILIZZARE UNA TRANSAZIONE PER ASSICURARSI CHE AVVENGA IN SICUREZZA
 
@@ -34,13 +35,14 @@ public class DistributoreDao {
         System.out.println("Il Distributore con ID : " + distributore.getId() + " " + " è stato salvato con successo!");
     }
 
+    //*************************************  Metodo getById  ****************************************
     public Distributore getById(UUID distributoreId) {
         Distributore found = em.find(Distributore.class, distributoreId);
         if (found == null) throw new NotFoundException(distributoreId);
         return found;
     }
 
-
+    //*************************************  Metodo findAll  ****************************************
     public List<Distributore> findAll() {
         TypedQuery<Distributore> query = em.createQuery("SELECT d FROM Distributore d", Distributore.class);
         return query.getResultList();

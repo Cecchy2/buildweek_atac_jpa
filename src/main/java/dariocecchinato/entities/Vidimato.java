@@ -16,7 +16,7 @@ public class Vidimato {
     @JoinColumn(name = "biglietto_id", nullable = false)
     private Biglietto biglietto;
     @ManyToOne
-    @JoinColumn(name = "giro_tratta_id", nullable = false)
+    @JoinColumn(name = "giro_tratta_id")
     private GiroTratta giroTratta;
     @Column(name = "data_vidimazione", nullable = false)
     private LocalDate dataVidimazione;

@@ -16,6 +16,7 @@ public class MezzoDao {
         this.em = em;
     }
 
+    //*************************************  Metodo save  ****************************************
     public void save(Mezzo mezzo) {
         //NEL PROCESSO DI SCRITTURA BISOGNA UTILIZZARE UNA TRANSAZIONE PER ASSICURARSI CHE AVVENGA IN SICUREZZA
 
@@ -35,12 +36,14 @@ public class MezzoDao {
     }
 
 
+    //*************************************  Metodo getById  ****************************************
     public Mezzo getById(UUID mezzoId) {
         Mezzo found = em.find(Mezzo.class, mezzoId);
         if (found == null) throw new NotFoundException(mezzoId);
         return found;
     }
 
+    //*************************************  Metodo findAll  ****************************************
     public List<Mezzo> findAll() {
         TypedQuery<Mezzo> query = em.createQuery("SELECT m FROM Mezzo m", Mezzo.class);
         return query.getResultList();
