@@ -659,7 +659,7 @@ public class Application {
 
             td.updateDataEmissioneTessera(tessera.getData_emissione(), LocalDate.now());
 
-            System.out.println("Tessera rinnovata. Nuova data di scadenza: " + LocalDate.now());
+            System.out.println("Tessera rinnovata. Nuova data di scadenza: " + tessera.getData_scadenza());
         } else {
             System.out.println("La tessera è ancora valida fino al: " + tessera.getData_scadenza());
         }
