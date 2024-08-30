@@ -31,21 +31,18 @@ public class BigliettoDao {
     }
 
     public void save(Biglietto biglietto) {
-        //NEL PROCESSO DI SCRITTURA BISOGNA UTILIZZARE UNA TRANSAZIONE PER ASSICURARSI CHE AVVENGA IN SICUREZZA
-
-        //1. chiedo all'entity manager di fornire una transazione
         EntityTransaction transaction = em.getTransaction();
-
-        //2.avviamo la transazione
-        transaction.begin();
-
-        //3.aggiungo l'evento al persistence context
-        em.persist(biglietto);
-
-        //4.concludiamo la transazione salvando l'evento nel DB
-        transaction.commit();
-
-        System.out.println("Il Biglietto con ID : " + biglietto.getId() + " " + " è stato salvato con successo!");
+        try {
+            transaction.begin();
+            em.persist(biglietto);
+            transaction.commit();
+            System.out.println("Il Biglietto con ID : " + biglietto.getId() + " è stato salvato con successo!");
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace(); // Questo stamperà l'errore completo
+        }
     }
 
     //*************************************  Metodo getById  ****************************************
@@ -63,6 +60,15 @@ public class BigliettoDao {
 
     //*************************************  Metodo acquistaBiglietto  ****************************************
     public void acquistaBiglietto(Tessera tessera) {
+        List<Biglietto> existingTickets = em.createQuery("SELECT b FROM Biglietto b WHERE b.tessera = :tessera", Biglietto.class)
+                .setParameter("tessera", tessera)
+                .getResultList();
+
+        if (!existingTickets.isEmpty()) {
+            System.out.println("Esiste già un biglietto associato a questa tessera.");
+            return;
+        }
+
         if (!td.isTesseraValida(tessera.getId())) { /*metodo per controllare la validita della tessera in caso fosse scaduta*/ /*kenny*/
             System.out.println("Attenzione: la tua tessera è scaduta! Vuoi rinnovarla?");
             System.out.println("Premi uno dei seguenti pulsanti per scegliere un operazione:");
@@ -98,13 +104,13 @@ public class BigliettoDao {
 
                         Distributore distributore = distributori.get(indiceDistributore - 1);
                         Biglietto biglietto = new Biglietto(LocalDate.now(), 1.50, distributore, tessera);
-                        tessera.setBiglietti(biglietto.getTessera_id().getBiglietti());
+                        tessera.setBiglietti(biglietto.getTessera().getBiglietti());
                         tessera.getBiglietti().add(biglietto);
                         save(biglietto);
 
                         System.out.println("Hai acquistato Il Biglietto " + biglietto.getId());
 
-                        menuUtente(biglietto.getTessera_id());
+                        menuUtente(biglietto.getTessera());
                         break;
 
                     case "2":
@@ -118,7 +124,7 @@ public class BigliettoDao {
                         Rivenditore rivenditore = rivenditori.get(indiceRivenditore - 1);
 
                         Biglietto biglietto2 = new Biglietto(LocalDate.now(), 2.0, rivenditore, tessera);
-                        tessera.setBiglietti(biglietto2.getTessera_id().getBiglietti());
+                        tessera.setBiglietti(biglietto2.getTessera().getBiglietti());
                         tessera.getBiglietti().add(biglietto2);
                         save(biglietto2);
                         System.out.println("Hai acquistato Il Biglietto" + biglietto2.getId());

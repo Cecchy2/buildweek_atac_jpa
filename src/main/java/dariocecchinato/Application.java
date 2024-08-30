@@ -117,7 +117,7 @@ public class Application {
             }
         });
 
-        
+
         startMenu();
         em.close();
         emf.close();
@@ -315,7 +315,6 @@ public class Application {
     }
 
     public static void vidmazioneBiglietto(Tessera tessera) {
-
         List<Biglietto> biglietti = tessera.getBiglietti();
         if (biglietti.isEmpty()) {
             System.out.println("Non hai biglietti disponibili");
@@ -329,6 +328,13 @@ public class Application {
         }
         int scelta = Integer.parseInt(scanner.nextLine());
         Biglietto biglietto = biglietti.get(scelta - 1);
+
+        // Controllo se il biglietto è già stato vidimato
+        if (biglietto.getVidimato() != null) {
+            System.out.println("Questo biglietto è già stato vidimato. Non puoi vidimarlo di nuovo.");
+            return;
+        }
+
         System.out.println("Scegli la tratta che desideri percorrere:");
         List<Tratta> listaTratte = trattaDao.findAll();
         List<Object[]> zonePartenzaCapolinea = trattaDao.getAllZonaPartenzaECapolinea();
@@ -336,18 +342,28 @@ public class Application {
             System.out.println(i + 1 + "- " + Arrays.toString(zonePartenzaCapolinea.get(i)));
         }
         int inputTratta = gestioneInputIntMenu(1, zonePartenzaCapolinea.size());
-        List<GiroTratta> giroTrattaDellaTrattaSelezionata = listaTratte.get(inputTratta).getGiritratte();
+        GiroTratta giroTratta = listaTratte.get(inputTratta - 1).getGiritratte().get(0);
+
+        // Verifica se i dettagli del giro della tratta sono null
+        if (giroTratta == null || giroTratta.getTempo_partenza() == null || giroTratta.getTempo_arrivo() == null || giroTratta.getMezzo_id().getTipo_mezzo() == null) {
+            System.out.println("Errore nella selezione della tratta. Riprova.");
+            return;
+        }
+
         System.out.println("Informazioni sul giro della tratta:");
-        System.out.println("Tempo di partenza : " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_partenza());
-        System.out.println("Tempo di arrivo: " + giroTrattaDellaTrattaSelezionata.getFirst().getTempo_arrivo());
-        System.out.println("Mezzo : " + giroTrattaDellaTrattaSelezionata.getFirst().getMezzo_id().getTipo_mezzo());
+        System.out.println("Tempo di partenza : " + giroTratta.getTempo_partenza());
+        System.out.println("Tempo di arrivo: " + giroTratta.getTempo_arrivo());
+        System.out.println("Mezzo : " + giroTratta.getMezzo_id().getTipo_mezzo());
+
         try {
-            Vidimato vidimazione = new Vidimato(biglietto, giroTrattaDellaTrattaSelezionata.getFirst(), LocalDate.now());
+            Vidimato vidimazione = new Vidimato(biglietto, giroTratta, LocalDate.now());
             vidimatoDao.save(vidimazione);
+            System.out.println("Il Biglietto con ID : " + biglietto.getId() + " è stato timbrato con successo!");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Errore durante la vidimazione del biglietto: Biglietto già Vidimato ");
         }
     }
+
 
     public static void acquistaAbbonamento(Tessera tessera) {
         System.out.println("Scegli il tipo di abbonamento:");
