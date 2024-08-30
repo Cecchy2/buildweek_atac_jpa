@@ -18,7 +18,7 @@ public class AmministratoreDao {
         this.em = em;
     }
 
-    // Metodo save per salvare un amministratore nel database
+    //*************************************  Metodo save  ****************************************
     public void save(Amministratore amministratore) {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
@@ -27,18 +27,20 @@ public class AmministratoreDao {
         System.out.println("L'amministratore " + amministratore.getNome() + " è stato salvato correttamente");
     }
 
-    // Metodo findAll per trovare tutti gli amministratori nel database
+    //*************************************  Metodo findAll  ****************************************
     public List<Amministratore> findAll() {
         TypedQuery<Amministratore> query = em.createQuery("SELECT a FROM Amministratore a", Amministratore.class);
         return query.getResultList();
     }
 
+    //*************************************  Metodo getById  ****************************************
     public Amministratore getById(UUID amministratoreId) {
         Amministratore found = em.find(Amministratore.class, amministratoreId);
         if (found == null) throw new NotFoundException(amministratoreId);
         return found;
     }
 
+    //*************************************  Metodo calcolaTempoMedioEffettivo  ****************************************
     public double calcolaTempoMedioEffettivo(Tratta tratta, Mezzo mezzo) {
         TypedQuery<Double> query = em.createQuery("SELECT AVG(g.tempo_effettivo_percorrenza) FROM GiroTratta g WHERE g.tratta_id = :tratta AND g.mezzo = :mezzo", Double.class);
         query.setParameter("tratta", tratta);
@@ -50,6 +52,7 @@ public class AmministratoreDao {
         return tempoMedioInMinuti;
     }
 
+    //*************************************  Metodo calcolaTempoEffettivo  ****************************************
     public double calcolaTempoEffettivo(Tratta tratta) {
         TypedQuery<Long> query = em.createQuery("SELECT g.tempo_effettivo_percorrenza FROM GiroTratta g WHERE g.tratta_id = :tratta", Long.class);
         query.setParameter("tratta", tratta);

@@ -49,4 +49,11 @@ public class VidimatoDao {
         TypedQuery<Long> query = em.createQuery("SELECT COUNT(v) FROM Vidimato v", Long.class);
         return query.getSingleResult();
     }
+
+    public Long restituisciNumeroTotaleBigliettiVidimatiPerMezzo(UUID mezzoId) {
+        TypedQuery<Long> query = em.createQuery(
+                "SELECT COUNT(v) FROM Vidimato v JOIN v.giroTratta gt WHERE gt.mezzo.mezzo_id = :mezzoId", Long.class);
+        query.setParameter("mezzoId", mezzoId);
+        return query.getSingleResult();
+    }
 }

@@ -17,6 +17,7 @@ public class GiroTrattaDao {
         this.em = em;
     }
 
+    //*************************************  Metodo save  ****************************************
     public void save(GiroTratta giroTratta) {
         //NEL PROCESSO DI SCRITTURA BISOGNA UTILIZZARE UNA TRANSAZIONE PER ASSICURARSI CHE AVVENGA IN SICUREZZA
 
@@ -35,17 +36,20 @@ public class GiroTrattaDao {
         System.out.println("Il GiroTratta con ID : " + giroTratta.getGiro_tratta_id() + " " + " è stato salvato con successo!");
     }
 
+    //*************************************  Metodo getById  ****************************************
     public GiroTratta getById(UUID giroTrattaId) {
         GiroTratta found = em.find(GiroTratta.class, giroTrattaId);
         if (found == null) throw new NotFoundException(giroTrattaId);
         return found;
     }
 
+    //*************************************  Metodo findAll  ****************************************
     public List<GiroTratta> findAll() {
         TypedQuery<GiroTratta> query = em.createQuery("SELECT m FROM GiroTratta m", GiroTratta.class);
         return query.getResultList();
     }
 
+    //*************************************  Metodo numeroGiriTrattaDiUnMezzo  ****************************************
     public Long numeroGiriTrattaDiUnMezzo(Mezzo mezzo) {
         TypedQuery<Long> query = em.createQuery("SELECT COUNT(g) FROM GiroTratta g WHERE g.mezzo = :mezzoId", Long.class);
         query.setParameter("mezzoId", mezzo);
