@@ -607,7 +607,7 @@ public class Application {
                     } else {
                         System.out.println("L'utente non ha una tessera associata.");
                     }
-                    break; // Esce dal ciclo se l'utente è trovato
+                    break;
                 } else {
                     System.out.println("Utente non trovato. Vuoi riprovare? (s/n)");
                     String risposta = scanner.nextLine();
