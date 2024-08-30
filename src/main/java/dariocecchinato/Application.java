@@ -116,7 +116,7 @@ public class Application {
                 //ssd.save(statoServizio);
             }
         });
-        cercaStatoMezzo();
+
         startMenu();
         em.close();
         emf.close();
@@ -413,9 +413,7 @@ public class Application {
                 case 4:
                     break;
                 case 5:
-                    System.out.println("Il numero totale di biglietti vidimanti è: " + vidimatoDao.restituisciNumeroTotaleBigliettiVidimati());
-                    System.out.println("Qui sotto la lista completa: ");
-                    vidimatoDao.findAll().forEach(System.out::println);
+                    numeroTotaleBigliettiVidimati();
                     break;
                 case 6:
                     numeroBigliettiVendutiInUnPeriodo();
@@ -573,6 +571,16 @@ public class Application {
         Utente utente = ud.ricercaNonnoUtente(nome, cognome, eta);
         System.out.println("id del utente: " + utente.getId());
         System.out.println("id della tessera: " + utente.getTessera().getId());
+    }
+
+    public static void numeroTotaleBigliettiVidimati() {
+        try {
+            System.out.println("Il numero totale di biglietti vidimanti è: " + vidimatoDao.restituisciNumeroTotaleBigliettiVidimati());
+            System.out.println("Qui sotto la lista completa: ");
+            vidimatoDao.findAll().forEach(System.out::println);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
 
