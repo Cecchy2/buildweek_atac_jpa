@@ -1,12 +1,13 @@
 package dariocecchinato.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 
 @Entity
 public class Utente extends Persona {
     private String zone_di_residenza;
-    @OneToOne(mappedBy = "utente")
+    @OneToOne(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Tessera tessera;
 
 

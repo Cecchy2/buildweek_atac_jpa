@@ -167,7 +167,7 @@ public class Application {
                 int input = scanner.nextInt();
                 scanner.nextLine(); // Pulisce il newline rimasto dopo nextInt()
                 if (input < min || input > max) {
-                    System.out.println("Scelta non valida. Inserisci un numero valido.");
+                    System.out.println("Scelta non valida. Inserisci un numero valido da: " + min + " a " + max + ".");
                 } else {
                     return input;
                 }
@@ -403,6 +403,7 @@ public class Application {
             int scelta = gestioneInputIntMenu(1, 11);
             switch (scelta) {
                 case 1:
+                    creazioneUteteLatoAdmin();
                     break;
                 case 2:
                     eliminaUtente();
@@ -566,15 +567,66 @@ public class Application {
     }
 
     public static void nonnoHaSmarritoTutto() {
-        System.out.print("Inserisci il nome: ");
-        String nome = scanner.nextLine();
-        System.out.print("Inserisci il cognome: ");
-        String cognome = scanner.nextLine();
-        System.out.print("Inserisci l'età: ");
-        int eta = scanner.nextInt();
-        Utente utente = ud.ricercaNonnoUtente(nome, cognome, eta);
-        System.out.println("id del utente: " + utente.getId());
-        System.out.println("id della tessera: " + utente.getTessera().getId());
+        try {
+            System.out.print("Inserisci il nome: ");
+            String nome = scanner.nextLine();
+            System.out.print("Inserisci il cognome: ");
+            String cognome = scanner.nextLine();
+            System.out.print("Inserisci l'età: ");
+            int eta = scanner.nextInt();
+            scanner.nextLine();
+
+            Utente utente = ud.ricercaNonnoUtente(nome, cognome, eta);
+
+            if (utente != null) {
+                System.out.println("ID dell'utente: " + utente.getId());
+                if (utente.getTessera() != null) {
+                    System.out.println("ID della tessera: " + utente.getTessera().getId());
+                } else {
+                    System.out.println("L'utente non ha una tessera associata.");
+                }
+            } else {
+                System.out.println("Utente non trovato.");
+            }
+        } catch (Exception e) {
+            System.out.println("Errore durante la ricerca dell'utente: " + e.getMessage());
+        }
+    }
+
+    public static void creazioneUteteLatoAdmin() {
+        String nome = null;
+        String cognome = null;
+        String email = null;
+        int eta = 0;
+        String zonaDiResidenza = null;
+        while (true) {
+            System.out.println("Inserisci il nome del nuovo utente:");
+            nome = scanner.nextLine();
+            System.out.println("Inserisci il cognome del nuovo utente:");
+            cognome = scanner.nextLine();
+            System.out.println("Inserisci la email del nuovo utente:");
+            email = scanner.nextLine();
+            System.out.println("Inserisci l'età del nuovo utente:");
+            eta = gestioneInputIntMenu(12, 95);
+            System.out.println("Inserisci la zona di residenza del nuovo utente:");
+            zonaDiResidenza = scanner.nextLine();
+            if (nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || zonaDiResidenza.isEmpty()) {
+                System.out.println("Tutti i campi devono essere compilati. Riprova.");
+            } else {
+                break;
+            }
+        }
+        Utente nuovoUtente = new Utente(nome, cognome, email, eta, zonaDiResidenza);
+        try {
+            ud.save(nuovoUtente);
+            Tessera nuovaTessera = new Tessera(LocalDate.now(), nuovoUtente);
+            td.save(nuovaTessera);
+            System.out.println("Utente creato: " + nuovoUtente);
+            System.out.println("Tessera del nuo cliente creata: " + nuovaTessera);
+        } catch (Exception e) {
+            System.out.println("Errore durante il salvataggio dell'utente o della tessera: " + e.getMessage());
+        }
+
     }
 
     public static void numeroTotaleBigliettiVidimati() {
