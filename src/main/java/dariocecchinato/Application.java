@@ -563,15 +563,30 @@ public class Application {
     }
 
     public static void nonnoHaSmarritoTutto() {
-        System.out.print("Inserisci il nome: ");
-        String nome = scanner.nextLine();
-        System.out.print("Inserisci il cognome: ");
-        String cognome = scanner.nextLine();
-        System.out.print("Inserisci l'età: ");
-        int eta = scanner.nextInt();
-        Utente utente = ud.ricercaNonnoUtente(nome, cognome, eta);
-        System.out.println("id del utente: " + utente.getId());
-        System.out.println("id della tessera: " + utente.getTessera().getId());
+        try {
+            System.out.print("Inserisci il nome: ");
+            String nome = scanner.nextLine();
+            System.out.print("Inserisci il cognome: ");
+            String cognome = scanner.nextLine();
+            System.out.print("Inserisci l'età: ");
+            int eta = scanner.nextInt();
+            scanner.nextLine();
+
+            Utente utente = ud.ricercaNonnoUtente(nome, cognome, eta);
+
+            if (utente != null) {
+                System.out.println("ID dell'utente: " + utente.getId());
+                if (utente.getTessera() != null) {
+                    System.out.println("ID della tessera: " + utente.getTessera().getId());
+                } else {
+                    System.out.println("L'utente non ha una tessera associata.");
+                }
+            } else {
+                System.out.println("Utente non trovato.");
+            }
+        } catch (Exception e) {
+            System.out.println("Errore durante la ricerca dell'utente: " + e.getMessage());
+        }
     }
 
     public static void creazioneUteteLatoAdmin() {
