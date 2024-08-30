@@ -116,7 +116,7 @@ public class Application {
                 //ssd.save(statoServizio);
             }
         });
-
+        numeroTotaleBigliettiVidimati();
         startMenu();
         em.close();
         emf.close();
@@ -409,6 +409,7 @@ public class Application {
                     cercaStatoMezzo();
                     break;
                 case 4:
+
                     System.out.println("Inserisci L'UUID del mezzo");
                     try {
                         UUID mezzoId = UUID.fromString(scanner.nextLine());
@@ -449,31 +450,34 @@ public class Application {
     }
 
     public static void tempoEffettivoMedioPercorrenza() {
-        try {
-            System.out.print("Inserisci l'ID della Tratta: ");
-            String trattaIdInput = scanner.nextLine();
-            UUID trattaId = UUID.fromString(trattaIdInput);
-            System.out.print("Inserisci l'ID del Mezzo: ");
-            String mezzoIdInput = scanner.nextLine();
-            UUID mezzoId = UUID.fromString(mezzoIdInput);
-            Tratta tratta = trattaDao.getById(trattaId);
-            if (tratta == null) {
-                System.out.println("Errore: Tratta con ID " + trattaId + " non trovata.");
-                return;
+        while (true) {
+            try {
+                System.out.print("Inserisci l'ID della Tratta: ");
+                String trattaIdInput = scanner.nextLine();
+                UUID trattaId = UUID.fromString(trattaIdInput);
+                System.out.print("Inserisci l'ID del Mezzo: ");
+                String mezzoIdInput = scanner.nextLine();
+                UUID mezzoId = UUID.fromString(mezzoIdInput);
+                Tratta tratta = trattaDao.getById(trattaId);
+                if (tratta == null) {
+                    System.out.println("Errore: Tratta con ID " + trattaId + " non trovata.");
+                    return;
+                }
+                Mezzo mezzo = mezzoDao.getById(mezzoId);
+                if (mezzo == null) {
+                    System.out.println("Errore: Mezzo con ID " + mezzoId + " non trovato.");
+                    return;
+                }
+                double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta, mezzo);
+                System.out.println("Il tempo medio effettivo di percorrenza è: " + tempoMedio + " minuti");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Errore: L'ID inserito non è valido. Assicurati di inserire un UUID corretto.");
+            } catch (NullPointerException e) {
+                System.out.println("Errore: Si è verificato un problema nel recupero della tratta o del mezzo. Verifica che gli ID siano corretti.");
+            } catch (Exception e) {
+                System.out.println("Errore: Si è verificato un errore imprevisto. Dettagli: " + e.getMessage());
             }
-            Mezzo mezzo = mezzoDao.getById(mezzoId);
-            if (mezzo == null) {
-                System.out.println("Errore: Mezzo con ID " + mezzoId + " non trovato.");
-                return;
-            }
-            double tempoMedio = amministratoreDao.calcolaTempoMedioEffettivo(tratta, mezzo);
-            System.out.println("Il tempo medio effettivo di percorrenza è: " + tempoMedio + " minuti");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Errore: L'ID inserito non è valido. Assicurati di inserire un UUID corretto.");
-        } catch (NullPointerException e) {
-            System.out.println("Errore: Si è verificato un problema nel recupero della tratta o del mezzo. Verifica che gli ID siano corretti.");
-        } catch (Exception e) {
-            System.out.println("Errore: Si è verificato un errore imprevisto. Dettagli: " + e.getMessage());
         }
     }
 
@@ -634,8 +638,10 @@ public class Application {
     public static void numeroTotaleBigliettiVidimati() {
         try {
             System.out.println("Il numero totale di biglietti vidimanti è: " + vidimatoDao.restituisciNumeroTotaleBigliettiVidimati());
-            System.out.println("Qui sotto la lista completa: ");
-            vidimatoDao.findAll().forEach(System.out::println);
+            if (!vidimatoDao.findAll().isEmpty()) {
+                System.out.println("Qui sotto la lista completa: ");
+                vidimatoDao.findAll().forEach(System.out::println);
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
