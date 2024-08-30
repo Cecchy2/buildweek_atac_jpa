@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import dariocecchinato.Supplier.*;
 import dariocecchinato.dao.*;
 import dariocecchinato.entities.*;
-import dariocecchinato.enums.TipoServizio;
 import dariocecchinato.enums.Tipo_abbonamento;
 import dariocecchinato.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
@@ -42,6 +41,7 @@ public class Application {
     private static Faker f = new Faker(Locale.ITALY);
 
     public static void main(String[] args) {
+
         Amministratore amministratore = new Amministratore("Signor", "Palle", "signorpalle@gmail.com", 45, "12345");
         //amministratoreDao.save(amministratore);
 

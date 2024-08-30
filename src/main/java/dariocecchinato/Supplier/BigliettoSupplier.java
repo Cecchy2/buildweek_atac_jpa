@@ -27,14 +27,16 @@ public class BigliettoSupplier implements Supplier<Biglietto> {
     @Override
     public Biglietto get() {
         LocalDate dataEmissione = LocalDate.now().minusDays(f.number().numberBetween(1, 30));
-        double prezzo = f.number().randomDouble(2, 1, 5);
+        double prezzo;
         Tessera tessera = tessere.get(random.nextInt(tessere.size()));
 
         if (random.nextBoolean()) {
             Distributore distributore = distributori.get(random.nextInt(distributori.size()));
+            prezzo = 1.50;
             return new Biglietto(dataEmissione, prezzo, distributore, tessera);
         } else {
             Rivenditore rivenditore = rivenditori.get(random.nextInt(rivenditori.size()));
+            prezzo = 2.0;
             return new Biglietto(dataEmissione, prezzo, rivenditore, tessera);
         }
     }

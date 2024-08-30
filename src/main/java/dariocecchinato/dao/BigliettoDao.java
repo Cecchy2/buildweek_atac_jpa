@@ -114,7 +114,9 @@ public class BigliettoDao {
                         int indiceRivenditore = Integer.parseInt(rivenditoreScelto);
                         Rivenditore rivenditore = rivenditori.get(indiceRivenditore - 1);
 
-                        Biglietto biglietto2 = new Biglietto(LocalDate.now(), 1.50, rivenditore, tessera);
+                        Biglietto biglietto2 = new Biglietto(LocalDate.now(), 2.0, rivenditore, tessera);
+                        tessera.setBiglietti(biglietto2.getTessera_id().getBiglietti());
+                        tessera.getBiglietti().add(biglietto2);
                         save(biglietto2);
                         System.out.println("Hai acquistato Il Biglietto" + biglietto2.getId());
                         break;
